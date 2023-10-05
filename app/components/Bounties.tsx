@@ -108,7 +108,7 @@ function classNames(...classes: Array<any>) {
 
 export default function Example() {
   return (
-    <div className="bg-gray-900 py-10 rounded-lg">
+    <div className="py-10 rounded-lg">
       <table className="mt-6 w-full whitespace-nowrap text-left">
         <colgroup>
           <col className="w-full sm:w-4/12" />

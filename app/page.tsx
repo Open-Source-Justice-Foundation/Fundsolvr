@@ -6,7 +6,7 @@ export default function Example() {
   return (
     <>
       <Sidebar />
-      <div className="lg:pl-72">
+      <div className="lg:pl-72 bg-gray-700/10">
         <Header />
         <main className="py-10">
           <div className="px-4 sm:px-6 lg:px-8">
