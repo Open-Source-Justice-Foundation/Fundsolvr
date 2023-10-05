@@ -3,20 +3,9 @@
 import { Fragment } from "react";
 
 import useSidebarStore from "@/app/stores/sidebarStore";
-import { Menu, Transition } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import { Bars3Icon, BellIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon } from "@heroicons/react/24/outline";
 
 import Login from "./Login";
-
-const userNavigation = [
-  { name: "Your profile", href: "#" },
-  { name: "Sign out", href: "#" },
-];
-
-function classNames(...classes: any[]) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export default function Header() {
   const { toggleSidebar } = useSidebarStore();
@@ -30,7 +19,6 @@ export default function Header() {
 
       <div className="flex flex-1 justify-end gap-x-4 self-stretch lg:gap-x-6">
         <div className="flex items-center gap-x-4 lg:gap-x-6">
-
           <Login>
             <div className="flex flex-1 justify-end">
               <a href="#" className="dark:text-smoke-100 text-sm font-semibold leading-6 text-gray-200">
@@ -39,8 +27,6 @@ export default function Header() {
               </a>
             </div>
           </Login>
-
-          {/* Profile dropdown */}
         </div>
       </div>
     </div>
