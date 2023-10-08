@@ -73,9 +73,9 @@ export default function BountyPage() {
   }, [naddrPointer]);
 
   return (
-    <div className="lg:pl-64">
+    <div className="lg:pl-64 pb-80">
       {bountyEvent && (
-        <div className="mx-auto max-w-2xl">
+        <div className="mx-auto max-w-3xl">
           <div className="flex flex-col gap-6 border-b border-gray-600 pb-8">
             <div className="mt-10 flex items-center justify-between">
               <div className="flex items-center gap-2 text-3xl text-white">
@@ -138,7 +138,7 @@ export default function BountyPage() {
 
           <div className="mt-6 rounded-lg bg-gray-800 p-6">
             <>
-              <div className="prose prose-invert lg:prose-lg" dangerouslySetInnerHTML={{ __html: markdown }}>
+              <div className="prose prose-invert" dangerouslySetInnerHTML={{ __html: markdown }}>
                 {/* {bountyEvent.content} */}
               </div>
               {/* <div className="mb-2 text-xl text-white">{bountyEvent.tags.join(", ")}</div> */}
