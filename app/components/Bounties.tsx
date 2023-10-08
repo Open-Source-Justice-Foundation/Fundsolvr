@@ -2,14 +2,12 @@
 
 import { useEffect, useState } from "react";
 
-
 import type { Event } from "nostr-tools";
 
 import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
 import { Profile } from "../types";
 import Bounty from "./Bounty";
-
 
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
@@ -63,7 +61,7 @@ export default function Bounties() {
   }, []);
 
   return (
-    <div className="rounded-lg py-10">
+    <div className="rounded-lg py-10 items-center justify-center flex flex-col gap-y-8">
       <table className="mt-6 w-full whitespace-nowrap text-left">
         <colgroup>
           <col className="w-full sm:w-4/12" />
@@ -92,11 +90,10 @@ export default function Bounties() {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-700">
-          {bountyEvents && bountyEvents.map((event) => (
-            <Bounty key={event.id} event={event} />
-          ))}
+          {bountyEvents && bountyEvents.map((event) => <Bounty key={event.id} event={event} />)}
         </tbody>
       </table>
+      <button className="flex items-center gap-x-2 rounded-lg bg-blue-700 px-3 py-2 text-sm font-medium text-gray-200">Load More</button>
     </div>
   );
 }
