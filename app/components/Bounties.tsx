@@ -78,13 +78,13 @@ export default function Bounties() {
             <th scope="col" className="py-2 pl-0 pr-8 font-semibold sm:table-cell">
               Value
             </th>
-            <th scope="col" className="py-2 pl-0 pr-4 text-right font-semibold sm:pr-8 sm:text-left lg:pr-8">
+            <th scope="col" className="hidden py-2 pl-0 pr-4 text-right font-semibold sm:pr-8 sm:text-left sm:table-cell lg:pr-8">
               Author/Company
             </th>
-            <th scope="col" className="hidden py-2 pl-0 pr-8 font-semibold md:table-cell lg:pr-8">
+            <th scope="col" className="hidden py-2 pl-0 pr-8 font-semibold lg:table-cell lg:pr-8">
               Status
             </th>
-            <th scope="col" className="hidden py-2 pl-0 pr-4 text-right font-semibold sm:table-cell sm:pr-6 lg:pr-8">
+            <th scope="col" className="hidden py-2 pl-0 pr-4 text-right font-semibold xl:table-cell sm:pr-6 lg:pr-8">
               Posted Date
             </th>
           </tr>
