@@ -74,7 +74,7 @@ export default function BountyPage() {
   }, [naddrPointer]);
 
   return (
-    <div className="lg:pl-64">
+    <div className="lg:pl-72">
       {bountyEvent && (
         <div className="mx-auto max-w-3xl">
           <Link href="/">

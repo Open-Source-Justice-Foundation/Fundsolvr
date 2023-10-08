@@ -14,9 +14,9 @@ import {
 } from "@heroicons/react/24/outline";
 
 const navigation = [
-  { name: "Home", href: "#", icon: HomeIcon, current: true },
-  { name: "Create", href: "#", icon: PlusCircleIcon, current: false },
-  { name: "Messages", href: "#", icon: ChatBubbleLeftIcon, current: false },
+  { name: "Home", href: "/", icon: HomeIcon, current: true },
+  { name: "Create", href: "/create", icon: PlusCircleIcon, current: false },
+  { name: "Messages", href: "messages", icon: ChatBubbleLeftIcon, current: false },
   { name: "My Bounties", href: "#", icon: UserIcon, current: false },
   { name: "Relays", href: "#", icon: ServerStackIcon, current: false },
 ];
