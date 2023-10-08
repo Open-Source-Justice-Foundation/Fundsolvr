@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { getTagValues } from "@/app/lib/utils";
 import { useProfileStore } from "@/app/stores/profileStore";
 import { useRelayStore } from "@/app/stores/relayStore";
-import { PaperAirplaneIcon, UserPlusIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, PaperAirplaneIcon, UserPlusIcon } from "@heroicons/react/24/outline";
 import { nip19 } from "nostr-tools";
 import { Event } from "nostr-tools";
 import { AddressPointer } from "nostr-tools/lib/nip19";
@@ -73,11 +73,15 @@ export default function BountyPage() {
   }, [naddrPointer]);
 
   return (
-    <div className="lg:pl-64 pb-80">
+    <div className="lg:pl-64">
       {bountyEvent && (
         <div className="mx-auto max-w-3xl">
+          <button className="flex items-center gap-x-2 rounded-lg bg-gray-800 px-3 py-2 text-sm font-medium text-gray-200">
+            <ArrowLeftIcon className="h-4 w-4" />
+            Back to all Bounties
+          </button>
           <div className="flex flex-col gap-6 border-b border-gray-600 pb-8">
-            <div className="mt-10 flex items-center justify-between">
+            <div className="mt-6 flex items-center justify-between">
               <div className="flex items-center gap-2 text-3xl text-white">
                 <span className="text-green-300">Earn</span>
 
