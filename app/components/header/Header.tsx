@@ -18,7 +18,7 @@ export default function Header() {
       </button>
 
       <div className="flex flex-1 justify-end gap-x-4 self-stretch lg:gap-x-6">
-        <div className="flex items-center gap-x-4 lg:gap-x-6">
+        <div className="flex items-center gap-x-4 lg:gap-x-6 pr-4">
           <Login>
             <div className="flex flex-1 justify-end">
               <a href="#" className="dark:text-smoke-100 text-sm font-semibold leading-6 text-gray-200">

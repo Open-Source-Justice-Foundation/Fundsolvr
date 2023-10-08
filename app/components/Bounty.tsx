@@ -34,6 +34,7 @@ export default function Bounty({ event }: Props) {
     const identifier = getTagValues("d", event.tags);
 
     // TODO: handle relays
+    // TODO: add tag for applicacants
     const addressPointer: AddressPointer = {
       identifier: identifier,
       pubkey: event.pubkey,
