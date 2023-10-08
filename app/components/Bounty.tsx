@@ -57,7 +57,7 @@ export default function Bounty({ event }: Props) {
       <tr key={event.id} className="group cursor-pointer hover:bg-gray-700/50" onClick={routeBounty}>
         <td className="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8">
           <div className="flex gap-x-3">
-            <div className="text-sm leading-6 text-gray-100 group-hover-underline">{getTagValues("title", event.tags)}</div>
+            <div className="group-hover-underline text-sm leading-6 text-gray-100">{getTagValues("title", event.tags)}</div>
           </div>
         </td>
         <td className="hidden py-4 pl-0 pr-4 text-sm leading-6 text-gray-100 sm:table-cell sm:pr-8">
