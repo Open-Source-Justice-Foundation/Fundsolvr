@@ -93,7 +93,7 @@ export default function Bounties() {
         </thead>
         <tbody className="divide-y divide-gray-700">
           {bountyEvents && bountyEvents.map((event) => (
-            <Bounty event={event} />
+            <Bounty key={event.id} event={event} />
           ))}
         </tbody>
       </table>
