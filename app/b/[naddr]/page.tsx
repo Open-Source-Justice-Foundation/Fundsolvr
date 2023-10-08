@@ -110,22 +110,16 @@ export default function BountyPage() {
                 </div>
 
                 <div className="flex gap-x-2">
-                  <button className="bg-gray-700 text-white rounded-lg px-2">
-
-                  <PaperAirplaneIcon className="h-5 w-5" />
-
+                  <button className="rounded-lg bg-gray-700 px-2 text-white">
+                    <PaperAirplaneIcon className="h-5 w-5" />
                   </button>
 
-                <button className="flex items-center gap-x-2 text-sm font-medium text-white bg-blue-500 rounded-lg px-2">
-                  <UserPlusIcon className="h-5 w-5" />
-                  Apply
-
-                </button>
+                  <button className="flex items-center gap-x-2 rounded-lg bg-blue-500 px-2 text-sm font-medium text-white">
+                    <UserPlusIcon className="h-5 w-5" />
+                    Apply
+                  </button>
                 </div>
-
-
               </div>
-
             </div>
           </div>
 
