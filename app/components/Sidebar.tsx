@@ -4,7 +4,6 @@ import { Fragment, useEffect, useState } from "react";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
 import { useRouter } from "next/navigation";
 
 import useSidebarStore from "@/app/stores/sidebarStore";
@@ -112,31 +111,33 @@ export default function Sidebar() {
                         <ul role="list" className="-mx-2 space-y-1">
                           {navigation.length > 0 &&
                             navigation.map((item) => (
-                              <li key={item.name}>
-                                <div
-                                  onClick={() => navigateToCreate(item.href)}
-                                  className={classNames(
-                                    pathname === item.href || item.matchPattern.test(pathname)
-                                      ? "bg-gray-800 text-white"
-                                      : "text-gray-400 hover:bg-gray-800 hover:text-white",
-                                    "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
-                                  )}
-                                >
-                                  <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
-                                  {item.name}
-                                </div>
+                              <li key={item.name} onClick={() => toggleSidebar()}>
+                                <Link href={item.href}>
+                                  <div
+                                    // onClick={() => navigateToCreate(item.href)}
+                                    className={classNames(
+                                      pathname === item.href || item.matchPattern.test(pathname)
+                                        ? "bg-gray-800 text-white"
+                                        : "text-gray-400 hover:bg-gray-800 hover:text-white",
+                                      "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+                                    )}
+                                  >
+                                    <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
+                                    {item.name}
+                                  </div>
+                                </Link>
                               </li>
                             ))}
                         </ul>
                       </li>
                       <li className="mt-auto">
-                        <a
+                        <Link
                           href="#"
                           className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-700 hover:text-white"
                         >
-                          <Cog6ToothIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
-                          Settings
-                        </a>
+                          <ServerStackIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
+                          Relays
+                        </Link>
                       </li>
                     </ul>
                   </nav>
@@ -167,30 +168,31 @@ export default function Sidebar() {
                 <ul role="list" className="-mx-2 space-y-1">
                   {navigation.map((item) => (
                     <li key={item.name}>
-                      <a
-                        href={item.href}
-                        className={classNames(
-                          pathname === item.href || item.matchPattern.test(pathname)
-                            ? "bg-gray-800 text-white"
-                            : "text-gray-400 hover:bg-gray-800 hover:text-white",
-                          "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
-                        )}
-                      >
-                        <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
-                        {item.name}
-                      </a>
+                      <Link href={item.href}>
+                        <div
+                          className={classNames(
+                            pathname === item.href || item.matchPattern.test(pathname)
+                              ? "bg-gray-800 text-white"
+                              : "text-gray-400 hover:bg-gray-800 hover:text-white",
+                            "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+                          )}
+                        >
+                          <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
+                          {item.name}
+                        </div>
+                      </Link>
                     </li>
                   ))}
                 </ul>
               </li>
               <li className="mt-auto">
-                <a
+                <Link
                   href="#"
                   className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
                 >
                   <ServerStackIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
                   Relays
-                </a>
+                </Link>
               </li>
             </ul>
           </nav>
