@@ -74,11 +74,11 @@ export default function CreateBounty() {
 
   return (
     <div className="lg:pl-72">
-      <main className="mx-auto max-w-3xl pt-4 pb-24">
+      <main className="mx-auto max-w-3xl pb-24 pt-4">
         <div className="px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-gray-100">Create Bounty</h1>
           <div className="mt-8">
-            <h2 className="text-gray-100">Title</h2>
+            <h2 className="font-semibold text-gray-100">Title</h2>
             <input
               type="text"
               value={title}
@@ -86,7 +86,7 @@ export default function CreateBounty() {
               className="mt-4 w-full rounded border border-gray-600 bg-gray-700 p-2 text-gray-100"
               placeholder="Bounty title"
             />
-            <h2 className="pb-4 pt-8 text-gray-100">Content</h2>
+            <h2 className="pb-4 pt-8 font-semibold text-gray-100">Content</h2>
             <MdEditor
               config={{
                 view: {
@@ -103,7 +103,7 @@ export default function CreateBounty() {
               onChange={handleEditorChange}
             />
 
-            <h2 className="pt-8 text-gray-100">Reward (sats)</h2>
+            <h2 className="pt-8 font-semibold text-gray-100">Reward (sats)</h2>
             <input
               type="text"
               value={reward}
