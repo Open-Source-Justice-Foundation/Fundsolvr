@@ -78,7 +78,7 @@ export default function BountyPage() {
       {bountyEvent && (
         <div className="mx-auto max-w-3xl">
           <Link href="/">
-            <button className="flex items-center gap-x-2 rounded-lg bg-gray-800 px-3 py-2 text-sm font-medium text-gray-200">
+            <button className="flex items-center gap-x-2 rounded-lg bg-gray-800 px-3 py-2 text-sm font-medium text-gray-200 hover:bg-gray-700/50">
               <ArrowLeftIcon className="h-4 w-4" />
               Back to all Bounties
             </button>
@@ -117,11 +117,11 @@ export default function BountyPage() {
                 </div>
 
                 <div className="flex gap-x-2">
-                  <button className="rounded-lg bg-gray-700 px-2 text-white">
+                  <button className="rounded-lg bg-gray-700 px-2 text-white hover:bg-gray-600/50">
                     <PaperAirplaneIcon className="h-5 w-5" />
                   </button>
 
-                  <button className="flex items-center gap-x-2 rounded-lg bg-blue-500 px-2 text-sm font-medium text-white">
+                  <button className="flex items-center gap-x-2 rounded-lg bg-blue-500 px-2 text-sm font-medium text-white hover:bg-blue-500/90">
                     <UserPlusIcon className="h-5 w-5" />
                     Apply
                   </button>
