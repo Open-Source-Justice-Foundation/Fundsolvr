@@ -74,7 +74,7 @@ export default function CreateBounty() {
 
   return (
     <div className="lg:pl-72">
-      <main className="mx-auto max-w-3xl py-4">
+      <main className="mx-auto max-w-3xl pt-4 pb-24">
         <div className="px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-gray-100">Create Bounty</h1>
           <div className="mt-8">
