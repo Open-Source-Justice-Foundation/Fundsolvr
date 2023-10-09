@@ -82,7 +82,7 @@ export default function Bounty({ event }: Props) {
             <div className={classNames(statuses["Open"], "flex-none rounded-full p-1")}>
               <div className="h-1.5 w-1.5 rounded-full bg-current" />
             </div>
-            <div className="hidden text-white sm:block">{"open"}</div>
+            <div className="hidden text-white sm:block">{"Open"}</div>
           </div>
         </td>
         <td className="hidden py-4 pl-0 pr-4 text-right text-sm leading-6 text-gray-400 xl:table-cell sm:pr-6 lg:pr-8">
