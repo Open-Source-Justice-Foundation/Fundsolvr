@@ -52,7 +52,7 @@ export default function Bounties() {
         setProfile(profile);
       };
 
-      const onEOSE = () => {};
+      const onEOSE = () => { };
 
       subscribe([relayUrl], userFilter, onEvent, onEOSE);
     };
@@ -61,7 +61,7 @@ export default function Bounties() {
   }, []);
 
   return (
-    <div className="rounded-lg py-10 items-center justify-center flex flex-col gap-y-8">
+    <div className="flex flex-col items-center justify-center gap-y-8 rounded-lg py-10">
       <table className="mt-6 w-full whitespace-nowrap text-left">
         <colgroup>
           <col className="w-full sm:w-4/12" />
@@ -78,13 +78,13 @@ export default function Bounties() {
             <th scope="col" className="py-2 pl-0 pr-8 font-semibold sm:table-cell">
               Value
             </th>
-            <th scope="col" className="hidden py-2 pl-0 pr-4 text-right font-semibold sm:pr-8 sm:text-left sm:table-cell lg:pr-8">
+            <th scope="col" className="hidden py-2 pl-0 pr-4 text-right font-semibold sm:table-cell sm:pr-8 sm:text-left lg:pr-8">
               Author/Company
             </th>
             <th scope="col" className="hidden py-2 pl-0 pr-8 font-semibold lg:table-cell lg:pr-8">
               Status
             </th>
-            <th scope="col" className="hidden py-2 pl-0 pr-4 text-right font-semibold xl:table-cell sm:pr-6 lg:pr-8">
+            <th scope="col" className="hidden py-2 pl-0 pr-4 text-right font-semibold sm:pr-6 lg:pr-8 xl:table-cell">
               Posted Date
             </th>
           </tr>
@@ -93,7 +93,9 @@ export default function Bounties() {
           {bountyEvents && bountyEvents.map((event) => <Bounty key={event.id} event={event} />)}
         </tbody>
       </table>
-      <button className="flex items-center gap-x-2 rounded-lg bg-blue-700 px-3 py-2 text-sm font-medium text-gray-200">Load More</button>
+      <button className="flex items-center gap-x-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-gray-200 hover:bg-blue-600/90">
+        Load More
+      </button>
     </div>
   );
 }
