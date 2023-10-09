@@ -1,5 +1,8 @@
-"use client"
+"use client";
+
 import { Fragment } from "react";
+
+import Link from "next/link";
 
 import useSidebarStore from "@/app/stores/sidebarStore";
 import { Dialog, Transition } from "@headlessui/react";
@@ -73,14 +76,16 @@ export default function Sidebar() {
                 </Transition.Child>
                 {/* Sidebar component, swap this element with another sidebar if you like */}
                 <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4 ring-1 ring-white/10">
-                  <div className="flex h-16 shrink-0 items-center gap-2">
-                    <img
-                      className="h-12 w-auto"
-                      src="https://user-images.githubusercontent.com/29136904/272774397-7a9461f7-eda2-46c7-9564-1dd90f6cdab2.png"
-                      alt="Your Company"
-                    />
-                    <h1 className="text-lg font-medium text-white">resolvr</h1>
-                  </div>
+                  <Link href="/">
+                    <div className="flex h-16 shrink-0 cursor-pointer items-center gap-2">
+                      <img
+                        className="h-12 w-auto"
+                        src="https://user-images.githubusercontent.com/29136904/272774397-7a9461f7-eda2-46c7-9564-1dd90f6cdab2.png"
+                        alt="Your Company"
+                      />
+                      <h1 className="text-lg font-medium text-white">resolvr</h1>
+                    </div>
+                  </Link>
                   <nav className="flex flex-1 flex-col">
                     <ul role="list" className="flex flex-1 flex-col gap-y-7">
                       <li>
@@ -123,14 +128,16 @@ export default function Sidebar() {
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
         {/* Sidebar component, swap this element with another sidebar if you like */}
         <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4">
-          <div className="flex h-16 shrink-0 items-center gap-2">
-            <img
-              className="h-16 w-auto"
-              src="https://user-images.githubusercontent.com/29136904/272774397-7a9461f7-eda2-46c7-9564-1dd90f6cdab2.png"
-              alt="Your Company"
-            />
-            <h1 className="text-xl font-medium text-white">resolvr</h1>
-          </div>
+          <Link href="/">
+            <div className="flex h-16 shrink-0 cursor-pointer items-center gap-2">
+              <img
+                className="h-16 w-auto"
+                src="https://user-images.githubusercontent.com/29136904/272774397-7a9461f7-eda2-46c7-9564-1dd90f6cdab2.png"
+                alt="Your Company"
+              />
+              <h1 className="text-xl font-medium text-white">resolvr</h1>
+            </div>
+          </Link>
           <nav className="flex flex-1 flex-col">
             <ul role="list" className="flex flex-1 flex-col gap-y-7">
               <li>
