@@ -1,8 +1,9 @@
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import useSidebarStore from "@/app/stores/sidebarStore";
 import { Dialog, Transition } from "@headlessui/react";
@@ -17,11 +18,11 @@ import {
 } from "@heroicons/react/24/outline";
 
 const navigation = [
-  { name: "Home", href: "/", icon: HomeIcon, current: true },
-  { name: "Create", href: "/create", icon: PlusCircleIcon, current: false },
-  { name: "Messages", href: "messages", icon: ChatBubbleLeftIcon, current: false },
-  { name: "My Bounties", href: "#", icon: UserIcon, current: false },
-  { name: "Relays", href: "#", icon: ServerStackIcon, current: false },
+  { name: "Home", href: "/", icon: HomeIcon, current: true, matchPattern: /^\/b\// },
+  { name: "Create", href: "/create", icon: PlusCircleIcon, current: false, matchPattern: /^$/ },
+  { name: "Messages", href: "messages", icon: ChatBubbleLeftIcon, current: false, matchPattern: /^\/m\// },
+  { name: "My Bounties", href: "/u", icon: UserIcon, current: false, matchPattern: /^\/u\// },
+  { name: "Relays", href: "#", icon: ServerStackIcon, current: false, matchPattern: /^$/ },
 ];
 
 function classNames(...classes: any[]) {
@@ -30,6 +31,12 @@ function classNames(...classes: any[]) {
 
 export default function Sidebar() {
   const { sidebarOpen, toggleSidebar } = useSidebarStore();
+
+  const pathname = usePathname();
+
+  useEffect(() => {
+    console.log("pathname", pathname);
+  }, [pathname]);
 
   return (
     <>
@@ -95,7 +102,7 @@ export default function Sidebar() {
                               <a
                                 href={item.href}
                                 className={classNames(
-                                  item.current ? "bg-gray-800 text-white" : "text-gray-400 hover:bg-gray-800 hover:text-white",
+                                  pathname === item.href || item.matchPattern.test(pathname) ? "bg-gray-800 text-white" : "text-gray-400 hover:bg-gray-800 hover:text-white",
                                   "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
                                 )}
                               >
@@ -147,7 +154,7 @@ export default function Sidebar() {
                       <a
                         href={item.href}
                         className={classNames(
-                          item.current ? "bg-gray-800 text-white" : "text-gray-400 hover:bg-gray-800 hover:text-white",
+                          pathname === item.href || item.matchPattern.test(pathname) ? "bg-gray-800 text-white" : "text-gray-400 hover:bg-gray-800 hover:text-white",
                           "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
                         )}
                       >
