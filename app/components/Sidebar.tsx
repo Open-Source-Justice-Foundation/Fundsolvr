@@ -1,9 +1,11 @@
 "use client";
 
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
+import { useRouter } from "next/navigation";
 
 import useSidebarStore from "@/app/stores/sidebarStore";
 import { Dialog, Transition } from "@headlessui/react";
@@ -16,27 +18,38 @@ import {
   UserIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { nip19 } from "nostr-tools";
 
-const navigation = [
-  { name: "Home", href: "/", icon: HomeIcon, current: true, matchPattern: /^\/b\// },
-  { name: "Create", href: "/create", icon: PlusCircleIcon, current: false, matchPattern: /^$/ },
-  { name: "Messages", href: "messages", icon: ChatBubbleLeftIcon, current: false, matchPattern: /^\/m\// },
-  { name: "My Bounties", href: "/u", icon: UserIcon, current: false, matchPattern: /^\/u\// },
-  { name: "Relays", href: "#", icon: ServerStackIcon, current: false, matchPattern: /^$/ },
-];
+import { useUserProfileStore } from "../stores/userProfileStore";
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function Sidebar() {
+  const { getUserPublicKey } = useUserProfileStore();
   const { sidebarOpen, toggleSidebar } = useSidebarStore();
 
+  const [publicKey, setPublicKey] = useState<String>("");
   const pathname = usePathname();
 
+  const router = useRouter();
+
+  function navigateToCreate(href: string) {
+    router.push(href);
+  }
+
+  const navigation = [
+    { name: "Home", href: "/", icon: HomeIcon, current: true, matchPattern: /^\/b\// },
+    { name: "Create", href: "/create", icon: PlusCircleIcon, current: false, matchPattern: /^$/ },
+    // { name: "Messages", href: "messages", icon: ChatBubbleLeftIcon, current: false, matchPattern: /^\/m\// },
+    { name: "Profile", href: `/u/${publicKey}`, icon: UserIcon, current: false, matchPattern: /^$/ },
+    { name: "Settings", href: "/settings", icon: Cog6ToothIcon, current: false, matchPattern: /^$/ },
+  ];
+
   useEffect(() => {
-    console.log("pathname", pathname);
-  }, [pathname]);
+    setPublicKey(nip19.npubEncode(getUserPublicKey()));
+  }, []);
 
   return (
     <>
@@ -97,20 +110,23 @@ export default function Sidebar() {
                     <ul role="list" className="flex flex-1 flex-col gap-y-7">
                       <li>
                         <ul role="list" className="-mx-2 space-y-1">
-                          {navigation.map((item) => (
-                            <li key={item.name}>
-                              <a
-                                href={item.href}
-                                className={classNames(
-                                  pathname === item.href || item.matchPattern.test(pathname) ? "bg-gray-800 text-white" : "text-gray-400 hover:bg-gray-800 hover:text-white",
-                                  "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
-                                )}
-                              >
-                                <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
-                                {item.name}
-                              </a>
-                            </li>
-                          ))}
+                          {navigation.length > 0 &&
+                            navigation.map((item) => (
+                              <li key={item.name}>
+                                <div
+                                  onClick={() => navigateToCreate(item.href)}
+                                  className={classNames(
+                                    pathname === item.href || item.matchPattern.test(pathname)
+                                      ? "bg-gray-800 text-white"
+                                      : "text-gray-400 hover:bg-gray-800 hover:text-white",
+                                    "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+                                  )}
+                                >
+                                  <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
+                                  {item.name}
+                                </div>
+                              </li>
+                            ))}
                         </ul>
                       </li>
                       <li className="mt-auto">
@@ -154,7 +170,9 @@ export default function Sidebar() {
                       <a
                         href={item.href}
                         className={classNames(
-                          pathname === item.href || item.matchPattern.test(pathname) ? "bg-gray-800 text-white" : "text-gray-400 hover:bg-gray-800 hover:text-white",
+                          pathname === item.href || item.matchPattern.test(pathname)
+                            ? "bg-gray-800 text-white"
+                            : "text-gray-400 hover:bg-gray-800 hover:text-white",
                           "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
                         )}
                       >
@@ -170,8 +188,8 @@ export default function Sidebar() {
                   href="#"
                   className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
                 >
-                  <Cog6ToothIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
-                  Settings
+                  <ServerStackIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
+                  Relays
                 </a>
               </li>
             </ul>

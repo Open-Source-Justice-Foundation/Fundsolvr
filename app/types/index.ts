@@ -18,10 +18,14 @@ export type Profile = {
   publicKey: string;
   about: string;
   lud06: string;
+  lud16: string;
   name: string;
   nip05: string;
   picture: string;
   website: string;
+  github: string;
+  publicKeyGistId: string;
+  banner: string;
 };
 
 export type RelayMenuActiveTab = "Read From" | "Post To" | "Settings" | "Discover";

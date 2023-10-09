@@ -12,7 +12,7 @@ import UserMenu from "../menus/UserMenu";
 
 export default function UserProfile() {
   const { subscribe, activeRelay, connect, relayUrl, setRelayUrl } = useRelayStore();
-  const { getUserPublicKey, getUserProfile, setUserProfile } = useUserProfileStore();
+  const { getUserPublicKey, getUserProfile, setUserProfile, setUserEvent } = useUserProfileStore();
   const [currentProfile, setCurrentProfile] = useState<Profile>();
 
   useEffect(() => {
@@ -46,6 +46,7 @@ export default function UserProfile() {
 
     const onEvent = (event: Event) => {
       console.log("event", event);
+      setUserEvent(event);
       const eventContent: EventProfileContent = JSON.parse(event.content);
 
       const profile: Profile = {
@@ -57,6 +58,9 @@ export default function UserProfile() {
         nip05: eventContent.nip05 || "",
         website: eventContent.website || "",
         lud06: eventContent.lud06 || "",
+        lud16: eventContent.lud16 || "",
+        banner: eventContent.banner || "",
+        github: eventContent.github || "",
       };
 
       setUserProfile(relayUrl, profile);

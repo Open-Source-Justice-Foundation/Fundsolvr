@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
 
 import type { Profile } from "../types";
+import type { Event } from "nostr-tools";
 
 interface CurrentUserState {
   userPublicKey: string;
@@ -11,6 +12,9 @@ interface CurrentUserState {
   setUserProfile: (relay: string, profile: Profile) => void;
   getUserProfile: (relay: string) => Profile;
   clearUserProfile: () => void;
+  userEvent: Event | null;
+  setUserEvent: (userEvent: Event) => void;
+  getUserEvent: () => Event | null;
 }
 
 export const useUserProfileStore = create<CurrentUserState>()(
@@ -24,6 +28,9 @@ export const useUserProfileStore = create<CurrentUserState>()(
         setUserProfile: (relay, userProfile) => set((state) => ({ userProfile: { ...state.userProfile, [relay]: userProfile } })),
         getUserProfile: (relay) => get().userProfile && get().userProfile[relay],
         clearUserProfile: () => set({ userProfile: {} }),
+        userEvent: null,
+        setUserEvent: (userEvent) => set({ userEvent }),
+        getUserEvent: () => get().userEvent,
       }),
       {
         name: "notebin-login-storage",
