@@ -17,7 +17,7 @@ import { useBountyEventStore } from "@/app/stores/eventStore";
 export default function BountyPage() {
   const { subscribe, relayUrl } = useRelayStore();
   const { getProfile } = useProfileStore();
-  const { cachedBountyEvent } = useBountyEventStore();
+  const { cachedBountyEvent, setCachedBountyEvent } = useBountyEventStore();
 
   const [naddr, setNaddr] = useState<string>("");
   const [naddrPointer, setNaddrPointer] = useState<AddressPointer>();
@@ -42,6 +42,7 @@ export default function BountyPage() {
 
         if (cachedBountyEvent) {
           setBountyEvent(cachedBountyEvent);
+          setCachedBountyEvent(null);
           return;
         }
 

@@ -8,7 +8,7 @@ interface BountyEventState {
   setBountyEvents: (bountyEvents: Array<Event>) => void;
   getBountyEvents: () => Array<Event>;
   cachedBountyEvent: Event | null;
-  setCachedBountyEvent: (bounty: Event) => void;
+  setCachedBountyEvent: (bounty: Event | null) => void;
   getCachedBountyEvent: () => Event | null;
 }
 
