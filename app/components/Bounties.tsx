@@ -15,6 +15,11 @@ export default function Bounties() {
   const { setProfile } = useProfileStore();
   const { setBountyEvents, getBountyEvents, bountyEvents } = useBountyEventStore();
   // const [localBountyEvents, setLocalBountyEvents] = useState<Event[]>([]);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const bountyFilter = {
     kinds: [30050],
@@ -99,9 +104,11 @@ export default function Bounties() {
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-700">
-          {bountyEvents && bountyEvents.map((event) => <Bounty key={event.id} event={event} />)}
-        </tbody>
+        {mounted && (
+          <tbody className="divide-y divide-gray-700">
+            {bountyEvents && bountyEvents.map((event) => <Bounty key={event.id} event={event} />)}
+          </tbody>
+        )}
       </table>
       <button className="flex items-center gap-x-2 rounded-lg bg-indigo-500/80 px-3 py-2 text-sm font-medium text-gray-200 hover:bg-indigo-500">
         Load More
