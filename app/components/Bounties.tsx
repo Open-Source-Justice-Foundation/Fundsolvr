@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import type { Event } from "nostr-tools";
 
+import { useBountyEventStore } from "../stores/eventStore";
 import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
 import { Profile } from "../types";
@@ -12,7 +13,8 @@ import Bounty from "./Bounty";
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
   const { setProfile } = useProfileStore();
-  const [bountyEvents, setBountyEvents] = useState<Event[]>([]);
+  const { setBountyEvents, getBountyEvents, bountyEvents } = useBountyEventStore();
+  // const [localBountyEvents, setLocalBountyEvents] = useState<Event[]>([]);
 
   const bountyFilter = {
     kinds: [30050],
@@ -20,6 +22,10 @@ export default function Bounties() {
   };
 
   useEffect(() => {
+    if (getBountyEvents().length > 0) {
+      return;
+    }
+
     const events: Event[] = [];
     const pubkeys = new Set();
 
@@ -43,10 +49,14 @@ export default function Bounties() {
           publicKey: event.pubkey,
           about: profileContent.about,
           lud06: profileContent.lud06,
+          lud16: profileContent.lud16,
           name: profileContent.name,
           nip05: profileContent.nip05,
           picture: profileContent.picture,
+          banner: profileContent.banner,
           website: profileContent.website,
+          github: profileContent.github,
+          publicKeyGistId: profileContent.publicKeyGistId,
         };
 
         setProfile(profile);
@@ -93,7 +103,7 @@ export default function Bounties() {
           {bountyEvents && bountyEvents.map((event) => <Bounty key={event.id} event={event} />)}
         </tbody>
       </table>
-      <button className="flex items-center gap-x-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-gray-200 hover:bg-blue-600/90">
+      <button className="flex items-center gap-x-2 rounded-lg bg-indigo-500/80 px-3 py-2 text-sm font-medium text-gray-200 hover:bg-indigo-500">
         Load More
       </button>
     </div>

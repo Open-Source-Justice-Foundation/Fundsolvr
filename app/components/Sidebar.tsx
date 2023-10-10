@@ -34,14 +34,13 @@ export default function Sidebar() {
 
   const router = useRouter();
 
-  function navigateToCreate(href: string) {
-    router.push(href);
+  function navigateToCreate() {
+    router.push("/create");
   }
 
   const navigation = [
     { name: "Home", href: "/", icon: HomeIcon, current: true, matchPattern: /^\/b\// },
-    { name: "Create", href: "/create", icon: PlusCircleIcon, current: false, matchPattern: /^$/ },
-    // { name: "Messages", href: "messages", icon: ChatBubbleLeftIcon, current: false, matchPattern: /^\/m\// },
+    { name: "Messages", href: "messages", icon: ChatBubbleLeftIcon, current: false, matchPattern: /^\/m\// },
     { name: "Profile", href: `/u/${publicKey}`, icon: UserIcon, current: false, matchPattern: /^$/ },
     { name: "Settings", href: "/settings", icon: Cog6ToothIcon, current: false, matchPattern: /^$/ },
   ];
@@ -114,7 +113,6 @@ export default function Sidebar() {
                               <li key={item.name} onClick={() => toggleSidebar()}>
                                 <Link href={item.href}>
                                   <div
-                                    // onClick={() => navigateToCreate(item.href)}
                                     className={classNames(
                                       pathname === item.href || item.matchPattern.test(pathname)
                                         ? "bg-gray-800 text-white"
@@ -129,6 +127,13 @@ export default function Sidebar() {
                               </li>
                             ))}
                         </ul>
+
+                        <button
+                          className="group mt-4 flex w-full justify-center gap-x-3 rounded-md bg-indigo-600/90 p-2 text-sm font-semibold leading-6 text-gray-100 hover:bg-indigo-600 hover:text-white"
+                          onClick={navigateToCreate}
+                        >
+                          Create Bounty
+                        </button>
                       </li>
                       <li className="mt-auto">
                         <Link
@@ -162,10 +167,10 @@ export default function Sidebar() {
               <h1 className="text-xl font-medium text-white">resolvr</h1>
             </div>
           </Link>
-          <nav className="flex flex-1 flex-col">
+          <nav className="flex flex-1 flex-col px-6">
             <ul role="list" className="flex flex-1 flex-col gap-y-7">
               <li>
-                <ul role="list" className="-mx-2 space-y-1">
+                <ul role="list" className="-mx-2 space-y-3">
                   {navigation.map((item) => (
                     <li key={item.name}>
                       <Link href={item.href}>
@@ -184,6 +189,13 @@ export default function Sidebar() {
                     </li>
                   ))}
                 </ul>
+
+                <button
+                  className="group mt-4 flex w-full justify-center gap-x-3 rounded-md bg-indigo-600/90 p-2 text-sm font-semibold leading-6 text-gray-100 hover:bg-indigo-600 hover:text-white"
+                  onClick={navigateToCreate}
+                >
+                  Create Bounty
+                </button>
               </li>
               <li className="mt-auto">
                 <Link

@@ -117,11 +117,11 @@ export default function BountyPage() {
                 </div>
 
                 <div className="flex gap-x-2">
-                  <button className="rounded-lg bg-gray-700 px-2 text-white hover:bg-gray-600/50">
+                  <button className="rounded-lg bg-gray-700/80 px-2 text-white hover:bg-gray-700">
                     <PaperAirplaneIcon className="h-5 w-5" />
                   </button>
 
-                  <button className="flex items-center gap-x-2 rounded-lg bg-blue-500 px-2 text-sm font-medium text-white hover:bg-blue-500/90">
+                  <button className="flex items-center gap-x-2 rounded-lg bg-indigo-500/80 px-2 text-sm font-medium text-white hover:bg-indigo-500">
                     <UserPlusIcon className="h-5 w-5" />
                     Apply
                   </button>
