@@ -7,9 +7,9 @@ interface BountyEventState {
   bountyEvents: Array<Event>;
   setBountyEvents: (bountyEvents: Array<Event>) => void;
   getBountyEvents: () => Array<Event>;
-  cachedBounty: Event | null;
-  setCachedBounty: (bounty: Event) => void;
-  getCachedBounty: () => Event | null;
+  cachedBountyEvent: Event | null;
+  setCachedBountyEvent: (bounty: Event) => void;
+  getCachedBountyEvent: () => Event | null;
 }
 
 export const useBountyEventStore = create<BountyEventState>()(
@@ -19,9 +19,9 @@ export const useBountyEventStore = create<BountyEventState>()(
         bountyEvents: [],
         setBountyEvents: (bountyEvents) => set({ bountyEvents }),
         getBountyEvents: () => get().bountyEvents,
-        cachedBounty: null,
-        setCachedBounty: (bounty) => set({ cachedBounty: bounty }),
-        getCachedBounty: () => get().cachedBounty,
+        cachedBountyEvent: null,
+        setCachedBountyEvent: (bounty) => set({ cachedBountyEvent: bounty }),
+        getCachedBountyEvent: () => get().cachedBountyEvent,
       }),
       {
         name: "resolvr-bounty-event-storage",

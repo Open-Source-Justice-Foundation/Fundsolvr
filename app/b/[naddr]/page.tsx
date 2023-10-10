@@ -12,10 +12,12 @@ import { ArrowLeftIcon, PaperAirplaneIcon, UserPlusIcon } from "@heroicons/react
 import { nip19 } from "nostr-tools";
 import { Event } from "nostr-tools";
 import { AddressPointer } from "nostr-tools/lib/nip19";
+import { useBountyEventStore } from "@/app/stores/eventStore";
 
 export default function BountyPage() {
   const { subscribe, relayUrl } = useRelayStore();
   const { getProfile } = useProfileStore();
+  const { cachedBountyEvent } = useBountyEventStore();
 
   const [naddr, setNaddr] = useState<string>("");
   const [naddrPointer, setNaddrPointer] = useState<AddressPointer>();
@@ -37,6 +39,13 @@ export default function BountyPage() {
       setNaddrPointer(naddr_data);
 
       if (naddrPointer) {
+
+        if (cachedBountyEvent) {
+          setBountyEvent(cachedBountyEvent);
+          return;
+        }
+
+
         const onEvent = (event: any) => {
           console.log("bounty event", event);
           setBountyEvent(event);

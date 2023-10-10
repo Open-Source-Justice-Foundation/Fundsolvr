@@ -7,6 +7,7 @@ import type { Event } from "nostr-tools";
 import { AddressPointer } from "nostr-tools/lib/nip19";
 
 import { getTagValues } from "../lib/utils";
+import { useBountyEventStore } from "../stores/eventStore";
 import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
 
@@ -27,6 +28,7 @@ interface Props {
 export default function Bounty({ event }: Props) {
   const { relayUrl } = useRelayStore();
   const { getProfile } = useProfileStore();
+  const { setCachedBountyEvent } = useBountyEventStore();
 
   const router = useRouter();
 
@@ -42,6 +44,7 @@ export default function Bounty({ event }: Props) {
       relays: [relayUrl],
     };
 
+    setCachedBountyEvent(event);
     router.push("/b/" + nip19.naddrEncode(addressPointer));
   };
 
@@ -85,7 +88,7 @@ export default function Bounty({ event }: Props) {
             <div className="hidden text-white sm:block">{"Open"}</div>
           </div>
         </td>
-        <td className="hidden py-4 pl-0 pr-4 text-right text-sm leading-6 text-gray-400 xl:table-cell sm:pr-6 lg:pr-8">
+        <td className="hidden py-4 pl-0 pr-4 text-right text-sm leading-6 text-gray-400 sm:pr-6 lg:pr-8 xl:table-cell">
           <time>{new Date(event.created_at * 1000).toDateString()}</time>
         </td>
       </tr>
