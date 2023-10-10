@@ -6,7 +6,6 @@ import { useUserProfileStore } from "@/app/stores/userProfileStore";
 import type { Event } from "nostr-tools";
 
 import { shortenHash } from "../../lib/utils";
-
 import { EventProfileContent, Profile } from "../../types";
 import UserMenu from "../menus/UserMenu";
 
@@ -61,13 +60,14 @@ export default function UserProfile() {
         lud16: eventContent.lud16 || "",
         banner: eventContent.banner || "",
         github: eventContent.github || "",
+        publicKeyGistId: eventContent.publicKeyGistId || "",
       };
 
       setUserProfile(relayUrl, profile);
       setCurrentProfile(profile);
     };
 
-    const onEOSE = () => {};
+    const onEOSE = () => { };
 
     subscribe([relayUrl], filter, onEvent, onEOSE);
   };
@@ -78,7 +78,9 @@ export default function UserProfile() {
 
   return (
     <>
-      <UserMenu>{currentProfile && <img className="inline-block h-8 w-8 rounded-full mt-2" src={currentProfile.picture} alt="" />}</UserMenu>
+      <UserMenu>
+        {currentProfile && <img className="mt-2 inline-block h-8 w-8 rounded-full" src={currentProfile.picture} alt="" />}
+      </UserMenu>
     </>
   );
 }
