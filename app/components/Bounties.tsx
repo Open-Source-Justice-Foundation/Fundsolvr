@@ -9,13 +9,11 @@ import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
 import { Profile } from "../types";
 import Bounty from "./Bounty";
-import Subheader from "./header/Subheader";
 
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
   const { setProfile } = useProfileStore();
   const { setBountyEvents, getBountyEvents, bountyEvents } = useBountyEventStore();
-  // const [localBountyEvents, setLocalBountyEvents] = useState<Event[]>([]);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
