@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import useSidebarStore from "@/app/stores/sidebarStore";
+import { PlusIcon } from "@heroicons/react/20/solid";
 import { Bars3Icon, BellIcon, MoonIcon } from "@heroicons/react/24/outline";
 
 import Login from "./Login";
@@ -39,9 +40,10 @@ export default function Header() {
             <div className="flex items-center gap-x-6">
               <button
                 onClick={navigateToCreate}
-                className="rounded-full bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-500"
+                className="flex items-center gap-x-2 rounded-full bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-500"
               >
-                + Bounty
+                <PlusIcon className="h-5 w-5" aria-hidden="true" />
+                Bounty
               </button>
               <MoonIcon className="h-7 w-7 text-gray-300" aria-hidden="true" />
               <BellIcon className="h-7 w-7 text-gray-300" aria-hidden="true" />
