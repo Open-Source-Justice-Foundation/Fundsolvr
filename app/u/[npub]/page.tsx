@@ -1,16 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { getTagValues } from "@/app/lib/utils";
 import { useProfileStore } from "@/app/stores/profileStore";
 import { useRelayStore } from "@/app/stores/relayStore";
-import { CheckIcon, HandThumbUpIcon, PencilSquareIcon, UserIcon } from "@heroicons/react/20/solid";
-import { nip19 } from "nostr-tools";
-import { Event } from "nostr-tools";
+import { CheckIcon, PencilSquareIcon, UserIcon } from "@heroicons/react/20/solid";
 
 const timeline = [
   {
@@ -80,7 +74,7 @@ export default function BountyPage() {
   }
 
   return (
-    <div className="pt-10 pb-20">
+    <div className="pb-20 pt-10">
       <div className="mx-auto flex h-screen w-full items-start justify-center text-sm text-gray-900 antialiased dark:text-white">
         <div className="mx-auto w-full max-w-3xl rounded-md border border-gray-600 p-4">
           <div className="mt-4 flex gap-x-4 px-4 py-3">
@@ -143,7 +137,7 @@ export default function BountyPage() {
             {/*   <div className="rounded-md border border-gray-600 p-4">Services</div> */}
             {/* </div> */}
 
-            <div className="flow-root px-16 pb-8 pt-8 border-t border-gray-600">
+            <div className="flow-root border-t border-gray-600 px-16 pb-8 pt-8">
               <ul role="list" className="-mb-8">
                 {timeline.map((event, eventIdx) => (
                   <li key={event.id}>
@@ -181,13 +175,8 @@ export default function BountyPage() {
                 ))}
               </ul>
             </div>
-
           </div>
-
-
         </div>
-
-
       </div>
     </div>
   );
