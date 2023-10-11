@@ -57,10 +57,10 @@ export default function Bounty({ event }: Props) {
           }
         `}
       </style>
-      <tr key={event.id} className="group cursor-pointer hover:bg-gray-700/50" onClick={routeBounty}>
+      <tr key={event.id} className="group cursor-pointer hover:bg-gray-700/50 relative transition ease-in-out duration-150" onClick={routeBounty}>
         <td className="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8">
           <div className="flex gap-x-3">
-            <div className="group-hover-underline leading-6 text-gray-100">{getTagValues("title", event.tags)}</div>
+            <div className="group-hover-underline leading-6 text-gray-100 transition ease-in-out duration-150">{getTagValues("title", event.tags)}</div>
           </div>
         </td>
         <td className="py-4 pl-0 pr-4 text-sm leading-6 text-gray-100 sm:table-cell sm:pr-8">
@@ -88,7 +88,7 @@ export default function Bounty({ event }: Props) {
             <div className="hidden text-white sm:block">{"Open"}</div>
           </div>
         </td>
-        <td className="text-sd hidden py-4 pl-0 pr-4 text-right leading-6 text-gray-400 sm:table-cell sm:pr-6 lg:pr-8">
+        <td className="text-sd hidden py-4 pl-0 leading-6 text-gray-400 sm:table-cell">
           <time>{new Date(event.created_at * 1000).toDateString()}</time>
         </td>
       </tr>

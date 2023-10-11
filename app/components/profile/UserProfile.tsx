@@ -79,7 +79,7 @@ export default function UserProfile() {
   return (
     <>
       <UserMenu>
-        {currentProfile && <img className="mt-2 inline-block h-10 w-10 rounded-lg" src={currentProfile.picture} alt="" />}
+        {currentProfile && <img className="mt-2 inline-block h-10 w-10 rounded-full" src={currentProfile.picture} alt="" />}
       </UserMenu>
     </>
   );

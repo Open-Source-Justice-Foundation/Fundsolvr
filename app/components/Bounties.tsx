@@ -100,18 +100,18 @@ export default function Bounties() {
             <th scope="col" className="hidden py-2 pr-8 font-semibold md:table-cell lg:pr-8">
               Status
             </th>
-            <th scope="col" className="hidden py-2 pr-4 text-right lg:w-full xl:w-fit font-semibold sm:table-cell sm:pr-6 lg:pr-8">
+            <th scope="col" className="hidden py-2 lg:w-full xl:w-fit font-semibold sm:table-cell">
               Posted Date
             </th>
           </tr>
         </thead>
         {mounted && (
-          <tbody className="divide-y divide-gray-700">
+          <tbody className="divide-y divide-gray-700/50">
             {bountyEvents && bountyEvents.map((event) => <Bounty key={event.id} event={event} />)}
           </tbody>
         )}
       </table>
-      <button className="flex items-center gap-x-2 rounded-lg bg-indigo-500/80 px-3 py-2 text-sm font-medium text-gray-200 hover:bg-indigo-500">
+      <button className="flex items-center gap-x-2 rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-gray-200 hover:bg-indigo-500">
         Load More
       </button>
     </div>
