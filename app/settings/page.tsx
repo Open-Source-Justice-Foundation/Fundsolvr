@@ -88,10 +88,10 @@ export default function Settings() {
   }, []);
 
   return (
-    <main className="container mx-auto border-x border-gray-700">
+    <main className="container mx-auto">
       {/* Settings forms */}
       <div className="divide-y divide-white/5">
-        <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-32">
           <div>
             <h2 className="text-base font-semibold leading-7 text-white">Personal Information</h2>
             <p className="mt-1 text-sm leading-6 text-gray-400">Use a permanent address where you can receive mail.</p>
@@ -184,7 +184,7 @@ export default function Settings() {
             <div className="mt-8 flex">
               <button
                 type="submit"
-                className="rounded-md bg-indigo-500/80 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
               >
                 Save
               </button>
@@ -192,7 +192,7 @@ export default function Settings() {
           </form>
         </div>
 
-        <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
+        <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-32">
           <div>
             <h2 className="text-base font-semibold leading-7 text-white">Connect your Github</h2>
             <p className="mt-1 text-sm leading-6 text-gray-400">Please enter a public gist id containing your nostr public key.</p>
@@ -239,7 +239,7 @@ export default function Settings() {
             )}
           </div>
         </div>
-        <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
+        <div className="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-32">
           <div>
             <h2 className="text-base font-semibold leading-7 text-white">Remove account</h2>
             <p className="mt-1 text-sm leading-6 text-gray-400">

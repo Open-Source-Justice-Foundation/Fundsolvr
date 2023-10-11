@@ -28,7 +28,7 @@ export default function Bounties() {
   };
 
   useEffect(() => {
-    if (getBountyEvents().length > 0) {
+    if (getBountyEvents(relayUrl).length > 0) {
       return;
     }
 
@@ -41,7 +41,7 @@ export default function Bounties() {
     };
 
     const onEOSE = () => {
-      setBountyEvents(events);
+      setBountyEvents(relayUrl, events);
       const userFilter = {
         kinds: [0],
         authors: Array.from(pubkeys),
@@ -94,20 +94,20 @@ export default function Bounties() {
             <th scope="col" className="py-2 pr-8 font-semibold sm:table-cell">
               Value
             </th>
-            <th scope="col" className="hidden py-2 pr-4 text-right font-semibold sm:pr-8 sm:text-left lg:pr-8 lg:table-cell">
+            <th scope="col" className="hidden py-2 pr-4 text-right font-semibold sm:pr-8 sm:text-left lg:table-cell lg:pr-8">
               Author/Company
             </th>
             <th scope="col" className="hidden py-2 pr-8 font-semibold md:table-cell lg:pr-8">
               Status
             </th>
-            <th scope="col" className="hidden py-2 lg:w-full xl:w-fit font-semibold sm:table-cell">
+            <th scope="col" className="hidden py-2 font-semibold sm:table-cell lg:w-full xl:w-fit">
               Posted Date
             </th>
           </tr>
         </thead>
         {mounted && (
           <tbody className="divide-y divide-gray-700/50">
-            {bountyEvents && bountyEvents.map((event) => <Bounty key={event.id} event={event} />)}
+            {bountyEvents[relayUrl] && bountyEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)}
           </tbody>
         )}
       </table>

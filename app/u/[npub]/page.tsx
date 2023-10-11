@@ -80,9 +80,9 @@ export default function BountyPage() {
   }
 
   return (
-    <div className="pb-20">
+    <div className="pt-10 pb-20">
       <div className="mx-auto flex h-screen w-full items-start justify-center text-sm text-gray-900 antialiased dark:text-white">
-        <div className="pt-10 mx-auto w-full max-w-4xl rounded-b-md border-x border-b border-gray-600 p-4">
+        <div className="mx-auto w-full max-w-3xl rounded-md border border-gray-600 p-4">
           <div className="mt-4 flex gap-x-4 px-4 py-3">
             <img
               className="h-32 w-32 cursor-pointer rounded-full"

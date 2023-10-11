@@ -129,7 +129,7 @@ export default function Sidebar() {
                         </ul>
 
                         <button
-                          className="group mt-4 flex w-full justify-center gap-x-3 rounded-md bg-indigo-600/90 p-2 text-sm font-semibold leading-6 text-gray-100 hover:bg-indigo-600 hover:text-white"
+                          className="group mt-4 flex w-full justify-center gap-x-3 rounded-md bg-indigo-600 p-2 text-sm font-semibold leading-6 text-gray-100 hover:bg-indigo-500 hover:text-white"
                           onClick={navigateToCreate}
                         >
                           Create Bounty
