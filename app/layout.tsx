@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import Sidebar from "./components/Sidebar";
 import Header from "./components/header/Header";
+import Subheader from "./components/header/Subheader";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -11,12 +12,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html 
-
-      className="h-full bg-gray-900 dark">
-      <body className="min-h-screen bg-gray-700/10">
+    <html className="dark h-full bg-gray-900">
+      <body className="min-h-screen">
         <Sidebar />
         <Header />
+        <Subheader />
         {children}
       </body>
     </html>

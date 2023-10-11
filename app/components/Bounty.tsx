@@ -72,13 +72,13 @@ export default function Bounty({ event }: Props) {
             <span>(sats)</span>
           </div>
         </td>
-        <td className="hidden py-4 pl-0 pr-4 sm:table-cell sm:pr-8">
+        <td className="hidden py-4 pl-0 pr-4 sm:pr-8 lg:table-cell">
           <div className="flex items-center gap-x-4">
             <img src={getProfile(relayUrl, event.pubkey)?.picture} alt="" className="h-8 w-8 rounded-full bg-gray-800" />
             <div className="truncate text-sm font-medium leading-6 text-white">{getProfile(relayUrl, event.pubkey)?.name}</div>
           </div>
         </td>
-        <td className="hidden py-4 pl-0 pr-4 text-sm leading-6 lg:table-cell">
+        <td className="hidden py-4 pl-0 pr-4 text-sm leading-6 md:table-cell">
           <div className="flex items-center justify-end gap-x-2 sm:justify-start">
             {/*@ts-ignore*/}
             {/*TODO: get status from event*/}
@@ -88,7 +88,7 @@ export default function Bounty({ event }: Props) {
             <div className="hidden text-white sm:block">{"Open"}</div>
           </div>
         </td>
-        <td className="hidden py-4 pl-0 pr-4 text-right text-sm leading-6 text-gray-400 sm:pr-6 lg:pr-8 xl:table-cell">
+        <td className="text-sd hidden py-4 pl-0 pr-4 text-right leading-6 text-gray-400 sm:table-cell sm:pr-6 lg:pr-8">
           <time>{new Date(event.created_at * 1000).toDateString()}</time>
         </td>
       </tr>

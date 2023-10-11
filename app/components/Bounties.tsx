@@ -9,6 +9,7 @@ import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
 import { Profile } from "../types";
 import Bounty from "./Bounty";
+import Subheader from "./header/Subheader";
 
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
@@ -67,7 +68,7 @@ export default function Bounties() {
         setProfile(profile);
       };
 
-      const onEOSE = () => { };
+      const onEOSE = () => {};
 
       subscribe([relayUrl], userFilter, onEvent, onEOSE);
     };
@@ -76,8 +77,8 @@ export default function Bounties() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-y-8 rounded-lg py-10">
-      <table className="mt-6 w-full whitespace-nowrap text-left">
+    <div className="flex flex-col items-center justify-center gap-y-8 rounded-lg py-6">
+      <table className="container mx-auto w-full whitespace-nowrap text-left">
         <colgroup>
           <col className="w-full sm:w-4/12" />
           <col className="lg:w-1/12" />
@@ -86,20 +87,20 @@ export default function Bounties() {
           <col className="lg:w-1/12" />
         </colgroup>
         <thead className="border-b border-gray-700 text-sm leading-6 text-white">
-          <tr>
+          <tr className="">
             <th scope="col" className="py-2 pl-4 pr-8 font-semibold sm:pl-6 lg:pl-8">
               Title
             </th>
-            <th scope="col" className="py-2 pl-0 pr-8 font-semibold sm:table-cell">
+            <th scope="col" className="py-2 pr-8 font-semibold sm:table-cell">
               Value
             </th>
-            <th scope="col" className="hidden py-2 pl-0 pr-4 text-right font-semibold sm:table-cell sm:pr-8 sm:text-left lg:pr-8">
+            <th scope="col" className="hidden py-2 pr-4 text-right font-semibold sm:pr-8 sm:text-left lg:pr-8 lg:table-cell">
               Author/Company
             </th>
-            <th scope="col" className="hidden py-2 pl-0 pr-8 font-semibold lg:table-cell lg:pr-8">
+            <th scope="col" className="hidden py-2 pr-8 font-semibold md:table-cell lg:pr-8">
               Status
             </th>
-            <th scope="col" className="hidden py-2 pl-0 pr-4 text-right font-semibold sm:pr-6 lg:pr-8 xl:table-cell">
+            <th scope="col" className="hidden py-2 pr-4 text-right lg:w-full xl:w-fit font-semibold sm:table-cell sm:pr-6 lg:pr-8">
               Posted Date
             </th>
           </tr>
