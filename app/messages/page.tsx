@@ -5,7 +5,7 @@ import { PlusIcon } from "@heroicons/react/20/solid";
 
 import { classNames } from "../lib/utils";
 import Badge from "./components/Badge";
-import Chat, { IUser } from "./components/Chat";
+import Contact, { IUser } from "./components/Contact";
 
 const USERS: IUser[] = [
   {
@@ -82,12 +82,12 @@ export default function MessagesPage() {
             <Tab.Panels className="mt-4 flex list-none flex-col gap-4">
               <Tab.Panel>
                 {USERS.map((user, idx) => (
-                  <Chat key={idx} user={user} />
+                  <Contact key={idx} user={user} />
                 ))}
               </Tab.Panel>
               <Tab.Panel>
                 {USERS.slice(1, 3).map((user, idx) => (
-                  <Chat key={idx} user={user} />
+                  <Contact key={idx} user={user} />
                 ))}
               </Tab.Panel>
             </Tab.Panels>

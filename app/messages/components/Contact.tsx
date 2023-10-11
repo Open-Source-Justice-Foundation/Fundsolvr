@@ -1,11 +1,12 @@
 import { Fragment } from "react";
 
+import Link from "next/link";
+
 import { classNames } from "@/app/lib/utils";
 import { Menu, Transition } from "@headlessui/react";
-import { SpeakerXMarkIcon, TrashIcon, ClipboardIcon } from "@heroicons/react/24/outline";
+import { ClipboardIcon, SpeakerXMarkIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 import Badge from "./Badge";
-import Link from "next/link";
 
 export interface IUser {
   img: string;
@@ -14,14 +15,14 @@ export interface IUser {
   bio: string;
 }
 
-interface IChatProps {
+interface IContactProps {
   user: IUser;
 }
 
-export default function Chat({ user }: IChatProps) {
+export default function Contact({ user }: IContactProps) {
   const { username, img, unread } = user;
   return (
-    <Link href={"#"} className="block rounded-md border border-transparent p-4 text-white hover:bg-gray-800">
+    <Link href={"#"} className="block rounded-md border border-transparent p-4 text-white transition-colors hover:bg-gray-800">
       <div className="group flex items-center gap-4">
         <div className="relative h-12 w-12">
           <img src={img} alt={username} className="aspect-square w-full rounded-full" />
@@ -73,7 +74,7 @@ export default function Chat({ user }: IChatProps) {
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Menu.Items className="absolute z-10 right-0 mt-2 w-56 origin-top-right divide-y divide-gray-600 rounded-md border border-gray-600 bg-gray-800 text-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-600 rounded-md border border-gray-600 bg-gray-800 text-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
               <div className="px-1 py-1 ">
                 <Menu.Item>
                   {({ active }) => (
