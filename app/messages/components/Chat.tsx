@@ -5,6 +5,7 @@ import { Menu, Transition } from "@headlessui/react";
 import { SpeakerXMarkIcon, TrashIcon, ClipboardIcon } from "@heroicons/react/24/outline";
 
 import Badge from "./Badge";
+import Link from "next/link";
 
 export interface IUser {
   img: string;
@@ -20,7 +21,7 @@ interface IChatProps {
 export default function Chat({ user }: IChatProps) {
   const { username, img, unread } = user;
   return (
-    <div className="rounded-md border border-transparent p-4 text-white hover:bg-gray-800">
+    <Link href={"#"} className="block rounded-md border border-transparent p-4 text-white hover:bg-gray-800">
       <div className="group flex items-center gap-4">
         <div className="relative h-12 w-12">
           <img src={img} alt={username} className="aspect-square w-full rounded-full" />
@@ -108,6 +109,6 @@ export default function Chat({ user }: IChatProps) {
           </Transition>
         </Menu>
       </div>
-    </div>
+    </Link>
   );
 }

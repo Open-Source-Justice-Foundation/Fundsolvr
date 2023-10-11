@@ -4,10 +4,10 @@ import { Tab } from "@headlessui/react";
 import { PlusIcon } from "@heroicons/react/20/solid";
 
 import { classNames } from "../lib/utils";
-import Chat, { IUser } from "./components/Chat";
 import Badge from "./components/Badge";
+import Chat, { IUser } from "./components/Chat";
 
-const USERS:IUser[] = [
+const USERS: IUser[] = [
   {
     img: "https://www.chrisatmachine.com/assets/headshot.jpg",
     username: "Christian Chiarulli",
@@ -62,7 +62,10 @@ export default function MessagesPage() {
                 <Tab
                   key={title}
                   className={({ selected }) =>
-                    classNames(`rounded-t-md border-x border-t p-4 flex items-center gap-2`, selected ? "border-gray-600 focus:outline-none" : "border-transparent")
+                    classNames(
+                      `flex items-center gap-2 rounded-t-md border-x border-t p-4`,
+                      selected ? "border-gray-600 focus:outline-none" : "border-transparent"
+                    )
                   }
                 >
                   <span>{title}</span>
