@@ -23,15 +23,19 @@ export default function Bounties() {
   const bountyFilter = {
     kinds: [30050],
     limit: 10,
+    until: undefined,
   };
 
-  useEffect(() => {
-    if (getBountyEvents(relayUrl).length > 0) {
-      return;
-    }
-
+  const getBounties = async () => {
     const events: Event[] = [];
     const pubkeys = new Set();
+
+    if (bountyEvents[relayUrl]) {
+      const lastEvent = bountyEvents[relayUrl].slice(-1)[0];
+      console.log("lastEvent", lastEvent);
+      // @ts-ignore
+      bountyFilter.until = lastEvent.created_at - 10;
+    }
 
     const onEvent = (event: Event) => {
       events.push(event);
@@ -39,7 +43,11 @@ export default function Bounties() {
     };
 
     const onEOSE = () => {
-      setBountyEvents(relayUrl, events);
+      if (bountyEvents[relayUrl]) {
+        setBountyEvents(relayUrl, [...bountyEvents[relayUrl], ...events]);
+      } else {
+        setBountyEvents(relayUrl, events);
+      }
       const userFilter = {
         kinds: [0],
         authors: Array.from(pubkeys),
@@ -66,12 +74,19 @@ export default function Bounties() {
         setProfile(profile);
       };
 
-      const onEOSE = () => {};
+      const onEOSE = () => { };
 
       subscribe([relayUrl], userFilter, onEvent, onEOSE);
     };
 
     subscribe([relayUrl], bountyFilter, onEvent, onEOSE);
+  };
+
+  useEffect(() => {
+    if (getBountyEvents(relayUrl).length > 0) {
+      return;
+    }
+    getBounties();
   }, []);
 
   return (
@@ -109,7 +124,10 @@ export default function Bounties() {
           </tbody>
         )}
       </table>
-      <button className="flex items-center gap-x-2 rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-gray-200 hover:bg-indigo-500">
+      <button
+        onClick={getBounties}
+        className="flex items-center gap-x-2 rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-gray-200 hover:bg-indigo-500"
+      >
         Load More
       </button>
     </div>
