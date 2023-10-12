@@ -40,7 +40,7 @@ export default function UserMenu({ children }: any) {
     <Popover className="relative">
       <Popover.Button className="inline-flex items-center gap-x-2 text-sm font-semibold leading-6 text-gray-900 outline-none ring-0">
         {children}
-        <ChevronDownIcon className="mt-2 h-6 w-6 text-gray-300" aria-hidden="true" />
+        {/* <ChevronDownIcon className="mt-2 h-6 w-6 text-gray-300" aria-hidden="true" /> */}
       </Popover.Button>
 
       <Transition

@@ -14,7 +14,6 @@ export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
   const { setProfile } = useProfileStore();
   const { setBountyEvents, getBountyEvents, bountyEvents } = useBountyEventStore();
-  // const [localBountyEvents, setLocalBountyEvents] = useState<Event[]>([]);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -24,15 +23,19 @@ export default function Bounties() {
   const bountyFilter = {
     kinds: [30050],
     limit: 10,
+    until: undefined,
   };
 
-  useEffect(() => {
-    if (getBountyEvents().length > 0) {
-      return;
-    }
-
+  const getBounties = async () => {
     const events: Event[] = [];
     const pubkeys = new Set();
+
+    if (bountyEvents[relayUrl]) {
+      const lastEvent = bountyEvents[relayUrl].slice(-1)[0];
+      console.log("lastEvent", lastEvent);
+      // @ts-ignore
+      bountyFilter.until = lastEvent.created_at - 10;
+    }
 
     const onEvent = (event: Event) => {
       events.push(event);
@@ -40,7 +43,11 @@ export default function Bounties() {
     };
 
     const onEOSE = () => {
-      setBountyEvents(events);
+      if (bountyEvents[relayUrl]) {
+        setBountyEvents(relayUrl, [...bountyEvents[relayUrl], ...events]);
+      } else {
+        setBountyEvents(relayUrl, events);
+      }
       const userFilter = {
         kinds: [0],
         authors: Array.from(pubkeys),
@@ -73,11 +80,18 @@ export default function Bounties() {
     };
 
     subscribe([relayUrl], bountyFilter, onEvent, onEOSE);
+  };
+
+  useEffect(() => {
+    if (getBountyEvents(relayUrl).length > 0) {
+      return;
+    }
+    getBounties();
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-y-8 rounded-lg py-10">
-      <table className="mt-6 w-full whitespace-nowrap text-left">
+    <div className="flex flex-col items-center justify-center gap-y-8 rounded-lg py-6">
+      <table className="container mx-auto w-full whitespace-nowrap text-left">
         <colgroup>
           <col className="w-full sm:w-4/12" />
           <col className="lg:w-1/12" />
@@ -86,31 +100,34 @@ export default function Bounties() {
           <col className="lg:w-1/12" />
         </colgroup>
         <thead className="border-b border-gray-700 text-sm leading-6 text-white">
-          <tr>
+          <tr className="">
             <th scope="col" className="py-2 pl-4 pr-8 font-semibold sm:pl-6 lg:pl-8">
               Title
             </th>
-            <th scope="col" className="py-2 pl-0 pr-8 font-semibold sm:table-cell">
+            <th scope="col" className="py-2 pr-8 font-semibold sm:table-cell">
               Value
             </th>
-            <th scope="col" className="hidden py-2 pl-0 pr-4 text-right font-semibold sm:table-cell sm:pr-8 sm:text-left lg:pr-8">
+            <th scope="col" className="hidden py-2 pr-4 text-right font-semibold sm:pr-8 sm:text-left lg:table-cell lg:pr-8">
               Author/Company
             </th>
-            <th scope="col" className="hidden py-2 pl-0 pr-8 font-semibold lg:table-cell lg:pr-8">
+            <th scope="col" className="hidden py-2 pr-8 font-semibold md:table-cell lg:pr-8">
               Status
             </th>
-            <th scope="col" className="hidden py-2 pl-0 pr-4 text-right font-semibold sm:pr-6 lg:pr-8 xl:table-cell">
+            <th scope="col" className="hidden py-2 font-semibold sm:table-cell lg:w-full xl:w-fit">
               Posted Date
             </th>
           </tr>
         </thead>
         {mounted && (
-          <tbody className="divide-y divide-gray-700">
-            {bountyEvents && bountyEvents.map((event) => <Bounty key={event.id} event={event} />)}
+          <tbody className="divide-y divide-gray-700/50">
+            {bountyEvents[relayUrl] && bountyEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)}
           </tbody>
         )}
       </table>
-      <button className="flex items-center gap-x-2 rounded-lg bg-indigo-500/80 px-3 py-2 text-sm font-medium text-gray-200 hover:bg-indigo-500">
+      <button
+        onClick={getBounties}
+        className="flex items-center gap-x-2 rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-gray-200 hover:bg-indigo-500"
+      >
         Load More
       </button>
     </div>
