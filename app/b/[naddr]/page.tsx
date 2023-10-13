@@ -6,13 +6,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { getTagValues } from "@/app/lib/utils";
+import { useBountyEventStore } from "@/app/stores/eventStore";
 import { useProfileStore } from "@/app/stores/profileStore";
 import { useRelayStore } from "@/app/stores/relayStore";
 import { ArrowLeftIcon, PaperAirplaneIcon, UserPlusIcon } from "@heroicons/react/24/outline";
 import { nip19 } from "nostr-tools";
 import { Event } from "nostr-tools";
 import { AddressPointer } from "nostr-tools/lib/nip19";
-import { useBountyEventStore } from "@/app/stores/eventStore";
 
 export default function BountyPage() {
   const { subscribe, relayUrl } = useRelayStore();
@@ -30,6 +30,8 @@ export default function BountyPage() {
     console.log("naddrStr", naddrStr);
   }
 
+  const profile = getProfile(relayUrl, bountyEvent?.pubkey || "");
+
   useEffect(() => {
     if (naddrStr) {
       console.log("naddr", naddr);
@@ -39,13 +41,11 @@ export default function BountyPage() {
       setNaddrPointer(naddr_data);
 
       if (naddrPointer) {
-
         if (cachedBountyEvent) {
           setBountyEvent(cachedBountyEvent);
           setCachedBountyEvent(null);
           return;
         }
-
 
         const onEvent = (event: any) => {
           console.log("bounty event", event);
@@ -84,7 +84,7 @@ export default function BountyPage() {
   }, [naddrPointer]);
 
   return (
-    <div className="pt-10 pb-20">
+    <div className="pb-20 pt-10">
       {bountyEvent && (
         <div className="mx-auto max-w-3xl">
           <Link href="/">
@@ -122,14 +122,17 @@ export default function BountyPage() {
 
               <div className="flex justify-between">
                 <div className="flex items-center gap-x-4">
-                  <img src={getProfile(relayUrl, bountyEvent.pubkey)?.picture} alt="" className="h-8 w-8 rounded-full bg-gray-800" />
-                  <div className="truncate text-sm font-medium leading-6 text-white">{getProfile(relayUrl, bountyEvent.pubkey)?.name}</div>
+                  <img src={profile?.picture} alt="" className="h-8 w-8 rounded-full bg-gray-800" />
+                  <div className="truncate text-sm font-medium leading-6 text-white">{profile?.name}</div>
                 </div>
 
                 <div className="flex gap-x-2">
-                  <button className="rounded-lg bg-gray-700/80 px-2 text-white hover:bg-gray-700">
+                  <Link
+                    className="flex items-center justify-center rounded-lg bg-gray-700/80 px-2 text-white hover:bg-gray-700"
+                    href={`/messages/${nip19.npubEncode(profile?.publicKey || "")}`}
+                  >
                     <PaperAirplaneIcon className="h-5 w-5" />
-                  </button>
+                  </Link>
 
                   <button className="flex items-center gap-x-2 rounded-lg bg-indigo-500/80 px-2 text-sm font-medium text-white hover:bg-indigo-500">
                     <UserPlusIcon className="h-5 w-5" />
@@ -165,7 +168,4 @@ export default function BountyPage() {
       )}
     </div>
   );
-}
-
-{
 }

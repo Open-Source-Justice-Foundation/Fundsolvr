@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { ChevronLeftIcon, PaperAirplaneIcon } from "@heroicons/react/20/solid";
 
@@ -7,17 +10,16 @@ import ChatBubble from "../components/ChatBubble";
 import ContactMenuButton from "../components/ContactMenuButton";
 
 const ChatPage = () => {
+  const router = useRouter();
+
   return (
     <>
       <div className="flex items-center border-b border-b-gray-600">
         <div className="flex w-full items-center gap-4 p-2 pb-4">
-          <Link href="/messages" className="rounded p-1 transition-colors hover:bg-gray-700">
+          <button onClick={() => router.back()} className="rounded p-1 transition-colors hover:bg-gray-700">
             <ChevronLeftIcon className="h-6 w-6" />
-          </Link>
-          <Link
-            href={`/u/npub`}
-            className="group flex flex-1 items-center gap-4"
-          >
+          </button>
+          <Link href={`/u/npub`} className="group flex flex-1 items-center gap-4">
             <Avatar src="https://www.chrisatmachine.com/assets/headshot.jpg" verified />
             <div className="flex flex-col gap-1">
               <h2 className="text-md font-bold group-hover:underline">Christian Chiarulli</h2>
@@ -28,13 +30,13 @@ const ChatPage = () => {
         </div>
       </div>
       <div className="flex h-full max-h-[66vh] flex-col items-center gap-4 overflow-auto p-4">
-        <span className="text-xs text-gray-400 py-2">Yesterday at 1:02 PM</span>
+        <span className="py-2 text-xs text-gray-400">Yesterday at 1:02 PM</span>
         <ChatBubble rtl text="Lorem! 👋" />
         <ChatBubble
           rtl
           text="Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis."
         />
-        <span className="text-xs text-gray-400 py-2">Today at 11:16 AM</span>
+        <span className="py-2 text-xs text-gray-400">Today at 11:16 AM</span>
         <ChatBubble text="Lorem 👀" />
         <ChatBubble text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore, dolorem? 🤔" />
         <ChatBubble text="Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia." />
