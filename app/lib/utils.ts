@@ -44,6 +44,10 @@ export function createUniqueUrl(title: string): string {
   return `${titleSlug}-${uniqueHash}`;
 }
 
+export function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(" ");
+}
+
 // // Example usage:
 // const title = "My Exciting Blog Post";
 // const uniqueUrl = createUniqueUrl(title);
