@@ -28,10 +28,10 @@ export default function Header() {
               <Bars3Icon className="h-8 w-8" aria-hidden="true" />
             </button>
             <Link className="hidden md:flex" href="/">
-              <div className="flex items-center">
+              <div className="flex items-center gap-x-2">
                 <img
-                  className="h-20"
-                  src="https://user-images.githubusercontent.com/29136904/272774397-7a9461f7-eda2-46c7-9564-1dd90f6cdab2.png"
+                  className="h-8"
+                  src="https://user-images.githubusercontent.com/29136904/276887775-0b18141f-1b7b-48c1-9df2-77f0509ad8d7.png"
                   alt="Your Company"
                 />
                 <div className="hidden text-4xl text-white sm:block">resolvr</div>

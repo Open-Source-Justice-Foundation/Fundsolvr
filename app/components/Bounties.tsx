@@ -96,13 +96,18 @@ export default function Bounties() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-y-8 rounded-lg py-6">
-      {mounted && <ul
-        className="w-full max-w-5xl flex flex-col items-center justify-center gap-y-4 rounded-lg py-6"
+      <div className="flex w-full max-w-5xl flex-col gap-6 border-b border-gray-600 pb-8">
+        <h1 className="text-3xl font-medium text-gray-100 leading-6">Bounties</h1>
+      </div>
 
-      >{bountyEvents[relayUrl] && bountyEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)}</ul>}
+      {mounted && (
+        <ul className="flex w-full max-w-5xl flex-col items-center justify-center gap-y-4 rounded-lg py-6">
+          {bountyEvents[relayUrl] && bountyEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)}
+        </ul>
+      )}
       <button
         onClick={getBounties}
-        className="flex items-center gap-x-2 rounded-lg bg-indigo-600 px-3 py-2 mb-6 text-sm font-medium text-gray-200 hover:bg-indigo-500"
+        className="mb-6 flex items-center gap-x-2 rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-gray-200 hover:bg-indigo-500"
       >
         Load More
       </button>
