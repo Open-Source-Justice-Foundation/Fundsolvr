@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 import useSidebarStore from "@/app/stores/sidebarStore";
 import { Bars3Icon, BellIcon, MoonIcon } from "@heroicons/react/24/outline";
@@ -10,8 +9,6 @@ import Login from "./Login";
 
 export default function Header() {
   const { toggleSidebar } = useSidebarStore();
-
-  const router = useRouter();
 
   return (
     <div className="container mx-auto flex max-w-5xl flex-col">

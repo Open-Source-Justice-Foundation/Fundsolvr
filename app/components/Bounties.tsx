@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 
-import router from "next/router";
+import { useRouter } from "next/navigation";
 
 import PlusIcon from "@heroicons/react/20/solid/PlusIcon";
+import { ArrowUpTrayIcon, NewspaperIcon, UserIcon } from "@heroicons/react/24/outline";
 import type { Event } from "nostr-tools";
 
 import { getTagValues } from "../lib/utils";
@@ -19,6 +20,8 @@ export default function Bounties() {
   const { setProfile } = useProfileStore();
   const { setBountyEvents, getBountyEvents, bountyEvents } = useBountyEventStore();
   const [mounted, setMounted] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -103,10 +106,9 @@ export default function Bounties() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-y-8 rounded-lg py-6">
-      <div className="flex w-full max-w-5xl flex-col gap-6 border-b border-gray-600 pb-8">
-        <div className="flex justify-between items-center">
+      <div className="flex w-full max-w-5xl flex-col gap-y-2">
+        <div className="flex items-center justify-between">
           <h1 className="text-3xl font-medium leading-6 text-gray-100">Bounties</h1>
-
           <button
             onClick={navigateToCreate}
             className="flex items-center gap-x-2 rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-500"
@@ -115,6 +117,22 @@ export default function Bounties() {
             Bounty
           </button>
         </div>
+        <p className="text-lg text-gray-400">Bounties are a way to incentivize work on a project.</p>
+      </div>
+
+      <div className="flex w-full max-w-5xl gap-x-2 border-b border-gray-600 px-2 pb-3 text-gray-300">
+        <span className="flex items-center gap-x-2 border-r border-gray-700 pr-2">
+          <NewspaperIcon className="h-5 w-5" aria-hidden="true" />
+          All Bounties
+        </span>
+        <span className="flex items-center gap-x-2 border-r border-gray-700 pr-2">
+          <ArrowUpTrayIcon className="h-5 w-5" aria-hidden="true" />
+          Posted Bounties
+        </span>
+        <span className="flex items-center gap-x-2">
+          <UserIcon className="h-5 w-5" aria-hidden="true" />
+          Assigned Bounties
+        </span>
       </div>
 
       {mounted && (
