@@ -108,7 +108,7 @@ export default function BountyPage() {
   return (
     <div className="pb-20 pt-10">
       {bountyEvent && (
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-5xl">
           <Link href="/">
             <button className="flex items-center gap-x-2 rounded-lg bg-gray-800 px-3 py-2 text-sm font-medium text-gray-200 hover:bg-gray-700/50">
               <ArrowLeftIcon className="h-4 w-4" />
