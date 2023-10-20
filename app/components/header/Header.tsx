@@ -19,9 +19,9 @@ export default function Header() {
   }
 
   return (
-    <div className="container mx-auto flex max-w-7xl flex-col">
+    <div className="container mx-auto flex max-w-5xl flex-col">
       <div className="top-0 z-40 flex h-16 w-full shrink-0 items-center gap-x-4 py-12 shadow-sm">
-        <div className="flex flex-1 justify-end gap-x-4 self-stretch px-4">
+        <div className="flex flex-1 justify-end gap-x-4 self-stretch lg:px-0 px-4">
           <div className="flex w-full items-center justify-between">
             <button type="button" className="-m-2.5 p-2.5 text-gray-200 md:hidden" onClick={() => toggleSidebar()}>
               <span className="sr-only">Open sidebar</span>
