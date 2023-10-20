@@ -40,7 +40,7 @@ function createUrlSlug(title: string): string {
 
 export function createUniqueUrl(title: string): string {
   const titleSlug = createUrlSlug(title);
-  const uniqueHash = generateUniqueHash(title + Date.now().toString(), 12);
+  const uniqueHash = generateUniqueHash(title, 12);
   return `${titleSlug}-${uniqueHash}`;
 }
 
