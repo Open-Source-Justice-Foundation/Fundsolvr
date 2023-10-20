@@ -145,22 +145,22 @@ export default function BountyPage() {
               <div className="flex justify-between">
                 <div className="flex items-center gap-x-4">
                   {bountyEvent?.pubkey && naddrPointer && (
-                    <>
-                      <Link
-                        href={`/u/${nip19.npubEncode(
-                          getProfile(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.publicKey || ""
-                        )}`}
-                      >
-                        <img
-                          src={getProfile(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.picture}
-                          alt=""
-                          className="h-8 w-8 rounded-full bg-gray-800"
-                        />
-                      </Link>
+                    <Link
+                      className="flex items-center gap-x-2"
+
+                      href={`/u/${nip19.npubEncode(
+                        getProfile(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.publicKey || ""
+                      )}`}
+                    >
+                      <img
+                        src={getProfile(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.picture}
+                        alt=""
+                        className="h-8 w-8 rounded-full ring-1 ring-gray-700 bg-gray-800"
+                      />
                       <div className="truncate text-sm font-medium leading-6 text-white">
                         {getProfile(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.name}
                       </div>
-                    </>
+                    </Link>
                   )}
                 </div>
 
