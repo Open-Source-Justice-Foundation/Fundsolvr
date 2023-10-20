@@ -81,7 +81,7 @@ export default function Bounty({ event }: Props) {
         </div>
 
         <div className="flex flex-col gap-x-3 gap-y-4 pl-4">
-          <div className="leading-6 text-gray-100">{getTagValues("title", event.tags)}</div>
+          <div className="leading-6 font-bold text-gray-100">{getTagValues("title", event.tags)}</div>
           <div className="leading-6 text-gray-100">{truncateText(removeMarkdownTitles(event.content), 120)}</div>
         </div>
         <div className="flex justify-between">
