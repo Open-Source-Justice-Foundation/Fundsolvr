@@ -35,9 +35,10 @@ export default function Bounties() {
     kinds: [30050],
     limit: 10,
     until: undefined,
+    // authors: ['220522c2c32b3bf29006b275e224b285d64bb19f79bda906991bcb3861e18cb4']
   };
 
-  const getBounties = async () => {
+  const getBounties = async (filterParams?: Object) => {
     const events: Event[] = [];
     const pubkeys = new Set();
 
@@ -94,7 +95,8 @@ export default function Bounties() {
       subscribe([relayUrl], userFilter, onEvent, onEOSE);
     };
 
-    subscribe([relayUrl], bountyFilter, onEvent, onEOSE);
+    const filter = filterParams !== undefined ? Object.assign(bountyFilter, filterParams) : bountyFilter 
+    subscribe([relayUrl], filter, onEvent, onEOSE);
   };
 
   useEffect(() => {
@@ -121,11 +123,11 @@ export default function Bounties() {
       </div>
 
       <div className="flex w-full max-w-5xl justify-center gap-x-2 overflow-x-scroll border-b border-gray-600 px-2 pb-3 text-gray-300 sm:justify-start">
-        <div className="ml-12 flex cursor-pointer items-center gap-x-2 border-r border-gray-700 pr-2 hover:text-gray-100 sm:ml-0">
+        <div onClick={async () => await getBounties()} className="ml-12 flex cursor-pointer items-center gap-x-2 border-r border-gray-700 pr-2 hover:text-gray-100 sm:ml-0">
           <NewspaperIcon className="h-5 w-5" aria-hidden="true" />
           <span className="whitespace-nowrap">All Bounties</span>
         </div>
-        <div className="flex cursor-pointer items-center gap-x-2 border-r border-gray-700 pr-2 hover:text-gray-100">
+        <div onClick={async () => await getBounties({authors: ['220522c2c32b3bf29006b275e224b285d64bb19f79bda906991bcb3861e18cb4']})} className="flex cursor-pointer items-center gap-x-2 border-r border-gray-700 pr-2 hover:text-gray-100">
           <ArrowUpTrayIcon className="h-5 w-5" aria-hidden="true" />
           <span className="whitespace-nowrap">Posted Bounties</span>
         </div>
