@@ -9,6 +9,7 @@ import { getTagValues } from "@/app/lib/utils";
 import { useBountyEventStore } from "@/app/stores/eventStore";
 import { useProfileStore } from "@/app/stores/profileStore";
 import { useRelayStore } from "@/app/stores/relayStore";
+import { Profile } from "@/app/types";
 import { ArrowLeftIcon, PaperAirplaneIcon, UserPlusIcon } from "@heroicons/react/24/outline";
 import { nip19 } from "nostr-tools";
 import { Event } from "nostr-tools";
@@ -16,27 +17,22 @@ import { AddressPointer } from "nostr-tools/lib/nip19";
 
 export default function BountyPage() {
   const { subscribe, relayUrl } = useRelayStore();
-  const { getProfile } = useProfileStore();
+  const { getProfile, setProfile } = useProfileStore();
   const { cachedBountyEvent, setCachedBountyEvent } = useBountyEventStore();
 
   const [naddr, setNaddr] = useState<string>("");
   const [naddrPointer, setNaddrPointer] = useState<AddressPointer>();
-  // TODO: get this event from cache, should cache after click since we already get it on the home page
   const [bountyEvent, setBountyEvent] = useState<Event>();
+
   const pathname = usePathname();
   let naddrStr: string = "";
   if (pathname && pathname.length > 60) {
     naddrStr = pathname.split("/").pop() || "";
-    console.log("naddrStr", naddrStr);
   }
-
-  const profile = getProfile(relayUrl, bountyEvent?.pubkey || "");
 
   useEffect(() => {
     if (naddrStr) {
-      console.log("naddr", naddr);
       const naddr_data: any = nip19.decode(naddrStr).data;
-      console.log("naddr_data", naddr_data);
       setNaddr(naddrStr);
       setNaddrPointer(naddr_data);
 
@@ -47,13 +43,43 @@ export default function BountyPage() {
           return;
         }
 
+        let pubkey = "";
+
         const onEvent = (event: any) => {
-          console.log("bounty event", event);
+          pubkey = event.pubkey;
           setBountyEvent(event);
         };
 
         const onEOSE = () => {
-          console.log("bounty eose");
+          const onEvent = (event: Event) => {
+            const profileContent = JSON.parse(event.content);
+
+            const profile: Profile = {
+              relay: relayUrl,
+              publicKey: event.pubkey,
+              about: profileContent.about,
+              lud06: profileContent.lud06,
+              lud16: profileContent.lud16,
+              name: profileContent.name,
+              nip05: profileContent.nip05,
+              picture: profileContent.picture,
+              banner: profileContent.banner,
+              website: profileContent.website,
+              github: profileContent.github,
+              publicKeyGistId: profileContent.publicKeyGistId,
+            };
+
+            setProfile(profile);
+          };
+
+          const onEOSE = () => { };
+
+          const userFilter = {
+            kinds: [0],
+            authors: [pubkey],
+          };
+
+          subscribe([relayUrl], userFilter, onEvent, onEOSE);
         };
 
         const filter = {
@@ -78,10 +104,6 @@ export default function BountyPage() {
   }
 
   const markdown = setupMarkdown(bountyEvent?.content || "");
-
-  useEffect(() => {
-    console.log("naddrPointer", naddrPointer);
-  }, [naddrPointer]);
 
   return (
     <div className="pb-20 pt-10">
@@ -122,17 +144,37 @@ export default function BountyPage() {
 
               <div className="flex justify-between">
                 <div className="flex items-center gap-x-4">
-                  <img src={profile?.picture} alt="" className="h-8 w-8 rounded-full bg-gray-800" />
-                  <div className="truncate text-sm font-medium leading-6 text-white">{profile?.name}</div>
+                  {bountyEvent?.pubkey && naddrPointer && (
+                    <>
+                      <Link
+                        href={`/u/${nip19.npubEncode(
+                          getProfile(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.publicKey || ""
+                        )}`}
+                      >
+                        <img
+                          src={getProfile(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.picture}
+                          alt=""
+                          className="h-8 w-8 rounded-full bg-gray-800"
+                        />
+                      </Link>
+                      <div className="truncate text-sm font-medium leading-6 text-white">
+                        {getProfile(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.name}
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 <div className="flex gap-x-2">
-                  <Link
-                    className="flex items-center justify-center rounded-lg bg-gray-700/80 px-2 text-white hover:bg-gray-700"
-                    href={`/messages/${nip19.npubEncode(profile?.publicKey || "")}`}
-                  >
-                    <PaperAirplaneIcon className="h-5 w-5" />
-                  </Link>
+                  {bountyEvent?.pubkey && naddrPointer && (
+                    <Link
+                      className="flex items-center justify-center rounded-lg bg-gray-700/80 px-2 text-white hover:bg-gray-700"
+                      href={`/messages/${nip19.npubEncode(
+                        getProfile(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.publicKey || ""
+                      )}`}
+                    >
+                      <PaperAirplaneIcon className="h-5 w-5" />
+                    </Link>
+                  )}
 
                   <button className="flex items-center gap-x-2 rounded-lg bg-indigo-500/80 px-2 text-sm font-medium text-white hover:bg-indigo-500">
                     <UserPlusIcon className="h-5 w-5" />
