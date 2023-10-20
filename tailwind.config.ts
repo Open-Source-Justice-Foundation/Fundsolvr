@@ -5,7 +5,11 @@ const config: Config = {
 
   darkMode: "class",
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        bitcoin: "#F6911D",
+      },
+    },
   },
   plugins: [require("@tailwindcss/typography"), require("@tailwindcss/forms")],
 };

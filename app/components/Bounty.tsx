@@ -65,7 +65,7 @@ export default function Bounty({ event }: Props) {
         onClick={routeBounty}
       >
         <div className="flex justify-between pl-1.5">
-          <div className="flex text-2xl text-orange-400">
+          <div className="flex text-2xl text-bitcoin">
             <SatoshiV2Icon style={{ height: "2rem", width: "2rem" }} />
             {Number(getTagValues("value", event.tags)).toLocaleString()}
           </div>
