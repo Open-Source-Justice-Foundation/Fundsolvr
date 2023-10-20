@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 
+import router from "next/router";
+
+import PlusIcon from "@heroicons/react/20/solid/PlusIcon";
 import type { Event } from "nostr-tools";
 
 import { getTagValues } from "../lib/utils";
@@ -20,6 +23,10 @@ export default function Bounties() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  function navigateToCreate() {
+    router.push("/create");
+  }
 
   const bountyFilter = {
     kinds: [30050],
@@ -97,7 +104,17 @@ export default function Bounties() {
   return (
     <div className="flex flex-col items-center justify-center gap-y-8 rounded-lg py-6">
       <div className="flex w-full max-w-5xl flex-col gap-6 border-b border-gray-600 pb-8">
-        <h1 className="text-3xl font-medium text-gray-100 leading-6">Bounties</h1>
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-medium leading-6 text-gray-100">Bounties</h1>
+
+          <button
+            onClick={navigateToCreate}
+            className="flex items-center gap-x-2 rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-500"
+          >
+            <PlusIcon className="h-5 w-5" aria-hidden="true" />
+            Bounty
+          </button>
+        </div>
       </div>
 
       {mounted && (

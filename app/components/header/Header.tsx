@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import useSidebarStore from "@/app/stores/sidebarStore";
-import { PlusIcon } from "@heroicons/react/20/solid";
 import { Bars3Icon, BellIcon, MoonIcon } from "@heroicons/react/24/outline";
 
 import Login from "./Login";
@@ -14,14 +13,10 @@ export default function Header() {
 
   const router = useRouter();
 
-  function navigateToCreate() {
-    router.push("/create");
-  }
-
   return (
     <div className="container mx-auto flex max-w-5xl flex-col">
       <div className="top-0 z-40 flex h-16 w-full shrink-0 items-center gap-x-4 py-12 shadow-sm">
-        <div className="flex flex-1 justify-end gap-x-4 self-stretch lg:px-0 px-4">
+        <div className="flex flex-1 justify-end gap-x-4 self-stretch px-4 lg:px-0">
           <div className="flex w-full items-center justify-between">
             <button type="button" className="-m-2.5 p-2.5 text-gray-200 md:hidden" onClick={() => toggleSidebar()}>
               <span className="sr-only">Open sidebar</span>
@@ -38,13 +33,6 @@ export default function Header() {
               </div>
             </Link>
             <div className="flex items-center gap-x-6">
-              {/* <button */}
-              {/*   onClick={navigateToCreate} */}
-              {/*   className="flex items-center gap-x-2 rounded-full bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-500" */}
-              {/* > */}
-              {/*   <PlusIcon className="h-5 w-5" aria-hidden="true" /> */}
-              {/*   Bounty */}
-              {/* </button> */}
               <MoonIcon className="h-7 w-7 text-gray-300" aria-hidden="true" />
               <BellIcon className="h-7 w-7 text-gray-300" aria-hidden="true" />
               <Login>
