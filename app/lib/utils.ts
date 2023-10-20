@@ -47,10 +47,3 @@ export function createUniqueUrl(title: string): string {
 export function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
-
-// // Example usage:
-// const title = "My Exciting Blog Post";
-// const uniqueUrl = createUniqueUrl(title);
-
-// console.log(`Original Title: ${title}`);
-// console.log(`Generated URL Segment: ${uniqueUrl}`);
