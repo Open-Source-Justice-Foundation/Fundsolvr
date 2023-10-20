@@ -106,7 +106,7 @@ export default function BountyPage() {
   const markdown = setupMarkdown(bountyEvent?.content || "");
 
   return (
-    <div className="pb-20 pt-10">
+    <div className="pb-20 pt-10 px-4">
       {bountyEvent && (
         <div className="mx-auto max-w-4xl">
           <Link href="/">
