@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import type { Event } from "nostr-tools";
 
+import { getTagValues } from "../lib/utils";
 import { useBountyEventStore } from "../stores/eventStore";
 import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
@@ -38,8 +39,12 @@ export default function Bounties() {
     }
 
     const onEvent = (event: Event) => {
-      events.push(event);
-      pubkeys.add(event.pubkey);
+      const value = getTagValues("value", event.tags);
+      if (value && value.length > 0) {
+        events.push(event);
+        console.log(value);
+        pubkeys.add(event.pubkey);
+      }
     };
 
     const onEOSE = () => {
