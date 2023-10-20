@@ -4,15 +4,12 @@ import { useRelayStore } from "@/app/stores/relayStore";
 import { useUserProfileStore } from "@/app/stores/userProfileStore";
 import { Profile } from "@/app/types";
 import { Popover, Transition } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
 
 
 const links = [
   { name: "Profile", href: "#" },
-  { name: "Your Notes", href: "#" },
-  { name: "Bookmarked Notes", href: "#" },
-  // create faq page later https://github.com/vercel/next.js/discussions/17443
-  // { name: "Help", href: "#" },
+  { name: "Messages", href: "#" },
+  { name: "Relays", href: "#" },
 ];
 
 export default function UserMenu({ children }: any) {
