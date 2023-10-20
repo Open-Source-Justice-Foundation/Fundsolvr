@@ -10,6 +10,7 @@ import { useBountyEventStore } from "@/app/stores/eventStore";
 import { useProfileStore } from "@/app/stores/profileStore";
 import { useRelayStore } from "@/app/stores/relayStore";
 import { Profile } from "@/app/types";
+import { SatoshiV2Icon } from "@bitcoin-design/bitcoin-icons-react/filled";
 import { ArrowLeftIcon, PaperAirplaneIcon, UserPlusIcon } from "@heroicons/react/24/outline";
 import { nip19 } from "nostr-tools";
 import { Event } from "nostr-tools";
@@ -106,7 +107,7 @@ export default function BountyPage() {
   const markdown = setupMarkdown(bountyEvent?.content || "");
 
   return (
-    <div className="pb-20 pt-10 px-4">
+    <div className="px-4 pb-20 pt-10">
       {bountyEvent && (
         <div className="mx-auto max-w-4xl">
           <Link href="/">
@@ -117,18 +118,11 @@ export default function BountyPage() {
           </Link>
           <div className="flex flex-col gap-6 border-b border-gray-600 pb-8">
             <div className="mt-6 flex items-center justify-between">
-              <div className="flex items-center gap-2 text-3xl text-white">
-                <span className="text-green-300">Earn</span>
-
-                <svg className="fill-orange-400" width="36" height="36" viewBox="0 0 24 24">
-                  <path
-                    // fill="currentColor"
-                    d="M14.24 10.56c-.31 1.24-2.24.61-2.84.44l.55-2.18c.62.18 2.61.44 2.29 1.74m-3.11 1.56l-.6 2.41c.74.19 3.03.92 3.37-.44c.36-1.42-2.03-1.79-2.77-1.97m10.57 2.3c-1.34 5.36-6.76 8.62-12.12 7.28C4.22 20.36.963 14.94 2.3 9.58A9.996 9.996 0 0 1 14.42 2.3c5.35 1.34 8.61 6.76 7.28 12.12m-7.49-6.37l.45-1.8l-1.1-.25l-.44 1.73c-.29-.07-.58-.14-.88-.2l.44-1.77l-1.09-.26l-.45 1.79c-.24-.06-.48-.11-.7-.17l-1.51-.38l-.3 1.17s.82.19.8.2c.45.11.53.39.51.64l-1.23 4.93c-.05.14-.21.32-.5.27c.01.01-.8-.2-.8-.2L6.87 15l1.42.36c.27.07.53.14.79.2l-.46 1.82l1.1.28l.45-1.81c.3.08.59.15.87.23l-.45 1.79l1.1.28l.46-1.82c1.85.35 3.27.21 3.85-1.48c.5-1.35 0-2.15-1-2.66c.72-.19 1.26-.64 1.41-1.62c.2-1.33-.82-2.04-2.2-2.52Z"
-                  />
-                </svg>
-
-                <span className="text-green-300">{parseInt(getTagValues("value", bountyEvent.tags)).toLocaleString()}</span>
-                <span className="text-green-300">(sats)</span>
+              <div className="flex items-center text-3xl text-white">
+                <div className="text-bitcoin">
+                  <SatoshiV2Icon style={{ height: "2rem", width: "2rem" }} />
+                </div>
+                <span className="text-bitcoin">{parseInt(getTagValues("value", bountyEvent.tags)).toLocaleString()}</span>
               </div>
 
               <span className="inline-flex items-center gap-x-3 rounded-md px-3 py-2 text-sm font-medium text-white ring-2 ring-inset ring-gray-800">
@@ -147,7 +141,6 @@ export default function BountyPage() {
                   {bountyEvent?.pubkey && naddrPointer && (
                     <Link
                       className="flex items-center gap-x-2"
-
                       href={`/u/${nip19.npubEncode(
                         getProfile(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.publicKey || ""
                       )}`}
@@ -155,7 +148,7 @@ export default function BountyPage() {
                       <img
                         src={getProfile(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.picture}
                         alt=""
-                        className="h-8 w-8 rounded-full ring-1 ring-gray-700 bg-gray-800"
+                        className="h-8 w-8 rounded-full bg-gray-800 ring-1 ring-gray-700"
                       />
                       <div className="truncate text-sm font-medium leading-6 text-white">
                         {getProfile(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.name}
