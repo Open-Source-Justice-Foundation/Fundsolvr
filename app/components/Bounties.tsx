@@ -121,15 +121,15 @@ export default function Bounties() {
       </div>
 
       <div className="flex w-full max-w-5xl gap-x-2 border-b border-gray-600 px-2 pb-3 text-gray-300">
-        <span className="flex items-center gap-x-2 border-r border-gray-700 pr-2">
+        <span className="cursor-pointer flex items-center gap-x-2 border-r border-gray-700 pr-2">
           <NewspaperIcon className="h-5 w-5" aria-hidden="true" />
           All Bounties
         </span>
-        <span className="flex items-center gap-x-2 border-r border-gray-700 pr-2">
+        <span className="cursor-pointer flex items-center gap-x-2 border-r border-gray-700 pr-2">
           <ArrowUpTrayIcon className="h-5 w-5" aria-hidden="true" />
           Posted Bounties
         </span>
-        <span className="flex items-center gap-x-2">
+        <span className="cursor-pointer flex items-center gap-x-2">
           <UserIcon className="h-5 w-5" aria-hidden="true" />
           Assigned Bounties
         </span>
