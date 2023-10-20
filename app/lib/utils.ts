@@ -44,6 +44,19 @@ export function createUniqueUrl(title: string): string {
   return `${titleSlug}-${uniqueHash}`;
 }
 
+export function removeMarkdownTitles(text: string) {
+    const titleRegex = /^#+\s.*$/gm;
+    return text.replace(titleRegex, '');
+}
+
+export function truncateText(text: string, maxLength: number) {
+    if (text.length <= maxLength) {
+        return text;
+    }
+    return text.substring(0, maxLength - 3) + '...';
+}
+
+
 export function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }

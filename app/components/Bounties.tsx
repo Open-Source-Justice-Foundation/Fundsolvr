@@ -96,42 +96,13 @@ export default function Bounties() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-y-8 rounded-lg py-6">
-      <table className="container mx-auto w-full whitespace-nowrap text-left">
-        <colgroup>
-          <col className="w-full sm:w-4/12" />
-          <col className="lg:w-1/12" />
-          <col className="lg:w-1/12" />
-          <col className="lg:w-1/12" />
-          <col className="lg:w-1/12" />
-        </colgroup>
-        <thead className="border-b border-gray-700 text-sm leading-6 text-white">
-          <tr className="">
-            <th scope="col" className="py-2 pl-4 pr-8 font-semibold sm:pl-6 lg:pl-8">
-              Title
-            </th>
-            <th scope="col" className="py-2 pr-8 font-semibold sm:table-cell">
-              Value
-            </th>
-            <th scope="col" className="hidden py-2 pr-4 text-right font-semibold sm:pr-8 sm:text-left lg:table-cell lg:pr-8">
-              Author/Company
-            </th>
-            <th scope="col" className="hidden py-2 pr-8 font-semibold md:table-cell lg:pr-8">
-              Status
-            </th>
-            <th scope="col" className="hidden py-2 font-semibold sm:table-cell lg:w-full xl:w-fit">
-              Posted Date
-            </th>
-          </tr>
-        </thead>
-        {mounted && (
-          <tbody className="divide-y divide-gray-700/50">
-            {bountyEvents[relayUrl] && bountyEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)}
-          </tbody>
-        )}
-      </table>
+      {mounted && <ul
+        className="w-full max-w-5xl flex flex-col items-center justify-center gap-y-4 rounded-lg py-6"
+
+      >{bountyEvents[relayUrl] && bountyEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)}</ul>}
       <button
         onClick={getBounties}
-        className="flex items-center gap-x-2 rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-gray-200 hover:bg-indigo-500"
+        className="flex items-center gap-x-2 rounded-lg bg-indigo-600 px-3 py-2 mb-6 text-sm font-medium text-gray-200 hover:bg-indigo-500"
       >
         Load More
       </button>

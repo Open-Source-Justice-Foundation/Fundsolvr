@@ -16,7 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen">
         <Sidebar />
         <Header />
-        <Subheader />
+        {/* <Subheader /> */}
         {children}
       </body>
     </html>
