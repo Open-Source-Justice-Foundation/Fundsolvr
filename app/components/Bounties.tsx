@@ -21,10 +21,9 @@ export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
   const { setProfile } = useProfileStore();
   const { setBountyEvents, getBountyEvents, bountyEvents } = useBountyEventStore();
-  const { setUserEvents, getUserEvents, userEvents } = useUserEventStore();
+  const { setUserEvents, userEvents } = useUserEventStore();
   const { getUserPublicKey } = useUserProfileStore();
   const [mounted, setMounted] = useState(false);
-  // const [showUserBounties, setShowUserBounties] = useState(false);
 
   enum BountyType {
     all = "all",
@@ -51,7 +50,6 @@ export default function Bounties() {
 
   const getBounties = async () => {
     const events: Event[] = [];
-    const userEvents: Event[] = [];
     const pubkeys = new Set();
 
     if (bountyEvents[relayUrl]) {
@@ -63,7 +61,6 @@ export default function Bounties() {
 
     const onEvent = (event: Event) => {
       const value = getTagValues("value", event.tags);
-
       if (value && value.length > 0) {
         events.push(event);
         console.log(value);
@@ -127,7 +124,6 @@ export default function Bounties() {
 
       if (value && value.length > 0) {
         events.push(event);
-        // console.log(event.pubkey, getUserPublicKey())
         console.log(value);
         pubkeys.add(event.pubkey);
       }
