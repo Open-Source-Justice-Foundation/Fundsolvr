@@ -95,8 +95,12 @@ export default function BountyPage() {
           <div className="flex flex-col gap-y-2">
             <h2 className="text-3xl font-bold tracking-tight text-white">{getProfile(relayUrl, publicKey)?.name}</h2>
             <div className="flex items-center gap-x-2">
-              <span className="text-gray-500 dark:text-gray-400">{getProfile(relayUrl, publicKey)?.nip05}</span>
-              <span className="text-gray-500 dark:text-gray-400">•</span>
+              {getProfile(relayUrl, publicKey)?.nip05 && (
+                <>
+                  <span className="text-gray-500 dark:text-gray-400">{getProfile(relayUrl, publicKey)?.nip05}</span>
+                  <span className="text-gray-500 dark:text-gray-400">•</span>
+                </>
+              )}
               <span className="text-gray-500 dark:text-gray-400">{getProfile(relayUrl, publicKey)?.lud16}</span>
             </div>
           </div>
