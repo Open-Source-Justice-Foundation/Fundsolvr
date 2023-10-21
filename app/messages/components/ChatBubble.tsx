@@ -7,7 +7,7 @@ interface IChatBubbleProps {
 
 const ChatBubble = ({ text, rtl }: IChatBubbleProps) => {
   return (
-    <div className={classNames("max-w-[85%] bg-gray-800 p-4", rtl ? "rounded-l-lg rounded-tr-lg ml-auto" : "rounded-r-lg rounded-tl-lg mr-auto")}>
+    <div className={classNames("max-w-[85%] bg-white dark:bg-gray-800 p-4", rtl ? "rounded-l-lg rounded-tr-lg ml-auto" : "rounded-r-lg rounded-tl-lg mr-auto")}>
       {text}
     </div>
   );

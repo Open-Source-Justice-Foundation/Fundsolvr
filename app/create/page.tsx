@@ -73,19 +73,19 @@ export default function CreateBounty() {
   };
 
   return (
-    <main className="mx-auto max-w-3xl pb-24 pt-4">
+    <main className="mx-auto max-w-3xl pb-24 pt-10">
       <div className="px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-gray-100">Create Bounty</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Create Bounty</h1>
         <div className="mt-8">
-          <h2 className="font-semibold text-gray-100">Title</h2>
+          <h2 className="font-semibold text-gray-800 dark:text-gray-100">Title</h2>
           <input
             type="text"
             value={title}
             onChange={handleTitleChange}
-            className="mt-4 w-full rounded border border-gray-600 bg-gray-700 p-2 text-gray-100"
+            className="mt-4 w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
             placeholder="Bounty title"
           />
-          <h2 className="pb-4 pt-8 font-semibold text-gray-100">Content</h2>
+          <h2 className="pb-4 pt-8 font-semibold text-gray-800 dark:text-gray-100">Content</h2>
           <MdEditor
             config={{
               view: {
@@ -102,12 +102,12 @@ export default function CreateBounty() {
             onChange={handleEditorChange}
           />
 
-          <h2 className="pt-8 font-semibold text-gray-100">Reward (sats)</h2>
+          <h2 className="pt-8 font-semibold text-gray-800 dark:text-gray-100">Reward (sats)</h2>
           <input
             type="text"
             value={reward}
             onChange={handleRewardChange}
-            className="mt-4 w-full rounded border border-gray-600 bg-gray-700 p-2 text-gray-100"
+            className="mt-4 w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
             placeholder="Value in sats"
           />
           {/* TODO: handle tags */}
@@ -121,7 +121,7 @@ export default function CreateBounty() {
           {/* /> */}
           <div className="mt-6 flex items-center justify-between">
             <button
-              className="flex items-center gap-x-2 rounded-lg bg-blue-700 px-3 py-2 text-sm font-medium text-gray-200"
+              className="flex items-center gap-x-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500 px-3 py-2 text-sm font-medium text-white"
               onClick={handlePublish}
             >
               Create Bounty

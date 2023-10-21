@@ -26,6 +26,7 @@ export type Profile = {
   github: string;
   publicKeyGistId: string;
   banner: string;
+  location?: string;
 };
 
 export type RelayMenuActiveTab = "Read From" | "Post To" | "Settings" | "Discover";
