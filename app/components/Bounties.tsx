@@ -106,7 +106,7 @@ export default function Bounties() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-y-8 rounded-lg py-6">
-      <div className="flex w-full max-w-5xl flex-col gap-y-2">
+      <div className="flex w-full max-w-4xl flex-col gap-y-2">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-medium leading-6 text-gray-100">Bounties</h1>
           <button
@@ -120,7 +120,7 @@ export default function Bounties() {
         <p className="text-lg text-gray-400">Bounties are a way to incentivize work on a project.</p>
       </div>
 
-      <div className="flex w-full max-w-5xl justify-center gap-x-2 overflow-auto border-b border-gray-600 px-2 pb-3 text-gray-300 sm:justify-start">
+      <div className="flex w-full max-w-4xl justify-center gap-x-2 overflow-auto border-b border-gray-600 px-2 pb-3 text-gray-300 sm:justify-start">
         <div className="ml-16 flex cursor-pointer items-center gap-x-2 border-r border-gray-700 pr-2 hover:text-gray-100 sm:ml-0">
           <NewspaperIcon className="h-5 w-5" aria-hidden="true" />
           <span className="whitespace-nowrap">All Bounties</span>
@@ -136,7 +136,7 @@ export default function Bounties() {
       </div>
 
       {mounted && (
-        <ul className="flex w-full max-w-5xl flex-col items-center justify-center gap-y-4 rounded-lg py-6">
+        <ul className="flex w-full max-w-4xl flex-col items-center justify-center gap-y-4 rounded-lg py-6">
           {bountyEvents[relayUrl] && bountyEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)}
         </ul>
       )}

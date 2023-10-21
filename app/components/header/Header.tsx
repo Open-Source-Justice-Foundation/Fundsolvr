@@ -11,7 +11,7 @@ export default function Header() {
   const { toggleSidebar } = useSidebarStore();
 
   return (
-    <div className="container mx-auto flex max-w-5xl flex-col border-b border-gray-800">
+    <div className="container mx-auto flex max-w-4xl flex-col border-b border-gray-800">
       <div className="top-0 z-40 flex h-16 w-full shrink-0 items-center gap-x-4 py-12 shadow-sm">
         <div className="flex flex-1 justify-end gap-x-4 self-stretch px-4 lg:px-0">
           <div className="flex w-full items-center justify-between">
