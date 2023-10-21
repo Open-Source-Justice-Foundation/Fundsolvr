@@ -111,7 +111,7 @@ export default function BountyPage() {
       {bountyEvent && (
         <div className="mx-auto max-w-4xl">
           <Link href="/">
-            <button className="flex items-center gap-x-2 rounded-lg bg-gray-800 px-3 py-2 text-sm font-medium text-gray-200 hover:bg-gray-700/50">
+            <button className="flex items-center gap-x-2 rounded-lg shadow-lg shadow-gray-900/5 bg-gray-50 dark:bg-gray-800 px-3 py-2 text-sm font-medium text-gray-800 ring-1 ring-gray-300 dark:ring-gray-800 dark:text-gray-200 hover:bg-white dark:hover:bg-gray-700/50">
               <ArrowLeftIcon className="h-4 w-4" />
               Back to all Bounties
             </button>
@@ -125,7 +125,7 @@ export default function BountyPage() {
                 <span className="text-bitcoin">{parseInt(getTagValues("value", bountyEvent.tags)).toLocaleString()}</span>
               </div>
 
-              <span className="inline-flex items-center gap-x-3 rounded-md px-3 py-2 text-sm font-medium text-white ring-2 ring-inset ring-gray-800">
+              <span className="inline-flex items-center gap-x-3 rounded-md px-3 py-2 text-sm font-medium bg-white text-gray-600 dark:text-white ring-2 ring-inset ring-gray-300 dark:bg-gray-900 dark:ring-gray-800">
                 <svg className="h-2 w-2 fill-yellow-400" viewBox="0 0 6 6" aria-hidden="true">
                   <circle cx={3} cy={3} r={3} />
                 </svg>
@@ -134,7 +134,7 @@ export default function BountyPage() {
             </div>
 
             <div>
-              <h2 className="mb-4 text-2xl text-white">{getTagValues("title", bountyEvent.tags)}</h2>
+              <h2 className="mb-4 text-2xl text-gray-900 dark:text-white">{getTagValues("title", bountyEvent.tags)}</h2>
 
               <div className="flex justify-between">
                 <div className="flex items-center gap-x-4">
@@ -148,9 +148,9 @@ export default function BountyPage() {
                       <img
                         src={getProfile(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.picture}
                         alt=""
-                        className="h-8 w-8 rounded-full bg-gray-800 ring-1 ring-gray-700"
+                        className="h-8 w-8 rounded-full ring-1 ring-white dark:ring-gray-700"
                       />
-                      <div className="truncate text-sm font-medium leading-6 text-white">
+                      <div className="truncate text-sm font-medium leading-6 text-gray-800 dark:text-white">
                         {getProfile(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.name}
                       </div>
                     </Link>
@@ -160,7 +160,7 @@ export default function BountyPage() {
                 <div className="flex gap-x-2">
                   {bountyEvent?.pubkey && naddrPointer && (
                     <Link
-                      className="flex items-center justify-center rounded-lg bg-gray-700/80 px-2 text-white hover:bg-gray-700"
+                      className="flex items-center justify-center rounded-lg bg-gray-400 hover:bg-gray-500 dark:bg-gray-700/80 px-2 text-white dark:hover:bg-gray-700"
                       href={`/messages/${nip19.npubEncode(
                         getProfile(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.publicKey || ""
                       )}`}
@@ -169,7 +169,7 @@ export default function BountyPage() {
                     </Link>
                   )}
 
-                  <button className="flex items-center gap-x-2 rounded-lg bg-indigo-500/80 px-2 text-sm font-medium text-white hover:bg-indigo-500">
+                  <button className="flex items-center gap-x-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-500/80 px-2 text-sm font-medium text-white dark:hover:bg-indigo-500">
                     <UserPlusIcon className="h-5 w-5" />
                     Apply
                   </button>
@@ -179,9 +179,9 @@ export default function BountyPage() {
           </div>
 
           <div className="mt-6 flex items-center justify-between">
-            <h3 className="text-xl font-bold text-white">Bounty Description</h3>
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white">Bounty Description</h3>
 
-            <div className="flex gap-2 text-sm text-gray-500">
+            <div className="flex gap-2 text-sm text-gray-700 dark:text-gray-500">
               <span>Posted:</span>
               {new Date(bountyEvent.created_at * 1000).toLocaleDateString("en-US", {
                 year: "numeric",
@@ -191,9 +191,9 @@ export default function BountyPage() {
             </div>
           </div>
 
-          <div className="mt-6 rounded-lg bg-gray-800 p-6">
+          <div className="mt-6 rounded-lg bg-white dark:bg-gray-800 p-6">
             <>
-              <div className="prose prose-invert" dangerouslySetInnerHTML={{ __html: markdown }}>
+              <div className="prose dark:prose-invert" dangerouslySetInnerHTML={{ __html: markdown }}>
                 {/* {bountyEvent.content} */}
               </div>
               {/* <div className="mb-2 text-xl text-white">{bountyEvent.tags.join(", ")}</div> */}

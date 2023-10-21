@@ -59,14 +59,14 @@ const TABS = [
 export default function MessagesPage() {
   return (
     <Tab.Group>
-      <Tab.List className="flex items-center border-b border-b-gray-600">
+      <Tab.List className="flex items-center border-b border-b-gray-400 dark:border-b-gray-600">
         {TABS.map(({ title, unread }) => (
           <Tab
             key={title}
             className={({ selected }) =>
               classNames(
                 `flex items-center gap-2 rounded-t-md border-x border-t p-4`,
-                selected ? "border-gray-600 focus:outline-none" : "border-transparent"
+                selected ? "border-gray-400 dark:border-gray-600 focus:outline-none" : "border-transparent"
               )
             }
           >

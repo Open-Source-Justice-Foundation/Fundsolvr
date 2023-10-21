@@ -108,28 +108,28 @@ export default function Bounties() {
     <div className="flex flex-col items-center justify-center gap-y-8 rounded-lg py-6">
       <div className="flex w-full max-w-4xl flex-col gap-y-2">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-medium leading-6 text-gray-100">Bounties</h1>
+          <h1 className="text-3xl font-medium leading-6 text-gray-800 dark:text-gray-100">Bounties</h1>
           <button
             onClick={navigateToCreate}
-            className="flex items-center gap-x-2 rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-500"
+            className="flex items-center gap-x-2 rounded-lg bg-indigo-500 dark:bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-600 dark:hover:bg-indigo-500 "
           >
             <PlusIcon className="h-5 w-5" aria-hidden="true" />
             Bounty
           </button>
         </div>
-        <p className="text-lg text-gray-400">Bounties are a way to incentivize work on a project.</p>
+        <p className="text-lg text-gray-500 dark:text-gray-400 hidden md:block">Bounties are a way to incentivize work on a project.</p>
       </div>
 
-      <div className="flex w-full max-w-4xl justify-center gap-x-2 overflow-auto border-b border-gray-600 px-2 pb-3 text-gray-300 sm:justify-start">
-        <div className="ml-16 flex cursor-pointer items-center gap-x-2 border-r border-gray-700 pr-2 hover:text-gray-100 sm:ml-0">
+      <div className="flex w-full max-w-4xl gap-x-2 md:overflow-hidden overflow-auto border-b dark:border-gray-600 border-gray-300 px-2 pb-3 text-gray-600 dark:text-gray-300 justify-start">
+        <div className="flex cursor-pointer items-center gap-x-2 border-r border-gray-200 dark:border-gray-700 pr-2 hover:text-gray-900 dark:hover:text-gray-100 sm:ml-0">
           <NewspaperIcon className="h-5 w-5" aria-hidden="true" />
           <span className="whitespace-nowrap">All Bounties</span>
         </div>
-        <div className="flex cursor-pointer items-center gap-x-2 border-r border-gray-700 pr-2 hover:text-gray-100">
+        <div className="flex cursor-pointer items-center gap-x-2 border-r border-gray-200 dark:border-gray-700 pr-2 hover:text-gray-900 dark:hover:text-gray-100">
           <ArrowUpTrayIcon className="h-5 w-5" aria-hidden="true" />
           <span className="whitespace-nowrap">Posted Bounties</span>
         </div>
-        <div className="flex cursor-pointer items-center gap-x-2 hover:text-gray-100">
+        <div className="flex cursor-pointer items-center gap-x-2 hover:text-gray-900 dark:hover:text-gray-100">
           <UserIcon className="h-5 w-5" aria-hidden="true" />
           <span className="whitespace-nowrap">Assigned Bounties</span>
         </div>
@@ -142,7 +142,7 @@ export default function Bounties() {
       )}
       <button
         onClick={getBounties}
-        className="mb-6 flex items-center gap-x-2 rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-gray-200 hover:bg-indigo-500"
+        className="mb-6 flex items-center gap-x-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-600 px-3 py-2 text-sm font-medium text-white dark:hover:bg-indigo-500"
       >
         Load More
       </button>

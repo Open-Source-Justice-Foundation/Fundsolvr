@@ -59,20 +59,20 @@ const timeline = [
 
 export default function Timeline() {
   return (
-    <div className="flow-root border-t border-gray-600 px-4 pb-8 pt-16 mt-8">
+    <div className="flow-root border-t border-gray-300 dark:border-gray-600 px-4 pb-8 pt-16 mt-8">
       <ul role="list" className="-mb-8">
         {timeline.map((event, eventIdx) => (
           <li key={event.id}>
             <div className="relative pb-8">
               {eventIdx !== timeline.length - 1 ? (
-                <span className="absolute left-4 top-4 -ml-px h-full w-0.5 bg-gray-700" aria-hidden="true" />
+                <span className="absolute left-4 top-4 -ml-px h-full w-0.5 bg-gray-300 dark:bg-gray-700" aria-hidden="true" />
               ) : null}
-              <div className="relative flex space-x-3">
+              <div className="relative flex space-x-5">
                 <div>
                   <span
                     className={classNames(
                       event.iconBackground,
-                      "flex h-8 w-8 items-center justify-center rounded-full ring-8 ring-gray-600"
+                      "flex h-8 w-8 items-center justify-center rounded-full ring-8 ring-gray-300 dark:ring-gray-700"
                     )}
                   >
                     <event.icon className="h-5 w-5 text-white" aria-hidden="true" />
@@ -80,14 +80,14 @@ export default function Timeline() {
                 </div>
                 <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
                   <div>
-                    <p className="text-sm text-gray-300">
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
                       {event.content}{" "}
-                      <a href={event.href} className="font-medium text-gray-100">
+                      <a href={event.href} className="font-medium text-gray-800 dark:text-gray-100">
                         {event.target}
                       </a>
                     </p>
                   </div>
-                  <div className="whitespace-nowrap text-right text-sm text-gray-300">
+                  <div className="whitespace-nowrap text-right text-sm text-gray-600 dark:text-gray-300">
                     <time dateTime={event.datetime}>{event.date}</time>
                   </div>
                 </div>

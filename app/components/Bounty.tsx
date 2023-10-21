@@ -61,7 +61,7 @@ export default function Bounty({ event }: Props) {
       </style>
       <li
         key={event.id}
-        className="relative flex w-full cursor-pointer flex-col gap-y-4 rounded-lg border border-gray-500/30 bg-gray-800 py-4 pr-4 transition duration-150 ease-in-out hover:border-gray-500/60"
+        className="relative flex w-full cursor-pointer flex-col gap-y-4 rounded-lg border border-gray-200 bg-white shadow-lg shadow-black/10 py-4 pr-4 transition duration-150 ease-in-out hover:border-gray-400/70 dark:border-gray-500/30 dark:bg-gray-800/80 dark:hover:border-gray-500/60"
         onClick={routeBounty}
       >
         <div className="flex justify-between pl-1.5">
@@ -76,20 +76,20 @@ export default function Bounty({ event }: Props) {
             <div className={classNames(statuses["Open"], "flex-none rounded-full p-1")}>
               <div className="h-1.5 w-1.5 rounded-full bg-current" />
             </div>
-            <div className="hidden text-white sm:block">{"Open"}</div>
+            <div className="hidden text-gray-800 dark:text-white sm:block">{"Open"}</div>
           </div>
         </div>
 
         <div className="flex flex-col gap-x-3 gap-y-4 pl-4">
-          <div className="leading-6 font-bold text-gray-100">{getTagValues("title", event.tags)}</div>
-          <div className="leading-6 text-gray-100">{truncateText(removeMarkdownTitles(event.content), 120)}</div>
+          <div className="font-bold leading-6 text-gray-800 dark:text-gray-100">{getTagValues("title", event.tags)}</div>
+          <div className="leading-6 text-gray-800 dark:text-gray-100">{truncateText(removeMarkdownTitles(event.content), 120)}</div>
         </div>
         <div className="flex justify-between">
-          <div className="flex items-center gap-x-2 pl-4 text-gray-400">
+          <div className="flex items-center gap-x-2 pl-4 text-gray-700 dark:text-gray-400">
             <img
               src={getProfile(relayUrl, event.pubkey)?.picture}
               alt=""
-              className="h-8 w-8 rounded-full bg-gray-800 ring-1 ring-gray-700"
+              className="h-8 w-8 rounded-full bg-gray-800 ring-1 ring-white dark:ring-gray-700"
             />
             <div className="truncate text-sm font-medium leading-6 ">{getProfile(relayUrl, event.pubkey)?.name}</div>
             <span>•</span>
@@ -97,7 +97,7 @@ export default function Bounty({ event }: Props) {
               <time>{new Date(event.created_at * 1000).toDateString()}</time>
             </div>
           </div>
-          <div className="text-gray-400 flex items-center gap-x-2 text-sm leading-6">
+          <div className="flex items-center gap-x-2 text-sm leading-6 text-gray-700 dark:text-gray-400">
             <UserIcon className="h-4 w-4 " aria-hidden="true" />
             <span>2 Applicants</span>
           </div>
