@@ -8,9 +8,10 @@ import { usePathname } from "next/navigation";
 import { useProfileStore } from "@/app/stores/profileStore";
 import { useRelayStore } from "@/app/stores/relayStore";
 import { Profile } from "@/app/types";
-import { ArrowUpTrayIcon, CheckIcon, NewspaperIcon, PaperAirplaneIcon, PencilSquareIcon, UserIcon, UserPlusIcon } from "@heroicons/react/20/solid";
+import { PaperAirplaneIcon, UserPlusIcon } from "@heroicons/react/20/solid";
 import { nip19 } from "nostr-tools";
 import type { Event } from "nostr-tools";
+
 import Timeline from "./Timeline";
 
 export default function BountyPage() {
@@ -104,7 +105,6 @@ export default function BountyPage() {
         <span className="max-w-sm break-words text-lg text-gray-100 md:max-w-xl">{getProfile(relayUrl, publicKey)?.about}</span>
 
         <Timeline />
-
       </div>
     </div>
   );
