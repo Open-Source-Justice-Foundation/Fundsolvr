@@ -13,15 +13,13 @@ import { getTagValues } from "../lib/utils";
 import { useBountyEventStore } from "../stores/eventStore";
 import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
-import { useUserEventStore } from "../stores/userEventStore";
 import { Profile } from "../types";
 import Bounty from "./Bounty";
 
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
   const { setProfile } = useProfileStore();
-  const { setBountyEvents, getBountyEvents, bountyEvents } = useBountyEventStore();
-  const { setUserEvents, userEvents } = useUserEventStore();
+  const { setBountyEvents, getBountyEvents, bountyEvents, setUserEvents, userEvents } = useBountyEventStore();
   const { getUserPublicKey } = useUserProfileStore();
   const [mounted, setMounted] = useState(false);
 
@@ -42,9 +40,10 @@ export default function Bounties() {
     router.push("/create");
   }
 
+  const BOUNTY_LIMIT = 10;
   const bountyFilter = {
     kinds: [30050],
-    limit: 10,
+    limit: BOUNTY_LIMIT,
     until: undefined,
   };
 
@@ -56,7 +55,7 @@ export default function Bounties() {
       const lastEvent = bountyEvents[relayUrl].slice(-1)[0];
       console.log("lastEvent", lastEvent);
       // @ts-ignore
-      bountyFilter.until = lastEvent.created_at - 10;
+      bountyFilter.until = lastEvent.created_at - BOUNTY_LIMIT;
     }
 
     const onEvent = (event: Event) => {
@@ -110,13 +109,12 @@ export default function Bounties() {
 
   const getUserBounties = async () => {
     const events: Event[] = [];
-    const pubkeys = new Set();
 
     if (userEvents[relayUrl]) {
       const lastEvent = userEvents[relayUrl].slice(-1)[0];
       console.log("lastEvent", lastEvent);
       // @ts-ignore
-      bountyFilter.until = lastEvent.created_at - 10;
+      bountyFilter.until = lastEvent.created_at - BOUNTY_LIMIT;
     }
 
     const onEvent = (event: Event) => {
@@ -125,7 +123,6 @@ export default function Bounties() {
       if (value && value.length > 0) {
         events.push(event);
         console.log(value);
-        pubkeys.add(event.pubkey);
       }
     };
 
@@ -168,21 +165,21 @@ export default function Bounties() {
           <h1 className="text-3xl font-medium leading-6 text-gray-800 dark:text-gray-100">Bounties</h1>
           <button
             onClick={navigateToCreate}
-            className="flex items-center gap-x-2 rounded-lg bg-indigo-500 dark:bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-600 dark:hover:bg-indigo-500 "
+            className="flex items-center gap-x-2 rounded-lg bg-indigo-500 px-4 py-2 font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500 "
           >
             <PlusIcon className="h-5 w-5" aria-hidden="true" />
             Bounty
           </button>
         </div>
-        <p className="text-lg text-gray-500 dark:text-gray-400 hidden md:block">Bounties are a way to incentivize work on a project.</p>
+        <p className="hidden text-lg text-gray-500 dark:text-gray-400 md:block">Bounties are a way to incentivize work on a project.</p>
       </div>
-      <div className="flex w-full max-w-4xl gap-x-2 md:overflow-hidden overflow-auto border-b dark:border-gray-600 border-gray-300 px-2 pb-3 text-gray-600 dark:text-gray-300 justify-start">
+      <div className="flex w-full max-w-4xl justify-start gap-x-2 overflow-auto border-b border-gray-300 px-2 pb-3 text-gray-600 dark:border-gray-600 dark:text-gray-300 md:overflow-hidden">
         <div
           onClick={async () => {
             await getBounties();
             setShowBountyType(BountyType.all);
           }}
-          className="flex cursor-pointer items-center gap-x-2 border-r border-gray-200 dark:border-gray-700 pr-2 hover:text-gray-900 dark:hover:text-gray-100 sm:ml-0"
+          className="flex cursor-pointer items-center gap-x-2 border-r border-gray-200 pr-2 hover:text-gray-900 dark:border-gray-700 dark:hover:text-gray-100 sm:ml-0"
         >
           <NewspaperIcon className="h-5 w-5" aria-hidden="true" />
           <span className="whitespace-nowrap">All Bounties</span>
@@ -192,7 +189,7 @@ export default function Bounties() {
             await getUserBounties();
             setShowBountyType(BountyType.userPosted);
           }}
-          className="flex cursor-pointer items-center gap-x-2 border-r border-gray-200 dark:border-gray-700 pr-2 hover:text-gray-900 dark:hover:text-gray-100"
+          className="flex cursor-pointer items-center gap-x-2 border-r border-gray-200 pr-2 hover:text-gray-900 dark:border-gray-700 dark:hover:text-gray-100"
         >
           <ArrowUpTrayIcon className="h-5 w-5" aria-hidden="true" />
           <span className="whitespace-nowrap">Posted Bounties</span>
@@ -212,7 +209,7 @@ export default function Bounties() {
         onClick={async () => {
           await getBounties();
         }}
-        className="mb-6 flex items-center gap-x-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-600 px-3 py-2 text-sm font-medium text-white dark:hover:bg-indigo-500"
+        className="mb-6 flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
       >
         Load More
       </button>
