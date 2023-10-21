@@ -20,7 +20,7 @@ export const useBountyEventStore = create<BountyEventState>()(
         getBountyEvents: (key: string) => get().bountyEvents[key] ?? [],
         cachedBountyEvent: null,
         setCachedBountyEvent: (bounty) => set({ cachedBountyEvent: bounty }),
-        getCachedBountyEvent: () => get().cachedBountyEvent,
+        getCachedBountyEvent: () => get().cachedBountyEvent,   
       }),
       {
         name: "resolvr-bounty-event-storage",
