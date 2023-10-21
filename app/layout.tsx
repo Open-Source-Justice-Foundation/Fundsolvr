@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/header/Header";
 import "./globals.css";
+import { Theme } from "./types";
 
 export const metadata: Metadata = {
   title: "resolvr",
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const theme = cookies().get("theme");
   return (
-    <html className={theme?.value}>
+    <html className={theme?.value || Theme.light}>
       <head />
 
       <body className="h-full bg-gray-100 dark:bg-gray-900">
