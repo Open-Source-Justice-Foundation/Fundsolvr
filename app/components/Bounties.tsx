@@ -28,6 +28,7 @@ export default function Bounties() {
     userPosted = "userPosted",
     assigned = "assigned",
   }
+  // TODO: externalize this state, for router.back
   const [bountyType, setBountyType] = useState<keyof typeof BountyType>(BountyType.all);
 
   const router = useRouter();
