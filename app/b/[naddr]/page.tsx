@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import { getTagValues } from "@/app/lib/utils";
 import { useBountyEventStore } from "@/app/stores/eventStore";
@@ -20,6 +21,8 @@ export default function BountyPage() {
   const { subscribe, relayUrl } = useRelayStore();
   const { getProfile, setProfile } = useProfileStore();
   const { cachedBountyEvent, setCachedBountyEvent } = useBountyEventStore();
+
+  const router = useRouter();
 
   const [naddr, setNaddr] = useState<string>("");
   const [naddrPointer, setNaddrPointer] = useState<AddressPointer>();
@@ -110,12 +113,13 @@ export default function BountyPage() {
     <div className="px-4 pb-20 pt-10">
       {bountyEvent && (
         <div className="mx-auto max-w-4xl">
-          <Link href="/">
-            <button className="flex items-center gap-x-2 rounded-lg shadow-lg shadow-gray-900/5 bg-gray-50 dark:bg-gray-800 px-3 py-2 text-sm font-medium text-gray-800 ring-1 ring-gray-300 dark:ring-gray-800 dark:text-gray-200 hover:bg-white dark:hover:bg-gray-700/50">
-              <ArrowLeftIcon className="h-4 w-4" />
-              Back to all Bounties
-            </button>
-          </Link>
+          <button
+            onClick={() => router.back()}
+            className="flex items-center gap-x-2 rounded-lg bg-gray-50 px-3 py-2 text-sm font-medium text-gray-800 shadow-lg shadow-gray-900/5 ring-1 ring-gray-300 hover:bg-white dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-800 dark:hover:bg-gray-700/50"
+          >
+            <ArrowLeftIcon className="h-4 w-4" />
+            Back to all Bounties
+          </button>
           <div className="flex flex-col gap-6 border-b border-gray-600 pb-8">
             <div className="mt-6 flex items-center justify-between">
               <div className="flex items-center text-3xl text-white">
@@ -125,7 +129,7 @@ export default function BountyPage() {
                 <span className="text-bitcoin">{parseInt(getTagValues("value", bountyEvent.tags)).toLocaleString()}</span>
               </div>
 
-              <span className="inline-flex items-center gap-x-3 rounded-md px-3 py-2 text-sm font-medium bg-white text-gray-600 dark:text-white ring-2 ring-inset ring-gray-300 dark:bg-gray-900 dark:ring-gray-800">
+              <span className="inline-flex items-center gap-x-3 rounded-md bg-white px-3 py-2 text-sm font-medium text-gray-600 ring-2 ring-inset ring-gray-300 dark:bg-gray-900 dark:text-white dark:ring-gray-800">
                 <svg className="h-2 w-2 fill-yellow-400" viewBox="0 0 6 6" aria-hidden="true">
                   <circle cx={3} cy={3} r={3} />
                 </svg>
@@ -160,7 +164,7 @@ export default function BountyPage() {
                 <div className="flex gap-x-2">
                   {bountyEvent?.pubkey && naddrPointer && (
                     <Link
-                      className="flex items-center justify-center rounded-lg bg-gray-400 hover:bg-gray-500 dark:bg-gray-700/80 px-2 text-white dark:hover:bg-gray-700"
+                      className="flex items-center justify-center rounded-lg bg-gray-400 px-2 text-white hover:bg-gray-500 dark:bg-gray-700/80 dark:hover:bg-gray-700"
                       href={`/messages/${nip19.npubEncode(
                         getProfile(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.publicKey || ""
                       )}`}
@@ -169,7 +173,7 @@ export default function BountyPage() {
                     </Link>
                   )}
 
-                  <button className="flex items-center gap-x-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-500/80 px-2 text-sm font-medium text-white dark:hover:bg-indigo-500">
+                  <button className="flex items-center gap-x-2 rounded-lg bg-indigo-500 px-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-500/80 dark:hover:bg-indigo-500">
                     <UserPlusIcon className="h-5 w-5" />
                     Apply
                   </button>
@@ -191,7 +195,7 @@ export default function BountyPage() {
             </div>
           </div>
 
-          <div className="mt-6 rounded-lg bg-white dark:bg-gray-800 p-6">
+          <div className="mt-6 rounded-lg bg-white p-6 dark:bg-gray-800">
             <>
               <div className="prose dark:prose-invert" dangerouslySetInnerHTML={{ __html: markdown }}>
                 {/* {bountyEvent.content} */}
