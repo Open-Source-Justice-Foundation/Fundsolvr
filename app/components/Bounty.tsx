@@ -50,6 +50,12 @@ export default function Bounty({ event }: Props) {
     router.push("/b/" + nip19.naddrEncode(addressPointer));
   };
 
+  function setupMarkdown(content: string) {
+    var md = require("markdown-it")();
+    var result = md.render(content || "");
+    return result;
+  }
+
   return (
     <>
       <style>
@@ -61,7 +67,7 @@ export default function Bounty({ event }: Props) {
       </style>
       <li
         key={event.id}
-        className="relative flex w-full cursor-pointer flex-col gap-y-4 rounded-lg border border-gray-200 bg-white shadow-lg shadow-black/10 py-4 pr-4 transition duration-150 ease-in-out hover:border-gray-400/70 dark:border-gray-500/30 dark:bg-gray-800/80 dark:hover:border-gray-500/60"
+        className="relative flex w-full cursor-pointer flex-col gap-y-4 rounded-lg border border-gray-200 bg-white py-4 pr-4 shadow-lg shadow-black/10 transition duration-150 ease-in-out hover:border-gray-400/70 dark:border-gray-500/30 dark:bg-gray-800/80 dark:hover:border-gray-500/60"
         onClick={routeBounty}
       >
         <div className="flex justify-between pl-1.5">
@@ -82,7 +88,10 @@ export default function Bounty({ event }: Props) {
 
         <div className="flex flex-col gap-x-3 gap-y-4 pl-4">
           <div className="font-bold leading-6 text-gray-800 dark:text-gray-100">{getTagValues("title", event.tags)}</div>
-          <div className="leading-6 text-gray-800 dark:text-gray-100">{truncateText(removeMarkdownTitles(event.content), 120)}</div>
+          <div
+            className="prose leading-6 text-gray-800 dark:text-gray-100"
+            dangerouslySetInnerHTML={{ __html: truncateText(removeMarkdownTitles(setupMarkdown(event.content)), 120) }}
+          ></div>
         </div>
         <div className="flex justify-between">
           <div className="flex items-center gap-x-2 pl-4 text-gray-700 dark:text-gray-400">
