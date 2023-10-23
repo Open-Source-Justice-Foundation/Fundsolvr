@@ -45,17 +45,23 @@ export function createUniqueUrl(title: string): string {
 }
 
 export function removeMarkdownTitles(text: string) {
-    const titleRegex = /^#+\s.*$/gm;
-    return text.replace(titleRegex, '');
+  // Remove Markdown titles
+  const titleRegex = /^#+\s.*$/gm;
+  text = text.replace(titleRegex, "");
+
+  // Remove Markdown images
+  const imageRegex = /!\[.*?\]\(.*?\)/g;
+  text = text.replace(imageRegex, "");
+
+  return text;
 }
 
 export function truncateText(text: string, maxLength: number) {
-    if (text.length <= maxLength) {
-        return text;
-    }
-    return text.substring(0, maxLength - 3) + '...';
+  if (text.length <= maxLength) {
+    return text;
+  }
+  return text.substring(0, maxLength - 3) + "...";
 }
-
 
 export function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
