@@ -50,12 +50,6 @@ export default function Bounty({ event }: Props) {
     router.push("/b/" + nip19.naddrEncode(addressPointer));
   };
 
-  function setupMarkdown(content: string) {
-    var md = require("markdown-it")();
-    var result = md.render(content || "");
-    return result;
-  }
-
   return (
     <>
       <style>
@@ -88,10 +82,7 @@ export default function Bounty({ event }: Props) {
 
         <div className="flex flex-col gap-x-3 gap-y-4 pl-4">
           <div className="font-bold leading-6 text-gray-800 dark:text-gray-100">{getTagValues("title", event.tags)}</div>
-          <div
-            className="prose leading-6 text-gray-800 dark:text-gray-100"
-            dangerouslySetInnerHTML={{ __html: truncateText(removeMarkdownTitles(setupMarkdown(event.content)), 120) }}
-          ></div>
+          <div className="prose leading-6 text-gray-800 dark:text-gray-100">{truncateText(removeMarkdownTitles(event.content), 120)}</div>
         </div>
         <div className="flex justify-between">
           <div className="flex items-center gap-x-2 pl-4 text-gray-700 dark:text-gray-400">
