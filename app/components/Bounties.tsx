@@ -19,7 +19,7 @@ import Bounty from "./Bounty";
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
   const { setProfile } = useProfileStore();
-  const { setBountyEvents, getBountyEvents, bountyEvents, setUserEvents, getUserEvents, userEvents } = useBountyEventStore();
+  const { setBountyEvents, getBountyEvents, bountyEvents, setUserEvents, getUserEvents, userEvents, bountyType, setBountyType } = useBountyEventStore();
   const { userPublicKey } = useUserProfileStore();
   const [mounted, setMounted] = useState(false);
 
@@ -28,8 +28,6 @@ export default function Bounties() {
     userPosted = "userPosted",
     assigned = "assigned",
   }
-  // TODO: externalize this state, for router.back
-  const [bountyType, setBountyType] = useState<keyof typeof BountyType>(BountyType.all);
 
   const router = useRouter();
 

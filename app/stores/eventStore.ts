@@ -16,6 +16,9 @@ interface BountyEventState {
   cachedUserEvent: Event | null;
   setCachedUserEvent: (userEvent: Event | null) => void;
   getCachedUserEvent: () => Event | null;
+
+  bountyType: "all" | "userPosted" | "assigned" ;
+  setBountyType: (bountyType: "all" | "userPosted" | "assigned") => void;
 }
 
 export const useBountyEventStore = create<BountyEventState>()(
@@ -35,6 +38,9 @@ export const useBountyEventStore = create<BountyEventState>()(
         cachedUserEvent: null,
         setCachedUserEvent: (userEvent) => set({ cachedUserEvent: userEvent }),
         getCachedUserEvent: () => get().cachedUserEvent,
+
+        bountyType: "all",
+        setBountyType: (bountyType) => set({ bountyType }),
       }),
       {
         name: "resolvr-bounty-event-storage",
