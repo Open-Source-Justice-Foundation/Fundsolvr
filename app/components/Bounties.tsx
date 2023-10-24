@@ -90,8 +90,6 @@ export default function Bounties() {
           picture: profileContent.picture,
           banner: profileContent.banner,
           website: profileContent.website,
-          github: profileContent.github,
-          publicKeyGistId: profileContent.publicKeyGistId,
         };
 
         setProfile(profile);
@@ -148,8 +146,6 @@ export default function Bounties() {
           picture: profileContent.picture,
           banner: profileContent.banner,
           website: profileContent.website,
-          github: profileContent.github,
-          publicKeyGistId: profileContent.publicKeyGistId,
         };
 
         setProfile(profile);
