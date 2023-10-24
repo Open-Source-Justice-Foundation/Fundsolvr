@@ -20,6 +20,15 @@ export default function Settings() {
   const [imageURL, setImageUrl] = useState("");
   const [username, setUsername] = useState("");
   const [about, setAbout] = useState("");
+  const [currentUserEvent, setCurrentUserEvent] = useState<Event>({
+    kind: 0,
+    tags: [],
+    content: "",
+    created_at: 0,
+    pubkey: "",
+    id: "",
+    sig: "",
+  });
 
   const handleGistIdChange = (event: any) => {
     setGistId(event.target.value);
@@ -105,13 +114,12 @@ export default function Settings() {
 
     const onEOSE = () => {
       const parsedUserProfile: Metadata = JSON.parse(userProfileEvent.content);
-      console.log(parsedUserProfile);
+      setCurrentUserEvent(userProfileEvent);
       setMetadata(parsedUserProfile);
     };
     subscribe([relayUrl], userFilter, onEvent, onEOSE);
   };
 
-  // TODO: Form validation or use a react component with built in
   const setMetadata = (metadata: Metadata) => {
     const { name, picture, about } = metadata;
     if (picture) {
@@ -127,17 +135,15 @@ export default function Settings() {
 
   const saveMetadata = async (e: React.MouseEvent) => {
     e.preventDefault();
+    const currentContent = JSON.parse(currentUserEvent.content);
+    const updatedUserProfile = JSON.stringify({ ...currentContent, name: username, picture: imageURL, about });
     let event: Event = {
       id: "",
       sig: "",
       kind: 0,
       created_at: Math.floor(Date.now() / 1000),
-      tags: [],
-      content: JSON.stringify({
-        name: username,
-        picture: imageURL,
-        about: about,
-      }),
+      tags: currentUserEvent?.tags || [],
+      content: updatedUserProfile,
       pubkey: getUserPublicKey(),
     };
     event = await window.nostr.signEvent(event);
