@@ -19,7 +19,8 @@ import Bounty from "./Bounty";
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
   const { setProfile } = useProfileStore();
-  const { setBountyEvents, getBountyEvents, bountyEvents, setUserEvents, getUserEvents, userEvents, bountyType, setBountyType } = useBountyEventStore();
+  const { setBountyEvents, getBountyEvents, bountyEvents, setUserEvents, getUserEvents, userEvents, bountyType, setBountyType } =
+    useBountyEventStore();
   const { userPublicKey } = useUserProfileStore();
   const [mounted, setMounted] = useState(false);
 
@@ -208,6 +209,10 @@ export default function Bounties() {
     }
   }
 
+  function classNames(...classes: any) {
+    return classes.filter(Boolean).join(" ");
+  }
+
   return (
     <div className="flex flex-col items-center justify-center gap-y-8 rounded-lg py-6">
       <div className="flex w-full max-w-4xl flex-col gap-y-2">
@@ -227,19 +232,36 @@ export default function Bounties() {
       <div className="flex w-full max-w-4xl justify-start gap-x-2 overflow-auto border-b border-gray-300 px-2 pb-3 text-gray-600 dark:border-gray-600 dark:text-gray-300 md:overflow-hidden">
         <div
           onClick={switchToAll}
-          className="flex cursor-pointer items-center gap-x-2 border-r border-gray-200 pr-2 hover:text-gray-900 dark:border-gray-700 dark:hover:text-gray-100 sm:ml-0"
+          className={classNames(
+            bountyType === BountyType.all
+              ? "border-indigo-300 text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
+              : "border-transparent hover:text-gray-700 dark:hover:text-gray-200",
+            "flex cursor-pointer items-center gap-x-2 border-r border-gray-200 pr-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
+          )}
         >
           <NewspaperIcon className="h-5 w-5" aria-hidden="true" />
           <span className="whitespace-nowrap">All Bounties</span>
         </div>
         <div
           onClick={switchToPosted}
-          className="flex cursor-pointer items-center gap-x-2 border-r border-gray-200 pr-2 hover:text-gray-900 dark:border-gray-700 dark:hover:text-gray-100"
+          className={classNames(
+            bountyType === BountyType.userPosted
+              ? "border-indigo-300 text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
+              : "border-transparent hover:text-gray-700 dark:hover:text-gray-200",
+            "flex cursor-pointer items-center gap-x-2 border-r border-gray-200 pr-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
+          )}
         >
           <ArrowUpTrayIcon className="h-5 w-5" aria-hidden="true" />
           <span className="whitespace-nowrap">Posted Bounties</span>
         </div>
-        <div className="flex cursor-pointer items-center gap-x-2 hover:text-gray-900 dark:hover:text-gray-100">
+        <div
+          className={classNames(
+            bountyType === BountyType.assigned
+              ? "border-indigo-300 text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
+              : "border-transparent hover:text-gray-700 dark:hover:text-gray-200",
+            "flex cursor-pointer items-center gap-x-2 pr-2 hover:text-indigo-600 dark:hover:text-gray-100"
+          )}
+        >
           <UserIcon className="h-5 w-5" aria-hidden="true" />
           <span className="whitespace-nowrap">Assigned Bounties</span>
         </div>
