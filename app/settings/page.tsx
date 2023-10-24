@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { CheckCircleIcon, PhotoIcon, UserCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import { connect } from "http2";
-import debounce from "lodash/debounce";
+import throttle from "lodash/throttle";
 import { type Event, Filter, getEventHash } from "nostr-tools";
 import { Octokit } from "octokit";
 import { RotatingLines } from "react-loader-spinner";
@@ -39,13 +39,8 @@ export default function Settings() {
   });
 
   const handleGistIdChange = (event: any) => {
-    setGistId(event.target.value);
+    setGistId(gistRef?.current?.value!);
   };
-
-  const debouncedHandleGistIdChange = debounce(handleGistIdChange, 250, {
-    trailing: true,
-    leading: false,
-  });
 
   const userFilter: Filter = {
     kinds: [0],
@@ -60,17 +55,23 @@ export default function Settings() {
     publicKeyGistId?: string;
   }
 
-  async function connectGithub() {
+  async function connectGithub(gist_id: string) {
     setLoadingGistId(true);
     const octokit = new Octokit({});
 
+    if (gist_id.length < 1) {
+      setLoadingGistId(false);
+      return;
+    }
+
     try {
       const gist = await octokit.request("GET /gists/{gist_id}", {
-        gist_id: gistId,
+        gist_id: gist_id,
         headers: {
           "X-GitHub-Api-Version": "2022-11-28",
         },
       });
+      console.log("gist", gist);
       const files = gist.data.files;
       if (files) {
         const values = Object.values(files);
@@ -97,11 +98,20 @@ export default function Settings() {
       setGithub("");
       setGistIdValid(false);
     } catch (e) {
+      console.error("Error fetching Gist: ", e);
       setGithub("");
       setGistIdValid(false);
     }
     setLoadingGistId(false);
   }
+
+  const throttledConnectGithub = useCallback(
+    throttle(connectGithub, 1500, {
+      trailing: true,
+      leading: false,
+    }),
+    []
+  );
 
   const getUserMetadata = async () => {
     let userProfileEvent: Event;
@@ -198,7 +208,7 @@ export default function Settings() {
   }, [relayUrl]);
 
   useEffect(() => {
-    connectGithub();
+    throttledConnectGithub(gistId);
   }, [gistId]);
 
   // TODO: redo the whole thing
@@ -301,9 +311,10 @@ export default function Settings() {
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
                       placeholder="Gist ID"
                       ref={gistRef}
-                      defaultValue={gistId}
+                      value={gistId}
                       onChange={(e) => {
-                        debouncedHandleGistIdChange(e);
+                        setLoadingGistId(true);
+                        handleGistIdChange(e);
                       }}
                     />
                     <div className="h-12 w-12">
