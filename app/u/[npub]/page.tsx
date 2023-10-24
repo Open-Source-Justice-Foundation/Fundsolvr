@@ -14,7 +14,7 @@ import type { Event } from "nostr-tools";
 
 import Timeline from "./Timeline";
 
-export default function BountyPage() {
+export default function UserProfilePage() {
   const { subscribe, relayUrl } = useRelayStore();
   const { getProfile, setProfile } = useProfileStore();
 
@@ -24,17 +24,14 @@ export default function BountyPage() {
   let npub: string = "";
   if (pathname && pathname.length > 60) {
     npub = pathname.split("/").pop() || "";
-    console.log("npub", npub);
   }
 
   useEffect(() => {
     if (npub) {
       const publicKey: any = nip19.decode(npub).data;
-      console.log("npub_data", publicKey);
       setpublicKey(publicKey);
 
       if (getProfile(relayUrl, publicKey)) {
-        console.log("cached profile", getProfile(relayUrl, publicKey));
         return;
       }
 
@@ -55,7 +52,6 @@ export default function BountyPage() {
           github: profileContent.github,
           publicKeyGistId: profileContent.publicKeyGistId,
         };
-        console.log("profile", profile);
 
         setProfile(profile);
       };
@@ -69,7 +65,7 @@ export default function BountyPage() {
 
       subscribe([relayUrl], userFilter, onEvent, onEOSE);
     }
-  }, [npub]);
+  }, [npub, relayUrl]);
 
   return (
     <div className="flex flex-col items-center justify-center px-4 pb-20 pt-10">

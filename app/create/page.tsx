@@ -9,6 +9,7 @@ import { getEventHash } from "nostr-tools";
 import type { Event } from "nostr-tools";
 
 import { createUniqueUrl } from "../lib/utils";
+import { usePostRelayStore } from "../stores/postRelayStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 import "./markdown-editor.css";
@@ -22,6 +23,9 @@ const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
 export default function CreateBounty() {
   const { publish, relayUrl } = useRelayStore();
   const { getUserPublicKey } = useUserProfileStore();
+
+  // TODO: use this
+  const { postRelays } = usePostRelayStore();
 
   const [title, setTitle] = useState("");
   const [reward, setReward] = useState("");
@@ -121,7 +125,7 @@ export default function CreateBounty() {
           {/* /> */}
           <div className="mt-6 flex items-center justify-between">
             <button
-              className="flex items-center gap-x-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500 px-3 py-2 text-sm font-medium text-white"
+              className="flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
               onClick={handlePublish}
             >
               Create Bounty
