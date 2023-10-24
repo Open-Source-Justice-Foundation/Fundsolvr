@@ -39,7 +39,7 @@ export default function Settings() {
   });
 
   const handleGistIdChange = (event: any) => {
-    setGistId(gistRef?.current?.value!);
+    setGistId(gistRef?.current?.value || "");
   };
 
   const userFilter: Filter = {
@@ -57,12 +57,15 @@ export default function Settings() {
 
   async function connectGithub(gist_id: string) {
     setLoadingGistId(true);
-    const octokit = new Octokit({});
 
     if (gist_id.length < 1) {
+      setGithub("");
+      setGistIdValid(false);
       setLoadingGistId(false);
       return;
     }
+
+    const octokit = new Octokit({});
 
     try {
       const gist = await octokit.request("GET /gists/{gist_id}", {
@@ -71,7 +74,6 @@ export default function Settings() {
           "X-GitHub-Api-Version": "2022-11-28",
         },
       });
-      console.log("gist", gist);
       const files = gist.data.files;
       if (files) {
         const values = Object.values(files);
@@ -106,7 +108,7 @@ export default function Settings() {
   }
 
   const throttledConnectGithub = useCallback(
-    throttle(connectGithub, 1500, {
+    throttle(connectGithub, 1000, {
       trailing: true,
       leading: false,
     }),
