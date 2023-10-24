@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
+import { CheckCircleIcon, PhotoIcon, UserCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
+import { connect } from "http2";
 import { type Event, Filter, getEventHash } from "nostr-tools";
 import { Octokit } from "octokit";
 
@@ -21,7 +22,9 @@ export default function Settings() {
 
   const [imageURL, setImageUrl] = useState("");
   const [username, setUsername] = useState("");
+  const [gistIdValid, setGistIdValid] = useState<Boolean>(false);
   const [about, setAbout] = useState("");
+  const gistRef = useRef<HTMLInputElement>(null);
   const [currentUserEvent, setCurrentUserEvent] = useState<Event>({
     kind: 0,
     tags: [],
@@ -36,6 +39,18 @@ export default function Settings() {
     setGistId(event.target.value);
   };
 
+  const debounce = (callback: Function, wait: number) => {
+    let timeoutId: any = null;
+    return (...args: any) => {
+      window.clearTimeout(timeoutId);
+      timeoutId = window.setTimeout(() => {
+        callback.apply(null, args);
+      }, wait);
+    };
+  };
+
+  const debouncedHandleGistIdChange = debounce(handleGistIdChange, 250);
+
   const userFilter: Filter = {
     kinds: [0],
     authors: [getUserPublicKey()],
@@ -45,66 +60,50 @@ export default function Settings() {
     name: string;
     picture: string;
     about: string;
+    github?: string;
+    publicKeyGistId?: string;
   }
 
-  const addGithubProfile = async (username: String) => {
-    const userProfileEvent = getUserEvent();
-    console.log("event", userProfileEvent);
-
-    if (userProfileEvent) {
-      const content = JSON.parse(userProfileEvent.content);
-      content.github = username;
-      content.publicKeyGistId = gistId;
-      const stringifiedContent = JSON.stringify(content);
-      console.log("content", stringifiedContent);
-
-      let event: Event = {
-        id: "",
-        sig: "",
-        kind: 0,
-        created_at: Math.floor(Date.now() / 1000),
-        tags: userProfileEvent?.tags || [],
-        content: stringifiedContent,
-        pubkey: getUserPublicKey(),
-      };
-
-      event.id = getEventHash(event);
-      event = await window.nostr.signEvent(event);
-
-      publish([relayUrl], event);
-    }
-  };
-
-  async function connectGithub(e: any) {
-    e.preventDefault();
+  async function connectGithub() {
     const octokit = new Octokit({});
+    console.log("connecting to github");
 
-    const gist = await octokit.request("GET /gists/{gist_id}", {
-      gist_id: gistId,
-      headers: {
-        "X-GitHub-Api-Version": "2022-11-28",
-      },
-    });
-    const files = gist.data.files;
-    if (files) {
-      const values = Object.values(files);
+    try {
+      const gist = await octokit.request("GET /gists/{gist_id}", {
+        gist_id: gistId,
+        headers: {
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
+      });
+      const files = gist.data.files;
+      if (files) {
+        console.log("success to github");
+        const values = Object.values(files);
 
-      if (values) {
-        const publicKey = values[0]?.content;
-        console.log("publicKey", publicKey);
+        if (values) {
+          const publicKey = values[0]?.content?.split(": ")[1].trim();
 
-        if (publicKey) {
-          if (publicKey === getUserPublicKey()) {
-            console.log("public keys match");
-            console.log("write the profile update event to add github");
+          if (publicKey) {
+            if (publicKey === getUserPublicKey()) {
+              console.log("public keys match");
+              console.log("write the profile update event to add github");
 
-            if (gist.data.owner) {
-              const login = gist.data.owner.login;
-              addGithubProfile(login);
+              if (gist.data.owner) {
+                const login = gist.data.owner.login;
+                setGithub(login);
+                setGistIdValid(true);
+                return;
+              }
             }
           }
         }
       }
+      setGithub("");
+      setGistIdValid(false);
+    } catch (e) {
+      setGithub("");
+      setGistIdValid(false);
+      console.log("failure to github");
     }
   }
 
@@ -123,7 +122,7 @@ export default function Settings() {
   };
 
   const setMetadata = (metadata: Metadata) => {
-    const { name, picture, about } = metadata;
+    const { name, picture, about, github, publicKeyGistId } = metadata;
     if (picture) {
       setImageUrl(picture);
     }
@@ -133,12 +132,28 @@ export default function Settings() {
     if (name) {
       setUsername(name);
     }
+    if (github) {
+      setGithub(github);
+    }
+    if (publicKeyGistId) {
+      setGistId(publicKeyGistId);
+      setGistIdValid(true);
+    }
   };
 
   const saveMetadata = async (e: React.MouseEvent) => {
     e.preventDefault();
     const currentContent = JSON.parse(currentUserEvent.content);
-    const updatedUserProfile = JSON.stringify({ ...currentContent, name: username, picture: imageURL, about });
+    const metadata: Metadata = {
+      name: username,
+      picture: imageURL,
+      about,
+    };
+    if (gistIdValid) {
+      metadata.github = github;
+      metadata.publicKeyGistId = gistId;
+    }
+    const updatedUserProfile = JSON.stringify({ ...currentContent, ...metadata });
     let event: Event = {
       id: "",
       sig: "",
@@ -160,10 +175,11 @@ export default function Settings() {
       lud06: currentContent.lud06 || "",
       lud16: currentContent.lud16 || "",
       banner: currentContent.banner || "",
-      github: currentContent.github || "",
-      publicKeyGistId: currentContent.publicKeyGistId || "",
+      github: github || "",
+      publicKeyGistId: gistId || "",
     };
 
+    event.id = getEventHash(event);
     event = await window.nostr.signEvent(event);
     publish([relayUrl], event);
     setUserProfile(relayUrl, profile);
@@ -173,15 +189,23 @@ export default function Settings() {
   useEffect(() => {
     const userProfile = getUserProfile(relayUrl);
     if (userProfile) {
-      setGithub(userProfile.github);
       setMetadata({
         name: userProfile.name,
         picture: userProfile.picture,
         about: userProfile.about,
+        github: userProfile.github,
+        publicKeyGistId: userProfile.publicKeyGistId,
       });
+      if (userProfile.publicKeyGistId) {
+        setGistIdValid(true);
+      }
     }
     getUserMetadata();
   }, [relayUrl]);
+
+  useEffect(() => {
+    connectGithub();
+  }, [gistId]);
 
   // TODO: redo the whole thing
 
@@ -275,13 +299,25 @@ export default function Settings() {
                   Github
                 </label>
                 <div className="mt-2">
-                  <input
-                    type="text"
-                    name="github"
-                    id="github"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
-                    placeholder="Gist ID"
-                  />
+                  <div className="mt-2 flex items-center gap-x-3">
+                    {gistIdValid ? (
+                      <CheckCircleIcon className="h-12 w-12 fill-green-500" />
+                    ) : (
+                      <XCircleIcon className="h-12 w-12 fill-red-500" />
+                    )}
+                    <input
+                      type="text"
+                      name="github"
+                      id="github"
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
+                      placeholder="Gist ID"
+                      ref={gistRef}
+                      defaultValue={gistId}
+                      onChange={(e) => {
+                        debouncedHandleGistIdChange(e);
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
