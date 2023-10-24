@@ -165,20 +165,6 @@ export default function Settings() {
     };
 
     event = await window.nostr.signEvent(event);
-    const profile: Profile = {
-      relay: relayUrl || "",
-      publicKey: getUserPublicKey() || "",
-      name: username || shortenHash(getUserPublicKey()) || "",
-      about: about || "",
-      picture: imageURL || "",
-      nip05: currentContent.nip05 || "",
-      website: currentContent.website || "",
-      lud06: currentContent.lud06 || "",
-      lud16: currentContent.lud16 || "",
-      banner: currentContent.banner || "",
-      github: currentContent.github || "",
-      publicKeyGistId: currentContent.publicKeyGistId || "",
-    };
     publish([relayUrl], event);
     setUserProfile(relayUrl, profile);
     setUserEvent(event);
