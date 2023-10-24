@@ -94,7 +94,7 @@ export default function Example({ children }: any) {
             {/* TODO: close menu when this is clicked */}
             <span
               className="block cursor-pointer select-none px-4 py-1 hover:bg-indigo-200 dark:hover:bg-indigo-600"
-              onClick={handleRelayMenuSettingsClick}
+              onClick={handleRelayMenuReadFromClick}
             >
               Relays
             </span>
