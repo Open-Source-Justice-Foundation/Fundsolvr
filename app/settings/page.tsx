@@ -4,8 +4,10 @@ import { useEffect, useRef, useState } from "react";
 
 import { CheckCircleIcon, PhotoIcon, UserCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import { connect } from "http2";
+import debounce from "lodash/debounce";
 import { type Event, Filter, getEventHash } from "nostr-tools";
 import { Octokit } from "octokit";
+import { RotatingLines } from "react-loader-spinner";
 
 import { shortenHash } from "../lib/utils";
 import { useRelayStore } from "../stores/relayStore";
@@ -23,6 +25,7 @@ export default function Settings() {
   const [imageURL, setImageUrl] = useState("");
   const [username, setUsername] = useState("");
   const [gistIdValid, setGistIdValid] = useState<Boolean>(false);
+  const [loadingGistId, setLoadingGistId] = useState<Boolean>(true);
   const [about, setAbout] = useState("");
   const gistRef = useRef<HTMLInputElement>(null);
   const [currentUserEvent, setCurrentUserEvent] = useState<Event>({
@@ -39,17 +42,10 @@ export default function Settings() {
     setGistId(event.target.value);
   };
 
-  const debounce = (callback: Function, wait: number) => {
-    let timeoutId: any = null;
-    return (...args: any) => {
-      window.clearTimeout(timeoutId);
-      timeoutId = window.setTimeout(() => {
-        callback.apply(null, args);
-      }, wait);
-    };
-  };
-
-  const debouncedHandleGistIdChange = debounce(handleGistIdChange, 250);
+  const debouncedHandleGistIdChange = debounce(handleGistIdChange, 250, {
+    trailing: true,
+    leading: false,
+  });
 
   const userFilter: Filter = {
     kinds: [0],
@@ -65,8 +61,8 @@ export default function Settings() {
   }
 
   async function connectGithub() {
+    setLoadingGistId(true);
     const octokit = new Octokit({});
-    console.log("connecting to github");
 
     try {
       const gist = await octokit.request("GET /gists/{gist_id}", {
@@ -77,7 +73,6 @@ export default function Settings() {
       });
       const files = gist.data.files;
       if (files) {
-        console.log("success to github");
         const values = Object.values(files);
 
         if (values) {
@@ -92,6 +87,7 @@ export default function Settings() {
                 const login = gist.data.owner.login;
                 setGithub(login);
                 setGistIdValid(true);
+                setLoadingGistId(false);
                 return;
               }
             }
@@ -103,8 +99,8 @@ export default function Settings() {
     } catch (e) {
       setGithub("");
       setGistIdValid(false);
-      console.log("failure to github");
     }
+    setLoadingGistId(false);
   }
 
   const getUserMetadata = async () => {
@@ -149,10 +145,8 @@ export default function Settings() {
       picture: imageURL,
       about,
     };
-    if (gistIdValid) {
-      metadata.github = github;
-      metadata.publicKeyGistId = gistId;
-    }
+    metadata.github = github;
+    metadata.publicKeyGistId = gistId;
     const updatedUserProfile = JSON.stringify({ ...currentContent, ...metadata });
     let event: Event = {
       id: "",
@@ -300,11 +294,6 @@ export default function Settings() {
                 </label>
                 <div className="mt-2">
                   <div className="mt-2 flex items-center gap-x-3">
-                    {gistIdValid ? (
-                      <CheckCircleIcon className="h-12 w-12 fill-green-500" />
-                    ) : (
-                      <XCircleIcon className="h-12 w-12 fill-red-500" />
-                    )}
                     <input
                       type="text"
                       name="github"
@@ -317,6 +306,16 @@ export default function Settings() {
                         debouncedHandleGistIdChange(e);
                       }}
                     />
+                    <div className="h-12 w-12">
+                      {gistId.length > 0 &&
+                        (loadingGistId ? (
+                          <RotatingLines strokeWidth="1" width="3rem" visible={true} ariaLabel="spinner-loading" />
+                        ) : gistIdValid ? (
+                          <CheckCircleIcon className="h-12 w-12 fill-green-500" />
+                        ) : (
+                          <XCircleIcon className="h-12 w-12 fill-red-500" />
+                        ))}
+                    </div>
                   </div>
                 </div>
               </div>
