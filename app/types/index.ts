@@ -14,18 +14,16 @@ export type EventProfileContent = {
 }
 
 export type Profile = {
-  relay: string;
-  publicKey: string;
+  relay?: string;
+  publicKey?: string;
   about: string;
-  lud06: string;
-  lud16: string;
+  lud06?: string;
+  lud16?: string;
   name: string;
-  nip05: string;
+  nip05?: string;
   picture: string;
-  website: string;
-  github: string;
-  publicKeyGistId: string;
-  banner: string;
+  website?: string;
+  banner?: string;
   location?: string;
 };
 

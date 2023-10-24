@@ -32,10 +32,6 @@ export default function Settings() {
     sig: "",
   });
 
-  const handleGistIdChange = (event: any) => {
-    setGistId(event.target.value);
-  };
-
   const userFilter: Filter = {
     kinds: [0],
     authors: [getUserPublicKey()],
@@ -52,31 +48,13 @@ export default function Settings() {
     console.log("event", userProfileEvent);
 
     if (userProfileEvent) {
-      const content = JSON.parse(userProfileEvent.content);
-      content.github = username;
-      content.publicKeyGistId = gistId;
-      const stringifiedContent = JSON.stringify(content);
-      console.log("content", stringifiedContent);
-
-      let event: Event = {
-        id: "",
-        sig: "",
-        kind: 0,
-        created_at: Math.floor(Date.now() / 1000),
-        tags: userProfileEvent?.tags || [],
-        content: stringifiedContent,
-        pubkey: getUserPublicKey(),
-      };
-
-      event.id = getEventHash(event);
-      event = await window.nostr.signEvent(event);
-
-      publish([relayUrl], event);
+      const githubIdentity = [["i", `github:${username}`, gistId]];
+      return githubIdentity;
     }
+    return null;
   };
 
-  async function connectGithub(e: any) {
-    e.preventDefault();
+  async function connectGithub() {
     const octokit = new Octokit({});
 
     const gist = await octokit.request("GET /gists/{gist_id}", {
@@ -100,7 +78,9 @@ export default function Settings() {
 
             if (gist.data.owner) {
               const login = gist.data.owner.login;
-              addGithubProfile(login);
+              const tags = await addGithubProfile(login);
+              console.log("tags", tags);
+              return tags;
             }
           }
         }
@@ -139,6 +119,24 @@ export default function Settings() {
     e.preventDefault();
     const currentContent = JSON.parse(currentUserEvent.content);
     const updatedUserProfile = JSON.stringify({ ...currentContent, name: username, picture: imageURL, about });
+
+    let identitiyTags: string[][] | null | undefined = [];
+
+    // check if gistId is set
+    if (gistId) {
+      identitiyTags = await connectGithub();
+    }
+
+    currentUserEvent.tags = currentUserEvent.tags.concat(identitiyTags || []);
+
+    // if it is, check if the public key in the gist matches the user public key
+
+    // if it does, add the github identity to the profile
+
+    // if it doesn't, show an error
+
+    // if gistId is not set, save the profile update event
+
     let event: Event = {
       id: "",
       sig: "",
@@ -160,12 +158,14 @@ export default function Settings() {
       lud06: currentContent.lud06 || "",
       lud16: currentContent.lud16 || "",
       banner: currentContent.banner || "",
-      github: currentContent.github || "",
-      publicKeyGistId: currentContent.publicKeyGistId || "",
     };
 
+    console.log("event", event);
+
     event = await window.nostr.signEvent(event);
-    publish([relayUrl], event);
+
+    console.log("event", event);
+    // publish([relayUrl], event);
     setUserProfile(relayUrl, profile);
     setUserEvent(event);
   };
@@ -173,7 +173,7 @@ export default function Settings() {
   useEffect(() => {
     const userProfile = getUserProfile(relayUrl);
     if (userProfile) {
-      setGithub(userProfile.github);
+      // setGithub(userProfile.github);
       setMetadata({
         name: userProfile.name,
         picture: userProfile.picture,
@@ -281,6 +281,9 @@ export default function Settings() {
                     id="github"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
                     placeholder="Gist ID"
+                    onChange={(e) => {
+                      setGistId(e.target.value);
+                    }}
                   />
                 </div>
               </div>
