@@ -164,6 +164,10 @@ export default function Bounties() {
   };
 
   function getBountiesIfEmpty() {
+    if (bountyEvents[relayUrl] === undefined) {
+      getBounties();
+    }
+
     if (bountyEvents[relayUrl].length < 1) {
       getBounties();
     }
@@ -236,7 +240,7 @@ export default function Bounties() {
             bountyType === BountyType.all
               ? "border-indigo-300 text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
               : "border-transparent hover:text-gray-700 dark:hover:text-gray-200",
-            "flex cursor-pointer items-center gap-x-2 border-r border-gray-200 pr-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
+            "flex select-none cursor-pointer items-center gap-x-2 border-r border-gray-200 pr-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
           )}
         >
           <NewspaperIcon className="h-5 w-5" aria-hidden="true" />
@@ -248,7 +252,7 @@ export default function Bounties() {
             bountyType === BountyType.userPosted
               ? "border-indigo-300 text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
               : "border-transparent hover:text-gray-700 dark:hover:text-gray-200",
-            "flex cursor-pointer items-center gap-x-2 border-r border-gray-200 pr-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
+            "flex select-none cursor-pointer items-center gap-x-2 border-r border-gray-200 pr-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
           )}
         >
           <ArrowUpTrayIcon className="h-5 w-5" aria-hidden="true" />
@@ -259,7 +263,7 @@ export default function Bounties() {
             bountyType === BountyType.assigned
               ? "border-indigo-300 text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
               : "border-transparent hover:text-gray-700 dark:hover:text-gray-200",
-            "flex cursor-pointer items-center gap-x-2 pr-2 hover:text-indigo-600 dark:hover:text-gray-100"
+            "flex select-none cursor-pointer items-center gap-x-2 pr-2 hover:text-indigo-600 dark:hover:text-gray-100"
           )}
         >
           <UserIcon className="h-5 w-5" aria-hidden="true" />
