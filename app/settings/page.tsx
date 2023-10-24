@@ -158,14 +158,15 @@ export default function Settings() {
       about,
     };
 
-    const updatedTags = currentUserEvent.tags.filter((tag) => {
-      if (Array.isArray(tag) && tag[0] === "i" && tag[1].startsWith("github:")) {
-        return false;
-      }
-      return true;
-    });
+    let tags = currentUserEvent.tags;
     if (github && gistId) {
-      updatedTags.push(["i", `github:${github}`, gistId]);
+      tags = currentUserEvent.tags.filter((tag) => {
+        if (Array.isArray(tag) && tag[0] === "i" && tag[1].startsWith("github:")) {
+          return false;
+        }
+        return true;
+      });
+      tags.push(["i", `github:${github}`, gistId]);
     }
     const updatedUserProfile = JSON.stringify({ ...currentContent, ...metadata });
 
@@ -174,7 +175,7 @@ export default function Settings() {
       sig: "",
       kind: 0,
       created_at: Math.floor(Date.now() / 1000),
-      tags: updatedTags,
+      tags,
       content: updatedUserProfile,
       pubkey: getUserPublicKey(),
     };
