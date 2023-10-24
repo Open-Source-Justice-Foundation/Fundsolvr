@@ -158,16 +158,18 @@ export default function Settings() {
       about,
     };
 
-    let tags = currentUserEvent.tags;
-    if (github && gistId) {
-      tags = currentUserEvent.tags.filter((tag) => {
-        if (Array.isArray(tag) && tag[0] === "i" && tag[1].startsWith("github:")) {
-          return false;
+    let tags = currentUserEvent.tags.reduce((tagArr, tag) => {
+      if (Array.isArray(tag) && tag[0] === "i" && tag[1].startsWith("github:")) {
+        if (github && gistId) {
+          tagArr.push(["i", `github:${github}`, gistId]);
+          return tagArr;
+        } else {
+          return tagArr;
         }
-        return true;
-      });
-      tags.push(["i", `github:${github}`, gistId]);
-    }
+      }
+      tagArr.push(tag);
+      return tagArr;
+    }, [] as Array<Array<any>>);
     const updatedUserProfile = JSON.stringify({ ...currentContent, ...metadata });
 
     let event: Event = {
