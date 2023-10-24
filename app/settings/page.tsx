@@ -148,7 +148,7 @@ export default function Settings() {
       content: updatedUserProfile,
       pubkey: getUserPublicKey(),
     };
-    event = await window.nostr.signEvent(event);
+
     const profile: Profile = {
       relay: relayUrl || "",
       publicKey: getUserPublicKey() || "",
@@ -163,6 +163,8 @@ export default function Settings() {
       github: currentContent.github || "",
       publicKeyGistId: currentContent.publicKeyGistId || "",
     };
+
+    event = await window.nostr.signEvent(event);
     publish([relayUrl], event);
     setUserProfile(relayUrl, profile);
     setUserEvent(event);
