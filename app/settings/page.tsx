@@ -6,11 +6,13 @@ import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { type Event, Filter, getEventHash } from "nostr-tools";
 import { Octokit } from "octokit";
 
+import { shortenHash } from "../lib/utils";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
+import { Profile } from "../types";
 
 export default function Settings() {
-  const { getUserPublicKey, getUserEvent, getUserProfile } = useUserProfileStore();
+  const { getUserPublicKey, getUserEvent, getUserProfile, setUserProfile, setUserEvent } = useUserProfileStore();
   const { userPublicKey } = useUserProfileStore();
   const { publish, subscribe, relayUrl } = useRelayStore();
 
@@ -146,8 +148,26 @@ export default function Settings() {
       content: updatedUserProfile,
       pubkey: getUserPublicKey(),
     };
+
+    const profile: Profile = {
+      relay: relayUrl || "",
+      publicKey: getUserPublicKey() || "",
+      name: username || shortenHash(getUserPublicKey()) || "",
+      about: about || "",
+      picture: imageURL || "",
+      nip05: currentContent.nip05 || "",
+      website: currentContent.website || "",
+      lud06: currentContent.lud06 || "",
+      lud16: currentContent.lud16 || "",
+      banner: currentContent.banner || "",
+      github: currentContent.github || "",
+      publicKeyGistId: currentContent.publicKeyGistId || "",
+    };
+
     event = await window.nostr.signEvent(event);
     publish([relayUrl], event);
+    setUserProfile(relayUrl, profile);
+    setUserEvent(event);
   };
 
   useEffect(() => {
@@ -161,7 +181,7 @@ export default function Settings() {
       });
     }
     getUserMetadata();
-  }, []);
+  }, [relayUrl]);
 
   // TODO: redo the whole thing
 
