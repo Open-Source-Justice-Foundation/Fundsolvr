@@ -38,10 +38,6 @@ export default function Settings() {
     sig: "",
   });
 
-  const handleGistIdChange = (event: any) => {
-    setGistId(gistRef?.current?.value || "");
-  };
-
   const userFilter: Filter = {
     kinds: [0],
     authors: [getUserPublicKey()],
@@ -54,6 +50,10 @@ export default function Settings() {
     github?: string;
     publicKeyGistId?: string;
   }
+
+  const handleGistIdChange = () => {
+    setGistId(gistRef?.current?.value || "");
+  };
 
   async function connectGithub(gist_id: string) {
     setLoadingGistId(true);
@@ -157,15 +157,24 @@ export default function Settings() {
       picture: imageURL,
       about,
     };
-    metadata.github = github;
-    metadata.publicKeyGistId = gistId;
+
+    const updatedTags = currentUserEvent.tags.filter((tag) => {
+      if (Array.isArray(tag) && tag[0] === "i" && tag[1].startsWith("github:")) {
+        return false;
+      }
+      return true;
+    });
+    if (github && gistId) {
+      updatedTags.push(["i", `github:${github}`, gistId]);
+    }
     const updatedUserProfile = JSON.stringify({ ...currentContent, ...metadata });
+
     let event: Event = {
       id: "",
       sig: "",
       kind: 0,
       created_at: Math.floor(Date.now() / 1000),
-      tags: currentUserEvent?.tags || [],
+      tags: updatedTags,
       content: updatedUserProfile,
       pubkey: getUserPublicKey(),
     };
@@ -314,9 +323,9 @@ export default function Settings() {
                       placeholder="Gist ID"
                       ref={gistRef}
                       value={gistId}
-                      onChange={(e) => {
+                      onChange={() => {
                         setLoadingGistId(true);
-                        handleGistIdChange(e);
+                        handleGistIdChange();
                       }}
                     />
                     <div className="h-12 w-12">
