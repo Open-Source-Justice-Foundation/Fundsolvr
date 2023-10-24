@@ -127,11 +127,13 @@ export default function Settings() {
       identitiyTags = await connectGithub();
       // if it is, check if the public key in the gist matches the user public key
       if (identitiyTags) {
-        if (userPublicKey === identitiyTags[0][2]) {
-          currentUserEvent.tags = currentUserEvent.tags.concat(identitiyTags || []);
-        }
+        // console.log("user public key", userPublicKey);
+        // console.log("identitiyTags", identitiyTags[]);
+        // if (userPublicKey === identitiyTags[0][2]) {
+        currentUserEvent.tags = currentUserEvent.tags.concat(identitiyTags || []);
+        // }
       }
-    // if it doesn't, show an error
+      // if it doesn't, show an error
     }
 
     // if gistId is not set, save the profile update event
