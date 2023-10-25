@@ -41,6 +41,9 @@ export default function Settings() {
   async function verifyGithubForUser(tag: any) {
     const githubUserVerified = await verifyGithub(nip19.npubEncode(getUserPublicKey()), tag[2]);
     setGithubVerified(githubUserVerified);
+    if (githubUserVerified) {
+      setGithubUser(tag[1]);
+    }
   }
 
   async function verifyGithubForUserOnLogin() {
