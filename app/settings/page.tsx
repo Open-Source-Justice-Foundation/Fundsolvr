@@ -79,12 +79,8 @@ export default function Settings() {
         const values = Object.values(files);
 
         if (values) {
-          const npubUserPublicKey = nip19.npubEncode(getUserPublicKey());
-          const gistContainsPublicKey: any = values[0]?.content?.includes(npubUserPublicKey);
-          if (gistContainsPublicKey) {
-            console.log("public keys match");
-            console.log("write the profile update event to add github");
-
+          const gistPublicKey: any = values[0]?.content?.split(": ")[1].trim();
+          if (nip19.decode(gistPublicKey).data === getUserPublicKey()) {
             if (gist.data.owner) {
               const login = gist.data.owner.login;
               setGithub(login);
