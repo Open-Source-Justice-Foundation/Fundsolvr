@@ -10,12 +10,14 @@ import { Octokit } from "octokit";
 import { RotatingLines } from "react-loader-spinner";
 
 import { shortenHash } from "../lib/utils";
+import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 import { Profile } from "../types";
 
 export default function Settings() {
   const { getUserPublicKey, getUserEvent, getUserProfile, setUserProfile, setUserEvent } = useUserProfileStore();
+  const { setProfile } = useProfileStore();
   const { userPublicKey } = useUserProfileStore();
   const { publish, subscribe, relayUrl } = useRelayStore();
 
@@ -195,6 +197,7 @@ export default function Settings() {
     event = await window.nostr.signEvent(event);
     publish([relayUrl], event);
     setUserProfile(relayUrl, profile);
+    setProfile(profile);
     setUserEvent(event);
   };
 
