@@ -66,7 +66,7 @@ export default function UserProfile() {
       setCurrentProfile(profile);
     };
 
-    const onEOSE = () => { };
+    const onEOSE = () => {};
 
     subscribe([relayUrl], filter, onEvent, onEOSE);
   };

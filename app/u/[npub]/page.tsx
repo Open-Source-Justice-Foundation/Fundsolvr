@@ -7,11 +7,12 @@ import { usePathname } from "next/navigation";
 
 import { useProfileStore } from "@/app/stores/profileStore";
 import { useRelayStore } from "@/app/stores/relayStore";
-import { Profile } from "@/app/types";
+import { ExternalIdentities, Profile } from "@/app/types";
 import { PaperAirplaneIcon, UserPlusIcon } from "@heroicons/react/20/solid";
 import { nip19 } from "nostr-tools";
 import type { Event } from "nostr-tools";
 
+import { checkTagForExternalIdentity } from "../../lib/utils";
 import Timeline from "./Timeline";
 
 export default function UserProfilePage() {
@@ -37,6 +38,13 @@ export default function UserProfilePage() {
 
       const onEvent = (event: Event) => {
         const profileContent = JSON.parse(event.content);
+        const externalIdentities: ExternalIdentities = {};
+        event.tags?.forEach((tag) => {
+          if (checkTagForExternalIdentity(tag, "github")) {
+            externalIdentities.github = tag[1].split("github:")[1];
+            externalIdentities.publicKeyGistId = tag[2];
+          }
+        });
 
         const profile: Profile = {
           relay: relayUrl,
@@ -49,11 +57,9 @@ export default function UserProfilePage() {
           picture: profileContent.picture,
           banner: profileContent.banner,
           website: profileContent.website,
-          github: profileContent.github,
-          publicKeyGistId: profileContent.publicKeyGistId,
+          github: externalIdentities.github || "",
+          publicKeyGistId: externalIdentities.publicKeyGistId || "",
         };
-
-        console.log("PROFILE", profile);
 
         setProfile(profile);
       };
@@ -110,7 +116,7 @@ export default function UserProfilePage() {
         <span className="max-w-sm break-words text-lg text-gray-700 dark:text-gray-100 md:max-w-xl">
           {getProfile(relayUrl, publicKey)?.about}
         </span>
-        {getProfile(relayUrl, publicKey)?.github && (
+        {getProfile(relayUrl, publicKey)?.github && getProfile(relayUrl, publicKey)?.publicKeyGistId && (
           <div className="flex">
             <Link className="block h-7 w-7" href={`https://github.com/${getProfile(relayUrl, publicKey)?.github}`} target="_blank">
               <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">

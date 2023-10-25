@@ -10,10 +10,11 @@ import { Octokit } from "octokit";
 import { RotatingLines } from "react-loader-spinner";
 
 import { shortenHash } from "../lib/utils";
+import { checkTagForExternalIdentity } from "../lib/utils";
 import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
-import { Profile } from "../types";
+import { ExternalIdentities, Profile } from "../types";
 
 export default function Settings() {
   const { getUserPublicKey, getUserEvent, getUserProfile, setUserProfile, setUserEvent } = useUserProfileStore();
@@ -51,6 +52,7 @@ export default function Settings() {
     about: string;
     github?: string;
     publicKeyGistId?: string;
+    tags?: Array<Array<string>>;
   }
 
   const handleGistIdChange = () => {
@@ -118,7 +120,19 @@ export default function Settings() {
     };
 
     const onEOSE = () => {
-      const parsedUserProfile: Metadata = JSON.parse(userProfileEvent.content);
+      const externalIdentities: ExternalIdentities = {};
+      userProfileEvent.tags?.forEach((tag) => {
+        // TODO: Turn this into a reusable util for all services
+        if (checkTagForExternalIdentity(tag, "github")) {
+          externalIdentities.github = tag[1].split("github:")[1];
+          externalIdentities.publicKeyGistId = tag[2];
+        }
+      });
+      const parsedUserProfile: Metadata = {
+        ...JSON.parse(userProfileEvent.content),
+        github: externalIdentities.github,
+        publicKeyGistId: externalIdentities.publicKeyGistId,
+      };
       setCurrentUserEvent(userProfileEvent);
       setMetadata(parsedUserProfile);
     };
@@ -127,22 +141,12 @@ export default function Settings() {
 
   const setMetadata = (metadata: Metadata) => {
     const { name, picture, about, github, publicKeyGistId } = metadata;
-    if (picture) {
-      setImageUrl(picture);
-    }
-    if (about) {
-      setAbout(about);
-    }
-    if (name) {
-      setUsername(name);
-    }
-    if (github) {
-      setGithub(github);
-    }
-    if (publicKeyGistId) {
-      setGistId(publicKeyGistId);
-      setGistIdValid(true);
-    }
+    setImageUrl(picture);
+    setAbout(about);
+    setUsername(name);
+    setGithub(github || "");
+    setGistId(publicKeyGistId || "");
+    setGistIdValid(true);
   };
 
   const saveMetadata = async (e: React.MouseEvent) => {

@@ -11,7 +11,7 @@ export type EventProfileContent = {
   nip05: string;
   lud16: string;
   [key: string]: any;
-}
+};
 
 export type Profile = {
   relay: string;
@@ -30,3 +30,8 @@ export type Profile = {
 };
 
 export type RelayMenuActiveTab = "Read From" | "Post To" | "Settings" | "Discover";
+
+export type ExternalIdentities = {
+  github?: string;
+  publicKeyGistId?: string;
+};

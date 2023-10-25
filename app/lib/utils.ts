@@ -66,3 +66,7 @@ export function truncateText(text: string, maxLength: number) {
 export function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
+
+export function checkTagForExternalIdentity(tag: Array<string>, externalIdentity: string) {
+  return Array.isArray(tag) && tag[0].toLowerCase() === "i" && tag[1].toLowerCase().startsWith(`${externalIdentity}:`);
+}
