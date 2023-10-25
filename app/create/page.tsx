@@ -219,7 +219,9 @@ export default function CreateBounty() {
 
             <div className="mt-4 flex gap-x-4">
               {tags.map((tag) => (
-                <div className="flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500">
+                <div 
+                  key={tag}
+                  className="flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500">
                   {tag}
                   <button
                     onClick={() => {
