@@ -1,4 +1,5 @@
 import * as crypto from "crypto";
+import { Octokit } from "octokit";
 
 export const shortenHash = (hash: string, length = 4 as number) => {
   if (hash) {
@@ -11,6 +12,15 @@ export const getTagValues = (name: string, tags: string[][]) => {
   const [, item] = itemTag || [, undefined];
   return item;
 };
+
+export function getITagValues(entries: any): string[][] {
+  return entries
+    .filter((entry: any) => entry[0] === "i")
+    .map((entry: any) => {
+      const [type, name] = entry[1].split(":");
+      return [type, name, entry[2]];
+    });
+}
 
 export const uniqBy = <T>(arr: T[], key: keyof T): T[] => {
   return Object.values(
@@ -65,4 +75,34 @@ export function truncateText(text: string, maxLength: number) {
 
 export function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
+}
+
+export async function verifyGithub(npub: string, gistId: string) {
+  const octokit = new Octokit({});
+  const gist = await octokit.request("GET /gists/{gist_id}", {
+    gist_id: gistId,
+    headers: {
+      "X-GitHub-Api-Version": "2022-11-28",
+    },
+  });
+  const files = gist.data.files;
+  if (!files) {
+    return false;
+  }
+  const values = Object.values(files);
+
+  if (!values) {
+    return false;
+  }
+  const identityPhrase = values[0]?.content;
+
+  if (!identityPhrase) {
+    return false;
+  }
+  let identityPhraseArr = identityPhrase.split(":");
+  const npubFromGist = identityPhraseArr[1].replace(/\r?\n|\r| /g, "");
+  if (npubFromGist === npub) {
+    return true;
+  }
+  return false;
 }
