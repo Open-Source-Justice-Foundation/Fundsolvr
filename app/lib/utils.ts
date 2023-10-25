@@ -13,6 +13,14 @@ export const getTagValues = (name: string, tags: string[][]) => {
   return item;
 };
 
+export const getBountyTags = (tags: string[][]) => {
+  return tags
+    .filter((tag) => tag[0] === "t")
+    .map((tag) => {
+      return tag[1];
+    });
+};
+
 export function getITagValues(entries: any): string[][] {
   return entries
     .filter((entry: any) => entry[0] === "i")

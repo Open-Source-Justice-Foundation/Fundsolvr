@@ -95,7 +95,7 @@ export default function Bounties() {
         setProfile(profile);
       };
 
-      const onEOSE = () => { };
+      const onEOSE = () => {};
 
       subscribe([relayUrl], userFilter, onEvent, onEOSE);
     };
@@ -151,7 +151,7 @@ export default function Bounties() {
         setProfile(profile);
       };
 
-      const onEOSE = () => { };
+      const onEOSE = () => {};
 
       subscribe([relayUrl], userFilter, onEvent, onEOSE);
     };

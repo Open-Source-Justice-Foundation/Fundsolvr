@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import { useRouter } from "next/navigation";
 
 import { SatoshiV2Icon } from "@bitcoin-design/bitcoin-icons-react/filled";
@@ -8,7 +10,7 @@ import { nip19 } from "nostr-tools";
 import type { Event } from "nostr-tools";
 import { AddressPointer } from "nostr-tools/lib/nip19";
 
-import { getTagValues, removeMarkdownTitles, truncateText } from "../lib/utils";
+import { getBountyTags, getTagValues, removeMarkdownTitles, truncateText } from "../lib/utils";
 import { useBountyEventStore } from "../stores/eventStore";
 import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
@@ -101,6 +103,16 @@ export default function Bounty({ event }: Props) {
             <UserIcon className="h-4 w-4 " aria-hidden="true" />
             <span>2 Applicants</span>
           </div>
+        </div>
+        <div className="mt-4 flex justify-end gap-x-4">
+          {getBountyTags(event.tags).map((tag) => (
+            <div
+              key={tag}
+              className="flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
+            >
+              {tag}
+            </div>
+          ))}
         </div>
       </li>
     </>
