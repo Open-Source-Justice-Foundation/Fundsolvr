@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { CheckCircleIcon, PhotoIcon, UserCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 import { connect } from "http2";
 import throttle from "lodash/throttle";
-import { type Event, Filter, getEventHash } from "nostr-tools";
+import { type Event, Filter, getEventHash, nip19 } from "nostr-tools";
 import { Octokit } from "octokit";
 import { RotatingLines } from "react-loader-spinner";
 
@@ -79,20 +79,18 @@ export default function Settings() {
         const values = Object.values(files);
 
         if (values) {
-          const publicKey = values[0]?.content?.split(": ")[1].trim();
+          const npubUserPublicKey = nip19.npubEncode(getUserPublicKey());
+          const gistContainsPublicKey: any = values[0]?.content?.includes(npubUserPublicKey);
+          if (gistContainsPublicKey) {
+            console.log("public keys match");
+            console.log("write the profile update event to add github");
 
-          if (publicKey) {
-            if (publicKey === getUserPublicKey()) {
-              console.log("public keys match");
-              console.log("write the profile update event to add github");
-
-              if (gist.data.owner) {
-                const login = gist.data.owner.login;
-                setGithub(login);
-                setGistIdValid(true);
-                setLoadingGistId(false);
-                return;
-              }
+            if (gist.data.owner) {
+              const login = gist.data.owner.login;
+              setGithub(login);
+              setGistIdValid(true);
+              setLoadingGistId(false);
+              return;
             }
           }
         }
@@ -158,18 +156,18 @@ export default function Settings() {
       about,
     };
 
-    let tags = currentUserEvent.tags.reduce((tagArr, tag) => {
-      if (Array.isArray(tag) && tag[0] === "i" && tag[1].startsWith("github:")) {
-        if (github && gistId) {
-          tagArr.push(["i", `github:${github}`, gistId]);
-          return tagArr;
-        } else {
-          return tagArr;
-        }
+    const tags = currentUserEvent.tags.reduce((tagArr, tag) => {
+      if (Array.isArray(tag) && tag[0].toLowerCase() === "i" && tag[1].toLowerCase().startsWith("github:")) {
+        return tagArr;
       }
       tagArr.push(tag);
       return tagArr;
     }, [] as Array<Array<any>>);
+
+    if (github && gistId) {
+      tags.push(["i", `github:${github}`, gistId]);
+    }
+
     const updatedUserProfile = JSON.stringify({ ...currentContent, ...metadata });
 
     let event: Event = {
