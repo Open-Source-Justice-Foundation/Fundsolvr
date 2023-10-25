@@ -3,12 +3,15 @@
 import React, { useState } from "react";
 
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 
 import MarkdownIt from "markdown-it";
-import { getEventHash } from "nostr-tools";
+import { getEventHash, nip19 } from "nostr-tools";
 import type { Event } from "nostr-tools";
+import { AddressPointer } from "nostr-tools/lib/nip19";
 
-import { createUniqueUrl } from "../lib/utils";
+import { createUniqueUrl, getTagValues } from "../lib/utils";
+import { useBountyEventStore } from "../stores/eventStore";
 import { usePostRelayStore } from "../stores/postRelayStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
@@ -23,13 +26,16 @@ const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
 export default function CreateBounty() {
   const { publish, relayUrl } = useRelayStore();
   const { getUserPublicKey } = useUserProfileStore();
+  const { setCachedBountyEvent, getBountyEvents, setBountyEvents } = useBountyEventStore();
 
   // TODO: use this
   const { postRelays } = usePostRelayStore();
 
   const [title, setTitle] = useState("");
   const [reward, setReward] = useState("");
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState("## Problem Description\n\n## Acceptance Criteria\n\n## Additional Information\n\n");
+
+  const router = useRouter();
 
   const handleTitleChange = (event: any) => {
     setTitle(event.target.value);
@@ -42,6 +48,22 @@ export default function CreateBounty() {
   function handleEditorChange({ html, text }: any) {
     setContent(text);
   }
+
+  const routeBounty = (event: Event) => {
+    const identifier = getTagValues("d", event.tags);
+
+    const addressPointer: AddressPointer = {
+      identifier: identifier,
+      pubkey: event.pubkey,
+      kind: 30050,
+      relays: [relayUrl],
+    };
+
+    setCachedBountyEvent(event);
+    router.push("/b/" + nip19.naddrEncode(addressPointer));
+
+    setBountyEvents(relayUrl, [event].concat(getBountyEvents(relayUrl)));
+  };
 
   const handlePublish = async () => {
     console.log("handlePublish", title, reward, content);
@@ -73,7 +95,11 @@ export default function CreateBounty() {
     event.id = getEventHash(event);
     event = await window.nostr.signEvent(event);
 
-    publish([relayUrl], event);
+    function onSeen() {
+      routeBounty(event);
+    }
+
+    publish([relayUrl], event, onSeen);
   };
 
   return (
@@ -91,6 +117,7 @@ export default function CreateBounty() {
           />
           <h2 className="pb-4 pt-8 font-semibold text-gray-800 dark:text-gray-100">Content</h2>
           <MdEditor
+            value={content}
             config={{
               view: {
                 menu: true,
