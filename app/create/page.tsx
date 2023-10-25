@@ -35,6 +35,8 @@ export default function CreateBounty() {
   const [reward, setReward] = useState("");
   const [rewardError, setRewardError] = useState("");
   const [content, setContent] = useState("## Problem Description\n\n## Acceptance Criteria\n\n## Additional Information\n\n");
+  const [tagInput, setTagInput] = useState("");
+  const [tags, setTags] = useState<Array<string>>([]);
 
   const [mounted, setMounted] = useState(false);
 
@@ -54,6 +56,10 @@ export default function CreateBounty() {
     } else {
       setRewardError("Invalid input. Only positive whole numbers allowed.");
     }
+  };
+
+  const handleTagChange = (event: any) => {
+    setTagInput(event.target.value);
   };
 
   function handleEditorChange({ html, text }: any) {
@@ -80,8 +86,31 @@ export default function CreateBounty() {
     setBountyEvents(relayUrl, [event].concat(getBountyEvents(relayUrl)));
   };
 
-  const handlePublish = async () => {
+  const addTag = () => {
+    if (tags.includes(tagInput)) {
+      setTagInput("");
+      return;
+    }
+    if (tagInput === "") {
+      return;
+    }
+    if (tagInput.length > 12) {
+      alert("Tag must be less than 12 characters.");
+      return;
+    }
+    if (tagInput.includes(" ")) {
+      alert("Tag cannot contain spaces.");
+      return;
+    }
+    if (tags.length > 4) {
+      alert("You can only have 5 tags.");
+      return;
+    }
+    setTags(tags.concat([tagInput]));
+    setTagInput("");
+  };
 
+  const handlePublish = async () => {
     if (!userPublicKey) {
       alert("Please login to create a bounty.");
       return;
@@ -102,10 +131,8 @@ export default function CreateBounty() {
       return;
     }
 
-
     const uniqueUrl = createUniqueUrl(title);
 
-    // TODO: handle tags
     const initialTags: Array<any> = [];
 
     const additionaltags = [
@@ -115,18 +142,21 @@ export default function CreateBounty() {
       ["value", reward],
     ];
 
-    const tags = initialTags.concat(additionaltags);
+    tags.forEach((tag) => {
+      additionaltags.push(["t", tag]);
+    });
+
+    const allTags = initialTags.concat(additionaltags);
 
     let event: Event = {
       id: "",
       sig: "",
       kind: 30050,
       created_at: Math.floor(Date.now() / 1000),
-      tags: tags,
+      tags: allTags,
       content: content,
       pubkey: userPublicKey,
     };
-
 
     event.id = getEventHash(event);
     event = await window.nostr.signEvent(event);
@@ -169,6 +199,38 @@ export default function CreateBounty() {
               renderHTML={(text) => mdParser.render(text)}
               onChange={handleEditorChange}
             />
+
+            <h2 className="pt-8 font-semibold text-gray-800 dark:text-gray-100">Tags</h2>
+            <div className="mt-4 flex gap-x-4">
+              <input
+                type="text"
+                value={tagInput}
+                onChange={handleTagChange}
+                className="w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
+                placeholder="nostr"
+              />
+              <button
+                onClick={addTag}
+                className="flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
+              >
+                Add
+              </button>
+            </div>
+
+            <div className="mt-4 flex gap-x-4">
+              {tags.map((tag) => (
+                <div className="flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500">
+                  {tag}
+                  <button
+                    onClick={() => {
+                      setTags(tags.filter((t) => t !== tag));
+                    }}
+                  >
+                    X
+                  </button>
+                </div>
+              ))}
+            </div>
 
             <h2 className="pt-8 font-semibold text-gray-800 dark:text-gray-100">Reward</h2>
             <input
