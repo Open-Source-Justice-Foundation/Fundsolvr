@@ -43,6 +43,8 @@ export default function Settings() {
     about: string;
   }
 
+  const onSeen = () => { };
+
   const addGithubProfile = async (username: String) => {
     const userProfileEvent = getUserEvent();
     console.log("event", userProfileEvent);
@@ -164,9 +166,7 @@ export default function Settings() {
     console.log("event", event);
 
     event = await window.nostr.signEvent(event);
-
-    console.log("event", event);
-    // publish([relayUrl], event);
+    publish([relayUrl], event, onSeen);
     setUserProfile(relayUrl, profile);
     setUserEvent(event);
   };
