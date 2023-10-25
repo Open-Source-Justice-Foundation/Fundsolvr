@@ -59,7 +59,7 @@ const timeline = [
 
 export default function Timeline() {
   return (
-    <div className="flow-root border-t border-gray-300 dark:border-gray-600 px-4 pb-8 pt-16 mt-8">
+    <div className="flow-root border-t border-gray-300 dark:border-gray-600 px-4 pb-8 pt-16 mt-4">
       <ul role="list" className="-mb-8">
         {timeline.map((event, eventIdx) => (
           <li key={event.id}>
