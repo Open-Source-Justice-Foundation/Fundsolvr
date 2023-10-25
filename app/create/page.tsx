@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
@@ -25,7 +25,7 @@ const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
 
 export default function CreateBounty() {
   const { publish, relayUrl } = useRelayStore();
-  const { getUserPublicKey, userPublicKey } = useUserProfileStore();
+  const { userPublicKey } = useUserProfileStore();
   const { setCachedBountyEvent, getBountyEvents, setBountyEvents } = useBountyEventStore();
 
   // TODO: use this
@@ -33,7 +33,10 @@ export default function CreateBounty() {
 
   const [title, setTitle] = useState("");
   const [reward, setReward] = useState("");
+  const [rewardError, setRewardError] = useState("");
   const [content, setContent] = useState("## Problem Description\n\n## Acceptance Criteria\n\n## Additional Information\n\n");
+
+  const [mounted, setMounted] = useState(false);
 
   const router = useRouter();
 
@@ -42,12 +45,24 @@ export default function CreateBounty() {
   };
 
   const handleRewardChange = (event: any) => {
-    setReward(event.target.value);
+    const inputValue = event.target.value;
+
+    // Check if the input is a positive integer (non-decimal and non-negative)
+    if (/^\d+$/.test(inputValue) || inputValue === "") {
+      setReward(inputValue);
+      setRewardError("");
+    } else {
+      setRewardError("Invalid input. Only positive whole numbers allowed.");
+    }
   };
 
   function handleEditorChange({ html, text }: any) {
     setContent(text);
   }
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const routeBounty = (event: Event) => {
     const identifier = getTagValues("d", event.tags);
@@ -66,7 +81,27 @@ export default function CreateBounty() {
   };
 
   const handlePublish = async () => {
-    console.log("handlePublish", title, reward, content);
+
+    if (!userPublicKey) {
+      alert("Please login to create a bounty.");
+      return;
+    }
+
+    if (Number(reward) < 1) {
+      alert("Please enter a reward greater than 0.");
+      return;
+    }
+
+    if (title === "") {
+      alert("Please enter a title.");
+      return;
+    }
+
+    if (content === "") {
+      alert("Please enter content.");
+      return;
+    }
+
 
     const uniqueUrl = createUniqueUrl(title);
 
@@ -92,7 +127,6 @@ export default function CreateBounty() {
       pubkey: userPublicKey,
     };
 
-    console.log("event", event);
 
     event.id = getEventHash(event);
     event = await window.nostr.signEvent(event);
@@ -106,7 +140,7 @@ export default function CreateBounty() {
 
   return (
     <main className="mx-auto max-w-3xl pb-24 pt-10">
-      {userPublicKey ? (
+      {mounted && userPublicKey ? (
         <div className="px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Create Bounty</h1>
           <div className="mt-8">
@@ -136,13 +170,15 @@ export default function CreateBounty() {
               onChange={handleEditorChange}
             />
 
-            <h2 className="pt-8 font-semibold text-gray-800 dark:text-gray-100">Reward (sats)</h2>
+            <h2 className="pt-8 font-semibold text-gray-800 dark:text-gray-100">Reward</h2>
             <input
-              type="text"
+              type="number"
               value={reward}
               onChange={handleRewardChange}
               className="mt-4 w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
               placeholder="Value in sats"
+              min="1"
+              step="1"
             />
             {/* TODO: handle tags */}
             {/* <h2 className="text-gray-100 pt-8">Tags</h2> */}
