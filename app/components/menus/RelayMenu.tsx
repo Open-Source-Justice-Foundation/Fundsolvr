@@ -57,7 +57,7 @@ export default function RelayMenu() {
         };
         getRelayInfo(relayHttpUrl);
       } else {
-        console.log("Cached relay info:", cachedRelayInfo);
+        // console.log("Cached relay info:", cachedRelayInfo);
       }
     });
   }, [addRelayInfo, getRelayInfo]);

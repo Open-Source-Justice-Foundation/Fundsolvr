@@ -58,8 +58,6 @@ export default function UserProfile() {
         lud06: eventContent.lud06 || "",
         lud16: eventContent.lud16 || "",
         banner: eventContent.banner || "",
-        github: eventContent.github || "",
-        publicKeyGistId: eventContent.publicKeyGistId || "",
       };
 
       setUserProfile(relayUrl, profile);

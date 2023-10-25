@@ -69,8 +69,6 @@ export default function BountyPage() {
               picture: profileContent.picture,
               banner: profileContent.banner,
               website: profileContent.website,
-              github: profileContent.github,
-              publicKeyGistId: profileContent.publicKeyGistId,
             };
 
             setProfile(profile);

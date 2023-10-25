@@ -3,21 +3,22 @@
 import { useEffect, useState } from "react";
 
 import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
-import { type Event, Filter, getEventHash } from "nostr-tools";
+import { type Event, Filter, getEventHash, nip19 } from "nostr-tools";
 import { Octokit } from "octokit";
 
-import { shortenHash } from "../lib/utils";
+import { getITagValues, shortenHash, verifyGithub } from "../lib/utils";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 import { Profile } from "../types";
 
 export default function Settings() {
   const { getUserPublicKey, getUserEvent, getUserProfile, setUserProfile, setUserEvent } = useUserProfileStore();
-  const { userPublicKey } = useUserProfileStore();
+  const { userPublicKey, userEvent } = useUserProfileStore();
   const { publish, subscribe, relayUrl } = useRelayStore();
 
   const [gistId, setGistId] = useState("");
-  const [github, setGithub] = useState("");
+  const [githubUser, setGithubUser] = useState("");
+  const [githubVerified, setGithubVerified] = useState(false);
 
   const [imageURL, setImageUrl] = useState("");
   const [username, setUsername] = useState("");
@@ -32,9 +33,36 @@ export default function Settings() {
     sig: "",
   });
 
-  const handleGistIdChange = (event: any) => {
-    setGistId(event.target.value);
-  };
+  // on first load check if the user has a github linked
+  // on login make sure fields are populated
+  // if user has github linked don't show the github field
+  // after save clear cache
+
+  async function verifyGithubForUser(tag: any) {
+    const githubUserVerified = await verifyGithub(nip19.npubEncode(getUserPublicKey()), tag[2]);
+    setGithubVerified(githubUserVerified);
+    if (githubUserVerified) {
+      setGithubUser(tag[1]);
+    }
+  }
+
+  async function verifyGithubForUserOnLogin() {
+    console.log("verifyGithubForUserOnLogin");
+    const userEvent = getUserEvent();
+    console.log("userEvent", userEvent);
+    if (userEvent) {
+      const iTags = getITagValues(userEvent.tags);
+      iTags.forEach((tag) => {
+        if (tag[0] === "github") {
+          verifyGithubForUser(tag);
+        }
+      });
+    }
+  }
+
+  useEffect(() => {
+    verifyGithubForUserOnLogin();
+  }, []);
 
   const userFilter: Filter = {
     kinds: [0],
@@ -54,31 +82,13 @@ export default function Settings() {
     console.log("event", userProfileEvent);
 
     if (userProfileEvent) {
-      const content = JSON.parse(userProfileEvent.content);
-      content.github = username;
-      content.publicKeyGistId = gistId;
-      const stringifiedContent = JSON.stringify(content);
-      console.log("content", stringifiedContent);
-
-      let event: Event = {
-        id: "",
-        sig: "",
-        kind: 0,
-        created_at: Math.floor(Date.now() / 1000),
-        tags: userProfileEvent?.tags || [],
-        content: stringifiedContent,
-        pubkey: getUserPublicKey(),
-      };
-
-      event.id = getEventHash(event);
-      event = await window.nostr.signEvent(event);
-
-      publish([relayUrl], event, onSeen);
+      const githubIdentity = [["i", `github:${username}`, gistId]];
+      return githubIdentity;
     }
+    return null;
   };
 
-  async function connectGithub(e: any) {
-    e.preventDefault();
+  async function connectGithub() {
     const octokit = new Octokit({});
 
     const gist = await octokit.request("GET /gists/{gist_id}", {
@@ -92,17 +102,17 @@ export default function Settings() {
       const values = Object.values(files);
 
       if (values) {
-        const publicKey = values[0]?.content;
-        console.log("publicKey", publicKey);
+        const identityPhrase = values[0]?.content;
 
-        if (publicKey) {
-          if (publicKey === getUserPublicKey()) {
-            console.log("public keys match");
-            console.log("write the profile update event to add github");
+        if (identityPhrase) {
+          let identityPhraseArr = identityPhrase.split(":");
+          const npubFromGist = identityPhraseArr[1].replace(/\r?\n|\r| /g, "");
 
+          if (npubFromGist === nip19.npubEncode(getUserPublicKey())) {
             if (gist.data.owner) {
               const login = gist.data.owner.login;
-              addGithubProfile(login);
+              const tags = await addGithubProfile(login);
+              return tags;
             }
           }
         }
@@ -141,6 +151,23 @@ export default function Settings() {
     e.preventDefault();
     const currentContent = JSON.parse(currentUserEvent.content);
     const updatedUserProfile = JSON.stringify({ ...currentContent, name: username, picture: imageURL, about });
+
+    let identitiyTags: string[][] | null | undefined = [];
+
+    // check if gistId is set
+    if (gistId) {
+      console.log("gistId", gistId);
+      identitiyTags = await connectGithub();
+      // if it is, check if the public key in the gist matches the user public key
+      if (identitiyTags) {
+        currentUserEvent.tags = currentUserEvent.tags.concat(identitiyTags || []);
+        // }
+      }
+      // if it doesn't, show an error
+    }
+
+    // if gistId is not set, save the profile update event
+
     let event: Event = {
       id: "",
       sig: "",
@@ -162,9 +189,9 @@ export default function Settings() {
       lud06: currentContent.lud06 || "",
       lud16: currentContent.lud16 || "",
       banner: currentContent.banner || "",
-      github: currentContent.github || "",
-      publicKeyGistId: currentContent.publicKeyGistId || "",
     };
+
+    console.log("event", event);
 
     event = await window.nostr.signEvent(event);
     publish([relayUrl], event, onSeen);
@@ -172,10 +199,56 @@ export default function Settings() {
     setUserEvent(event);
   };
 
+  function filterOutGithub(entries: any[]): any[] {
+    return entries.filter((entry) => !(entry[0] === "i" && entry[1].startsWith("github:")));
+  }
+
+  const removeGithub = async () => {
+    const currentContent = JSON.parse(currentUserEvent.content);
+
+    let event: Event = {
+      id: "",
+      sig: "",
+      kind: 0,
+      created_at: Math.floor(Date.now() / 1000),
+      tags: currentUserEvent?.tags || [],
+      content: JSON.stringify(currentContent),
+      pubkey: getUserPublicKey(),
+    };
+
+    const profile: Profile = {
+      relay: relayUrl || "",
+      publicKey: getUserPublicKey() || "",
+      name: username || shortenHash(getUserPublicKey()) || "",
+      about: about || "",
+      picture: imageURL || "",
+      nip05: currentContent.nip05 || "",
+      website: currentContent.website || "",
+      lud06: currentContent.lud06 || "",
+      lud16: currentContent.lud16 || "",
+      banner: currentContent.banner || "",
+    };
+
+    console.log("event", event);
+
+    // remove github tag from event
+    event.tags = filterOutGithub(event.tags);
+
+    console.log("event no github tag", event);
+
+    event = await window.nostr.signEvent(event);
+    publish([relayUrl], event, onSeen);
+    setUserProfile(relayUrl, profile);
+    setGithubVerified(false);
+    setGithubUser("");
+    setGistId("");
+    setUserEvent(event);
+  };
+
   useEffect(() => {
     const userProfile = getUserProfile(relayUrl);
     if (userProfile) {
-      setGithub(userProfile.github);
+      // setGithub(userProfile.github);
       setMetadata({
         name: userProfile.name,
         picture: userProfile.picture,
@@ -183,12 +256,11 @@ export default function Settings() {
       });
     }
     getUserMetadata();
-  }, [relayUrl]);
-
-  // TODO: redo the whole thing
+    verifyGithubForUserOnLogin();
+  }, [relayUrl, userPublicKey, userEvent]);
 
   return (
-    <div className="flex w-full flex-col items-center justify-center pb-24 pt-10">
+    <div className="flex w-full flex-col items-center justify-center px-4 pb-24 pt-10">
       <form className="w-full max-w-4xl">
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12 dark:border-gray-700">
@@ -276,15 +348,34 @@ export default function Settings() {
                 <label htmlFor="github" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">
                   Github
                 </label>
-                <div className="mt-2">
-                  <input
-                    type="text"
-                    name="github"
-                    id="github"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
-                    placeholder="Gist ID"
-                  />
-                </div>
+                {githubVerified ? (
+                  <div className="mt-2 flex gap-x-4">
+                    <span onClick={removeGithub} className="cursor-pointer text-red-400">
+                      Unlink Github
+                    </span>
+                    <span className="flex gap-x-2 text-gray-400">
+                      <svg className="fill-gray-400" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.87 1.52 2.34 1.07 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.92c0-1.11.38-2 1.03-2.71c-.1-.25-.45-1.29.1-2.64c0 0 .84-.27 2.75 1.02c.79-.22 1.65-.33 2.5-.33c.85 0 1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02c.55 1.35.2 2.39.1 2.64c.65.71 1.03 1.6 1.03 2.71c0 3.82-2.34 4.66-4.57 4.91c.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2Z" />
+                      </svg>
+
+                      {githubUser}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="mt-2">
+                    <input
+                      type="text"
+                      name="github"
+                      id="github"
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
+                      placeholder="Gist ID"
+                      value={gistId}
+                      onChange={(e) => {
+                        setGistId(e.target.value);
+                      }}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>
