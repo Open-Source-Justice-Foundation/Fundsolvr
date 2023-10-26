@@ -12,6 +12,8 @@ import { getBountyTags, getTagValues, parseProfileContent, removeMarkdownTitles,
 import { useBountyEventStore } from "../stores/eventStore";
 import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
+import { useUserProfileStore } from "../stores/userProfileStore";
+import DeleteBounty from "./DeleteBounty";
 
 const statuses = {
   Open: "text-yellow-400 bg-yellow-400/10",
@@ -31,6 +33,8 @@ export default function Bounty({ event }: Props) {
   const { relayUrl } = useRelayStore();
   const { getProfileEvent } = useProfileStore();
   const { setCachedBountyEvent } = useBountyEventStore();
+  const { getUserPublicKey } = useUserProfileStore();
+  console.log(event);
 
   const tags = getBountyTags(event.tags);
 
@@ -113,6 +117,7 @@ export default function Bounty({ event }: Props) {
               </div>
             )}
           </div>
+          {event.pubkey === getUserPublicKey() && <DeleteBounty eventId={event.id}></DeleteBounty>}
         </div>
       </li>
     </>
