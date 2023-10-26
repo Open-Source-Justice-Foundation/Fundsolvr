@@ -15,6 +15,7 @@ import { ArrowLeftIcon, PaperAirplaneIcon, UserPlusIcon } from "@heroicons/react
 import { nip19 } from "nostr-tools";
 import { Event } from "nostr-tools";
 import { AddressPointer } from "nostr-tools/lib/nip19";
+import { NoComment } from "react-nocomment";
 
 import DeleteBounty from "../../components/DeleteBounty";
 import { useUserProfileStore } from "../../stores/userProfileStore";
@@ -36,6 +37,7 @@ export default function BountyPage() {
   if (pathname && pathname.length > 60) {
     naddrStr = pathname.split("/").pop() || "";
   }
+  console.log("decoded!", nip19.decode(naddrStr));
 
   useEffect(() => {
     if (naddrStr) {
@@ -212,6 +214,9 @@ export default function BountyPage() {
                 }}
               ></DeleteBounty>
             )}
+          </div>
+          <div className="mt-4">
+            <NoComment owner={getUserPublicKey()} relays={[relayUrl]} customBase={naddrStr} />
           </div>
         </div>
       )}
