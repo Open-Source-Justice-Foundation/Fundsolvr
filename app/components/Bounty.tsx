@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import { useRouter } from "next/navigation";
 
 import { SatoshiV2Icon } from "@bitcoin-design/bitcoin-icons-react/filled";

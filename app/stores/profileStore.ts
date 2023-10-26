@@ -5,7 +5,7 @@ import { createJSONStorage, devtools, persist } from "zustand/middleware";
 interface ProfileState {
   profileEvents: Record<string, Event>;
   setProfileEvent: (relay: string, publicKey: string, event: Event) => void;
-  getProfileEvent: (relay: string, publicKey: string) => Event | undefined;
+  getProfileEvent: (relay: string, publicKey: string) => Event;
 }
 
 export const useProfileStore = create<ProfileState>()(

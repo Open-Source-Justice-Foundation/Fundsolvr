@@ -75,7 +75,7 @@ export default function Bounties() {
         authors: Array.from(pubkeys),
       };
 
-      getAllBountyTags(events);
+      // getAllBountyTags(events);
 
       const onEvent = (event: Event) => {
         setProfileEvent(relayUrl, event.pubkey, event);
@@ -266,7 +266,7 @@ export default function Bounties() {
           {Array.from(bountyTags).map((tag: any) => (
             <div
               key={tag}
-              className="flex cursor-pointer select-none items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
+              className="flex cursor-pointer select-none items-center gap-x-2 rounded-lg text-gray-500 bg-gray-200 px-3 py-2 text-sm font-medium hover:bg-gray-300 dark:text-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600"
             >
               {tag}
             </div>
