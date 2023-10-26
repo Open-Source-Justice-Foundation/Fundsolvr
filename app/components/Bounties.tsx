@@ -202,13 +202,11 @@ export default function Bounties() {
       });
     });
 
-    console.log("bountyTagCountMap", bountyTagCountMap);
     const sortMapByCount = Array.from(bountyTagCountMap.entries())
       .sort((a, b) => {
         return b[1] - a[1];
       })
       .map((entry) => entry[0]);
-    console.log(sortMapByCount);
     setBountyTags(sortMapByCount);
   }
 
