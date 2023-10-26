@@ -42,7 +42,6 @@ export default function BountyPage() {
       const naddr_data: any = nip19.decode(naddrStr).data;
       setNaddr(naddrStr);
       setNaddrPointer(naddr_data);
-      console.log(naddr_data);
 
       if (naddrPointer) {
         if (cachedBountyEvent) {
@@ -63,7 +62,7 @@ export default function BountyPage() {
             setProfileEvent(relayUrl, event.pubkey, event);
           };
 
-          const onEOSE = () => { };
+          const onEOSE = () => {};
 
           const userFilter = {
             kinds: [0],
