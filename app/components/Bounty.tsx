@@ -102,19 +102,17 @@ export default function Bounty({ event }: Props) {
             </div>
           </div>
           <div className="flex items-center gap-x-2 text-sm leading-6 text-gray-700 dark:text-gray-400">
-            <UserIcon className="h-4 w-4 " aria-hidden="true" />
-            <span>2 Applicants</span>
+            {/* <UserIcon className="h-4 w-4 " aria-hidden="true" /> */}
+            {/* <span>2 Applicants</span> */}
+            {tags[0] && (
+              <div
+                key={tags[0]}
+                className="flex cursor-pointer select-none items-center gap-x-2 rounded-lg bg-gray-200 px-3 py-2 text-sm font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-100"
+              >
+                {tags[0]}
+              </div>
+            )}
           </div>
-        </div>
-        <div className="mt-4 flex justify-end gap-x-4">
-          {tags[0] && (
-            <div
-              key={tags[0]}
-              className="flex cursor-pointer select-none items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white dark:bg-indigo-600"
-            >
-              {tags[0]}
-            </div>
-          )}
         </div>
       </li>
     </>
