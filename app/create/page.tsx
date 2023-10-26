@@ -129,7 +129,9 @@ export default function CreateBounty() {
       kind: 1,
       created_at: Math.floor(Date.now() / 1000),
       tags: tags,
-      content: `Check out my bounty at resolvr.io: nostr:${nip19.naddrEncode(addressPointer)}`,
+      // TODO: use this when clients support 30050 events
+      // content: `Check out my bounty at resolvr.io: nostr:${nip19.naddrEncode(addressPointer)}`,
+      content: `Check out my bounty at https://resolvr.io/b/${nip19.naddrEncode(addressPointer)}`,
       pubkey: userPublicKey,
     };
 
