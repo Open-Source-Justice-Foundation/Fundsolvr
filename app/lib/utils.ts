@@ -160,3 +160,13 @@ export function parseProfileContent(stringifiedContent: string | undefined): Pro
 
   return profile;
 }
+
+export function websiteLink(website: string | undefined) {
+  if (!website) {
+    return "";
+  }
+  if (website.startsWith("http")) {
+    return website;
+  }
+  return `https://${website}`;
+}

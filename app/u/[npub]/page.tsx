@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { getITagValue, getITagValues, parseProfileContent, verifyGithub } from "@/app/lib/utils";
+import { getITagValue, getITagValues, parseProfileContent, verifyGithub, websiteLink } from "@/app/lib/utils";
 import { useProfileStore } from "@/app/stores/profileStore";
 import { useRelayStore } from "@/app/stores/relayStore";
 import { CheckCircleIcon, PaperAirplaneIcon, UserPlusIcon } from "@heroicons/react/20/solid";
@@ -131,16 +131,18 @@ export default function UserProfilePage() {
 
         {githubVerified && (
           <div className="flex gap-x-4">
-            <a
-              target="_blank"
-              rel="nofollow noopener noreferrer"
-              href={`https://${parseProfileContent(getProfileEvent(relayUrl, publicKey)?.content).website}`}
-              className="relative inline-block"
-            >
-              <svg className="h-8 w-8 fill-gray-400 hover:fill-gray-300" width="24" height="24" viewBox="0 0 24 24">
-                <path d="M17.9 17.39c-.26-.8-1.01-1.39-1.9-1.39h-1v-3a1 1 0 0 0-1-1H8v-2h2a1 1 0 0 0 1-1V7h2a2 2 0 0 0 2-2v-.41a7.984 7.984 0 0 1 2.9 12.8M11 19.93c-3.95-.49-7-3.85-7-7.93c0-.62.08-1.22.21-1.79L9 15v1a2 2 0 0 0 2 2m1-16A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2Z" />
-              </svg>
-            </a>
+            {parseProfileContent(getProfileEvent(relayUrl, publicKey)?.content).website && (
+              <a
+                target="_blank"
+                rel="nofollow noopener noreferrer"
+                href={websiteLink(parseProfileContent(getProfileEvent(relayUrl, publicKey)?.content).website)}
+                className="relative inline-block"
+              >
+                <svg className="h-8 w-8 fill-gray-400 hover:fill-gray-300" width="24" height="24" viewBox="0 0 24 24">
+                  <path d="M17.9 17.39c-.26-.8-1.01-1.39-1.9-1.39h-1v-3a1 1 0 0 0-1-1H8v-2h2a1 1 0 0 0 1-1V7h2a2 2 0 0 0 2-2v-.41a7.984 7.984 0 0 1 2.9 12.8M11 19.93c-3.95-.49-7-3.85-7-7.93c0-.62.08-1.22.21-1.79L9 15v1a2 2 0 0 0 2 2m1-16A10 10 0 0 0 2 12a10 10 0 0 0 10 10a10 10 0 0 0 10-10A10 10 0 0 0 12 2Z" />
+                </svg>
+              </a>
+            )}
             <a
               target="_blank"
               rel="nofollow noopener noreferrer"
