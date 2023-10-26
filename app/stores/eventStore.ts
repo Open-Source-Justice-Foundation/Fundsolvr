@@ -9,6 +9,7 @@ interface BountyEventState {
   cachedBountyEvent: Event | null;
   setCachedBountyEvent: (bounty: Event | null) => void;
   getCachedBountyEvent: () => Event | null;
+  deleteBountyEvent: (key: string, id: string) => void;
 
   userEvents: Record<string, Array<Event>>;
   setUserEvents: (key: string, userEvents: Array<Event>) => void;
@@ -16,8 +17,9 @@ interface BountyEventState {
   cachedUserEvent: Event | null;
   setCachedUserEvent: (userEvent: Event | null) => void;
   getCachedUserEvent: () => Event | null;
+  deleteUserEvent: (key: string, id: string) => void;
 
-  bountyType: "all" | "userPosted" | "assigned" ;
+  bountyType: "all" | "userPosted" | "assigned";
   setBountyType: (bountyType: "all" | "userPosted" | "assigned") => void;
 }
 
@@ -31,6 +33,10 @@ export const useBountyEventStore = create<BountyEventState>()(
         cachedBountyEvent: null,
         setCachedBountyEvent: (bounty) => set({ cachedBountyEvent: bounty }),
         getCachedBountyEvent: () => get().cachedBountyEvent,
+        deleteBountyEvent: (key: string, id: string) =>
+          set((prev) => ({
+            bountyEvents: { [key]: prev.bountyEvents[key].filter((bountyEvent) => bountyEvent.id !== id) },
+          })),
 
         userEvents: {},
         setUserEvents: (key, userEvents) => set((prev) => ({ userEvents: { ...prev.userEvents, [key]: userEvents } })),
@@ -38,6 +44,10 @@ export const useBountyEventStore = create<BountyEventState>()(
         cachedUserEvent: null,
         setCachedUserEvent: (userEvent) => set({ cachedUserEvent: userEvent }),
         getCachedUserEvent: () => get().cachedUserEvent,
+        deleteUserEvent: (key: string, id: string) =>
+          set((prev) => ({
+            userEvents: { [key]: prev.userEvents[key].filter((userEvent) => userEvent.id !== id) },
+          })),
 
         bountyType: "all",
         setBountyType: (bountyType) => set({ bountyType }),
