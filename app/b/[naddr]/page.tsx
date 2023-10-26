@@ -63,7 +63,7 @@ export default function BountyPage() {
             setProfileEvent(relayUrl, event.pubkey, event);
           };
 
-          const onEOSE = () => {};
+          const onEOSE = () => { };
 
           const userFilter = {
             kinds: [0],
@@ -200,7 +200,7 @@ export default function BountyPage() {
             {getBountyTags(bountyEvent.tags).map((tag) => (
               <div
                 key={tag}
-                className="flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
+                className="flex cursor-pointer select-none items-center gap-x-2 rounded-lg bg-gray-200 px-3 py-2 text-sm font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-100"
               >
                 {tag}
               </div>
