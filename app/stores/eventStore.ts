@@ -17,6 +17,10 @@ interface BountyEventState {
   setCachedUserEvent: (userEvent: Event | null) => void;
   getCachedUserEvent: () => Event | null;
 
+  tag: string;
+  setTag: (tag: string) => void;
+  getTag: () => string;
+
   bountyType: "all" | "userPosted" | "assigned" ;
   setBountyType: (bountyType: "all" | "userPosted" | "assigned") => void;
 }
@@ -38,6 +42,10 @@ export const useBountyEventStore = create<BountyEventState>()(
         cachedUserEvent: null,
         setCachedUserEvent: (userEvent) => set({ cachedUserEvent: userEvent }),
         getCachedUserEvent: () => get().cachedUserEvent,
+
+        tag: "",
+        setTag: (tag) => set({ tag }),
+        getTag: () => get().tag,
 
         bountyType: "all",
         setBountyType: (bountyType) => set({ bountyType }),

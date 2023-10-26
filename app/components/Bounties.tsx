@@ -14,6 +14,7 @@ import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 import Bounty from "./Bounty";
+import Tag from "./Tag";
 
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
@@ -81,7 +82,7 @@ export default function Bounties() {
         setProfileEvent(relayUrl, event.pubkey, event);
       };
 
-      const onEOSE = () => {};
+      const onEOSE = () => { };
 
       subscribe([relayUrl], userFilter, onEvent, onEOSE);
     };
@@ -122,7 +123,7 @@ export default function Bounties() {
         setProfileEvent(relayUrl, event.pubkey, event);
       };
 
-      const onEOSE = () => {};
+      const onEOSE = () => { };
 
       subscribe([relayUrl], userFilter, onEvent, onEOSE);
     };
@@ -264,12 +265,7 @@ export default function Bounties() {
       {bountyTags && (
         <div className="flex w-full max-w-4xl justify-start gap-x-2 overflow-auto">
           {Array.from(bountyTags).map((tag: any) => (
-            <div
-              key={tag}
-              className="flex cursor-pointer select-none items-center gap-x-2 rounded-lg text-gray-500 bg-gray-200 px-3 py-2 text-sm font-medium hover:bg-gray-300 dark:text-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600"
-            >
-              {tag}
-            </div>
+            <Tag key={tag} tag={tag} />
           ))}
         </div>
       )}
