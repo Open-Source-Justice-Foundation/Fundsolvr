@@ -74,7 +74,7 @@ export default function Settings() {
   }, []);
 
   useEffect(() => {
-    console.log("change on relay")
+    console.log("change on relay");
     verifyGithubForUserOnLogin();
   }, [relayUrl]);
 
@@ -278,7 +278,10 @@ export default function Settings() {
       <form className="w-full max-w-4xl">
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12 dark:border-gray-700">
-            <h2 className="text-base font-semibold leading-7 text-gray-900 dark:text-gray-100">Profile</h2>
+            <div className="flex items-center gap-x-2">
+              <h2 className="text-base font-semibold leading-7 text-gray-900 dark:text-gray-100">Profile</h2>
+              {relayUrl && <span className="text-gray-400 dark:text-gray-600">({relayUrl.replace("wss://", "")})</span>}
+            </div>
             <p className="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-300">
               This information will be displayed publicly so be careful what you share.
             </p>
