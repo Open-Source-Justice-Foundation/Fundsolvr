@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 
-import { getTagValues, parseProfileContent } from "@/app/lib/utils";
+import { getBountyTags, getTagValues, parseProfileContent } from "@/app/lib/utils";
 import { useBountyEventStore } from "@/app/stores/eventStore";
 import { useProfileStore } from "@/app/stores/profileStore";
 import { useRelayStore } from "@/app/stores/relayStore";
@@ -58,7 +58,7 @@ export default function BountyPage() {
             setProfileEvent(relayUrl, event.pubkey, event);
           };
 
-          const onEOSE = () => { };
+          const onEOSE = () => {};
 
           const userFilter = {
             kinds: [0],
@@ -190,6 +190,16 @@ export default function BountyPage() {
               </div>
               {/* <div className="mb-2 text-xl text-white">{bountyEvent.tags.join(", ")}</div> */}
             </>
+          </div>
+          <div className="mt-4 flex justify-end gap-x-4">
+            {getBountyTags(bountyEvent.tags).map((tag) => (
+              <div
+                key={tag}
+                className="flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
+              >
+                {tag}
+              </div>
+            ))}
           </div>
         </div>
       )}
