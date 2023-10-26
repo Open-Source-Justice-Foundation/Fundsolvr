@@ -16,10 +16,14 @@ import { nip19 } from "nostr-tools";
 import { Event } from "nostr-tools";
 import { AddressPointer } from "nostr-tools/lib/nip19";
 
+import DeleteBounty from "../../components/DeleteBounty";
+import { useUserProfileStore } from "../../stores/userProfileStore";
+
 export default function BountyPage() {
   const { subscribe, relayUrl } = useRelayStore();
   const { getProfileEvent, setProfileEvent } = useProfileStore();
   const { cachedBountyEvent, setCachedBountyEvent } = useBountyEventStore();
+  const { getUserPublicKey } = useUserProfileStore();
 
   const router = useRouter();
 
@@ -38,6 +42,7 @@ export default function BountyPage() {
       const naddr_data: any = nip19.decode(naddrStr).data;
       setNaddr(naddrStr);
       setNaddrPointer(naddr_data);
+      console.log(naddr_data);
 
       if (naddrPointer) {
         if (cachedBountyEvent) {
@@ -200,6 +205,14 @@ export default function BountyPage() {
                 {tag}
               </div>
             ))}
+            {bountyEvent.pubkey === getUserPublicKey() && (
+              <DeleteBounty
+                eventId={bountyEvent.id}
+                onDelete={() => {
+                  router.back();
+                }}
+              ></DeleteBounty>
+            )}
           </div>
         </div>
       )}
