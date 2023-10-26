@@ -6,11 +6,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 
-import { getBountyTags, getTagValues } from "@/app/lib/utils";
+import { getBountyTags, getTagValues, parseProfileContent } from "@/app/lib/utils";
 import { useBountyEventStore } from "@/app/stores/eventStore";
 import { useProfileStore } from "@/app/stores/profileStore";
 import { useRelayStore } from "@/app/stores/relayStore";
-import { Profile } from "@/app/types";
 import { SatoshiV2Icon } from "@bitcoin-design/bitcoin-icons-react/filled";
 import { ArrowLeftIcon, PaperAirplaneIcon, UserPlusIcon } from "@heroicons/react/24/outline";
 import { nip19 } from "nostr-tools";
@@ -19,7 +18,7 @@ import { AddressPointer } from "nostr-tools/lib/nip19";
 
 export default function BountyPage() {
   const { subscribe, relayUrl } = useRelayStore();
-  const { getProfile, setProfile } = useProfileStore();
+  const { getProfileEvent, setProfileEvent } = useProfileStore();
   const { cachedBountyEvent, setCachedBountyEvent } = useBountyEventStore();
 
   const router = useRouter();
@@ -56,22 +55,7 @@ export default function BountyPage() {
 
         const onEOSE = () => {
           const onEvent = (event: Event) => {
-            const profileContent = JSON.parse(event.content);
-
-            const profile: Profile = {
-              relay: relayUrl,
-              publicKey: event.pubkey,
-              about: profileContent.about,
-              lud06: profileContent.lud06,
-              lud16: profileContent.lud16,
-              name: profileContent.name,
-              nip05: profileContent.nip05,
-              picture: profileContent.picture,
-              banner: profileContent.banner,
-              website: profileContent.website,
-            };
-
-            setProfile(profile);
+            setProfileEvent(relayUrl, event.pubkey, event);
           };
 
           const onEOSE = () => {};
@@ -144,16 +128,24 @@ export default function BountyPage() {
                     <Link
                       className="flex items-center gap-x-2"
                       href={`/u/${nip19.npubEncode(
-                        getProfile(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.publicKey || ""
+                        getProfileEvent(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.pubkey || ""
                       )}`}
                     >
                       <img
-                        src={getProfile(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.picture}
+                        src={
+                          parseProfileContent(
+                            getProfileEvent(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.content
+                          )?.picture
+                        }
                         alt=""
                         className="h-8 w-8 rounded-full ring-1 ring-white dark:ring-gray-700"
                       />
                       <div className="truncate text-sm font-medium leading-6 text-gray-800 dark:text-white">
-                        {getProfile(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.name}
+                        {
+                          parseProfileContent(
+                            getProfileEvent(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.content
+                          )?.name
+                        }
                       </div>
                     </Link>
                   )}
@@ -163,9 +155,7 @@ export default function BountyPage() {
                   {bountyEvent?.pubkey && naddrPointer && (
                     <Link
                       className="flex items-center justify-center rounded-lg bg-gray-400 px-2 text-white hover:bg-gray-500 dark:bg-gray-700/80 dark:hover:bg-gray-700"
-                      href={`/messages/${nip19.npubEncode(
-                        getProfile(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.publicKey || ""
-                      )}`}
+                      href={`/messages/${nip19.npubEncode(bountyEvent.pubkey)}`}
                     >
                       <PaperAirplaneIcon className="h-5 w-5" />
                     </Link>

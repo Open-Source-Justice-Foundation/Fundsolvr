@@ -10,7 +10,7 @@ import { nip19 } from "nostr-tools";
 import type { Event } from "nostr-tools";
 import { AddressPointer } from "nostr-tools/lib/nip19";
 
-import { getBountyTags, getTagValues, removeMarkdownTitles, truncateText } from "../lib/utils";
+import { getBountyTags, getTagValues, parseProfileContent, removeMarkdownTitles, truncateText } from "../lib/utils";
 import { useBountyEventStore } from "../stores/eventStore";
 import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
@@ -31,7 +31,7 @@ interface Props {
 
 export default function Bounty({ event }: Props) {
   const { relayUrl } = useRelayStore();
-  const { getProfile } = useProfileStore();
+  const { getProfileEvent } = useProfileStore();
   const { setCachedBountyEvent } = useBountyEventStore();
 
   const tags = getBountyTags(event.tags);
@@ -91,11 +91,13 @@ export default function Bounty({ event }: Props) {
         <div className="flex justify-between">
           <div className="flex items-center gap-x-2 pl-4 text-gray-700 dark:text-gray-400">
             <img
-              src={getProfile(relayUrl, event.pubkey)?.picture}
+              src={parseProfileContent(getProfileEvent(relayUrl, event.pubkey)?.content).picture}
               alt=""
               className="h-8 w-8 rounded-full bg-gray-800 ring-1 ring-white dark:ring-gray-700"
             />
-            <div className="truncate text-sm font-medium leading-6 ">{getProfile(relayUrl, event.pubkey)?.name}</div>
+            <div className="truncate text-sm font-medium leading-6 ">
+              {parseProfileContent(getProfileEvent(relayUrl, event.pubkey)?.content).name}
+            </div>
             <span>•</span>
             <div className="text-sm leading-6">
               <time>{new Date(event.created_at * 1000).toDateString()}</time>

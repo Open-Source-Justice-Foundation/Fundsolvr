@@ -13,13 +13,12 @@ import { useBountyEventStore } from "../stores/eventStore";
 import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
-import { Profile } from "../types";
 import Bounty from "./Bounty";
 
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
-  const { setProfile } = useProfileStore();
-  const { setBountyEvents, getBountyEvents, bountyEvents, setUserEvents, getUserEvents, userEvents, bountyType, setBountyType } =
+  const { setProfileEvent } = useProfileStore();
+  const { setBountyEvents, getBountyEvents, bountyEvents, setUserEvents, userEvents, bountyType, setBountyType } =
     useBountyEventStore();
   const { userPublicKey } = useUserProfileStore();
   const [mounted, setMounted] = useState(false);
@@ -80,22 +79,7 @@ export default function Bounties() {
       getAllBountyTags(events);
 
       const onEvent = (event: Event) => {
-        const profileContent = JSON.parse(event.content);
-
-        const profile: Profile = {
-          relay: relayUrl,
-          publicKey: event.pubkey,
-          about: profileContent.about,
-          lud06: profileContent.lud06,
-          lud16: profileContent.lud16,
-          name: profileContent.name,
-          nip05: profileContent.nip05,
-          picture: profileContent.picture,
-          banner: profileContent.banner,
-          website: profileContent.website,
-        };
-
-        setProfile(profile);
+        setProfileEvent(relayUrl, event.pubkey, event);
       };
 
       const onEOSE = () => {};
@@ -136,22 +120,7 @@ export default function Bounties() {
       };
 
       const onEvent = (event: Event) => {
-        const profileContent = JSON.parse(event.content);
-
-        const profile: Profile = {
-          relay: relayUrl,
-          publicKey: event.pubkey,
-          about: profileContent.about,
-          lud06: profileContent.lud06,
-          lud16: profileContent.lud16,
-          name: profileContent.name,
-          nip05: profileContent.nip05,
-          picture: profileContent.picture,
-          banner: profileContent.banner,
-          website: profileContent.website,
-        };
-
-        setProfile(profile);
+        setProfileEvent(relayUrl, event.pubkey, event);
       };
 
       const onEOSE = () => {};

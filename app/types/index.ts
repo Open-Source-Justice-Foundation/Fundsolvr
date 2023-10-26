@@ -25,6 +25,7 @@ export type Profile = {
   website?: string;
   banner?: string;
   location?: string;
+  github?: string;
 };
 
 export type RelayMenuActiveTab = "Read From" | "Post To" | "Settings" | "Discover";

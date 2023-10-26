@@ -69,7 +69,7 @@ export const useRelayInfoStore = create<RelayStore>()(
           }),
       }),
       {
-        name: "neotweet-relayinfo-storage",
+        name: "resolvr-relayinfo-storage",
         storage: createJSONStorage(() => sessionStorage),
       },
     ),
