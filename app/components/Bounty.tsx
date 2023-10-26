@@ -34,6 +34,8 @@ export default function Bounty({ event }: Props) {
   const { getProfile } = useProfileStore();
   const { setCachedBountyEvent } = useBountyEventStore();
 
+  const tags = getBountyTags(event.tags);
+
   const router = useRouter();
 
   const routeBounty = () => {
@@ -105,14 +107,14 @@ export default function Bounty({ event }: Props) {
           </div>
         </div>
         <div className="mt-4 flex justify-end gap-x-4">
-          {getBountyTags(event.tags).map((tag) => (
+          {tags[0] && (
             <div
-              key={tag}
+              key={tags[0]}
               className="flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
             >
-              {tag}
+              {tags[0]}
             </div>
-          ))}
+          )}
         </div>
       </li>
     </>

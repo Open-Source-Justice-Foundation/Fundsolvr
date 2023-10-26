@@ -8,7 +8,7 @@ import PlusIcon from "@heroicons/react/20/solid/PlusIcon";
 import { ArrowUpTrayIcon, NewspaperIcon, UserIcon } from "@heroicons/react/24/outline";
 import type { Event, Filter } from "nostr-tools";
 
-import { getTagValues } from "../lib/utils";
+import { getBountyTags, getTagValues } from "../lib/utils";
 import { useBountyEventStore } from "../stores/eventStore";
 import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
@@ -23,6 +23,7 @@ export default function Bounties() {
     useBountyEventStore();
   const { userPublicKey } = useUserProfileStore();
   const [mounted, setMounted] = useState(false);
+  const [bountyTags, setBountyTags] = useState<string[]>([]);
 
   enum BountyType {
     all = "all",
@@ -75,6 +76,8 @@ export default function Bounties() {
         kinds: [0],
         authors: Array.from(pubkeys),
       };
+
+      getAllBountyTags(events);
 
       const onEvent = (event: Event) => {
         const profileContent = JSON.parse(event.content);
@@ -187,9 +190,33 @@ export default function Bounties() {
     getPostedBountiesIfEmpty();
   }
 
+  function getAllBountyTags(events: Event[]) {
+    const bountyTagCountMap = new Map<string, number>();
+    bountyEvents[relayUrl].forEach((event) => {
+      getBountyTags(event.tags).forEach((tag: string) => {
+        if (bountyTagCountMap.get(tag)) {
+          bountyTagCountMap.set(tag, bountyTagCountMap.get(tag)! + 1);
+        } else {
+          bountyTagCountMap.set(tag, 1);
+        }
+      });
+    });
+
+    console.log("bountyTagCountMap", bountyTagCountMap);
+    const sortMapByCount = Array.from(bountyTagCountMap.entries())
+      .sort((a, b) => {
+        return b[1] - a[1];
+      })
+      .map((entry) => entry[0]);
+    console.log(sortMapByCount);
+    setBountyTags(sortMapByCount);
+  }
+
   useEffect(() => {
     if (getBountyEvents(relayUrl).length < 1) {
       getBounties();
+    } else {
+      getAllBountyTags(bountyEvents[relayUrl]);
     }
   }, []);
 
@@ -268,6 +295,18 @@ export default function Bounties() {
           <span className="whitespace-nowrap">Assigned Bounties</span>
         </div>
       </div>
+      {bountyTags && (
+        <div className="flex w-full max-w-4xl justify-start gap-x-2 overflow-auto">
+          {Array.from(bountyTags).map((tag: any) => (
+            <div
+              key={tag}
+              className="flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
+            >
+              {tag}
+            </div>
+          ))}
+        </div>
+      )}
 
       {mounted && (
         <ul className="flex w-full max-w-4xl flex-col items-center justify-center gap-y-4 rounded-lg py-6">
