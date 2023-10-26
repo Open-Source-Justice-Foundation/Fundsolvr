@@ -37,6 +37,7 @@ export default function CreateBounty() {
   const [content, setContent] = useState("## Problem Description\n\n## Acceptance Criteria\n\n## Additional Information\n\n");
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<Array<string>>([]);
+  const [isSocialNoteChecked, setIsSocialNoteChecked] = useState(false);
 
   const [mounted, setMounted] = useState(false);
 
@@ -65,6 +66,10 @@ export default function CreateBounty() {
   function handleEditorChange({ html, text }: any) {
     setContent(text);
   }
+
+  const handleSocialNoteCheckboxChange = (e: any) => {
+    setIsSocialNoteChecked(e.target.checked);
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -108,6 +113,34 @@ export default function CreateBounty() {
     }
     setTags(tags.concat([tagInput]));
     setTagInput("");
+  };
+
+  const publishTextNote = async (identifier: string, tags: any, publicKey: string) => {
+    const addressPointer: AddressPointer = {
+      identifier: identifier,
+      pubkey: publicKey,
+      kind: 30050,
+      relays: [relayUrl],
+    };
+
+    let event: Event = {
+      id: "",
+      sig: "",
+      kind: 1,
+      created_at: Math.floor(Date.now() / 1000),
+      tags: tags,
+      content: `Check out my bounty at resolvr.io: nostr:${nip19.naddrEncode(addressPointer)}`,
+      pubkey: userPublicKey,
+    };
+
+    console.log("TEXT EVENT", event);
+
+    event.id = getEventHash(event);
+    event = await window.nostr.signEvent(event);
+
+    function onSeen() { }
+
+    publish([relayUrl], event, onSeen);
   };
 
   const handlePublish = async () => {
@@ -161,7 +194,14 @@ export default function CreateBounty() {
     event.id = getEventHash(event);
     event = await window.nostr.signEvent(event);
 
+    const ttags = tags.map((tag) => {
+      return ["t", tag];
+    });
+
     function onSeen() {
+      if (isSocialNoteChecked) {
+        publishTextNote(uniqueUrl, ttags, userPublicKey);
+      }
       routeBounty(event);
     }
 
@@ -209,6 +249,7 @@ export default function CreateBounty() {
                 className="w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
                 placeholder="nostr"
               />
+
               <button
                 onClick={addTag}
                 className="flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
@@ -219,9 +260,10 @@ export default function CreateBounty() {
 
             <div className="mt-4 flex gap-x-4">
               {tags.map((tag) => (
-                <div 
+                <div
                   key={tag}
-                  className="flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500">
+                  className="flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
+                >
                   {tag}
                   <button
                     onClick={() => {
@@ -244,15 +286,28 @@ export default function CreateBounty() {
               min="1"
               step="1"
             />
-            {/* TODO: handle tags */}
-            {/* <h2 className="text-gray-100 pt-8">Tags</h2> */}
-            {/* <input */}
-            {/*   type="text" */}
-            {/*   value={inputValue} */}
-            {/*   onChange={handleInputChange} */}
-            {/*   className="mt-4 w-full rounded border border-gray-600 bg-gray-700 text-gray-100 p-2" */}
-            {/*   placeholder="Comma separated tags" */}
-            {/* /> */}
+            <div className="relative mb-2 mt-8 flex items-start">
+              <div className="flex h-6 items-center">
+                <input
+                  id="socialnote"
+                  aria-describedby="social-note"
+                  name="socialnote"
+                  type="checkbox"
+                  onChange={handleSocialNoteCheckboxChange}
+                  checked={isSocialNoteChecked}
+                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 dark:border-gray-900"
+                />
+              </div>
+              <div className="ml-3 text-sm leading-6">
+                <label htmlFor="socialnote" className="font-medium text-gray-900 dark:text-gray-100">
+                  Post Social Note
+                </label>
+                <p id="comments-description" className="text-gray-500 dark:text-gray-300">
+                  Post a note to your profile to let your followers know about your bounty.
+                </p>
+              </div>
+            </div>
+
             <div className="mt-6 flex items-center justify-between">
               <button
                 className="flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"

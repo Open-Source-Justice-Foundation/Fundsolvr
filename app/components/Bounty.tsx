@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 
 import { SatoshiV2Icon } from "@bitcoin-design/bitcoin-icons-react/filled";
-import { UserIcon } from "@heroicons/react/24/outline";
 import { nip19 } from "nostr-tools";
 import type { Event } from "nostr-tools";
 import { AddressPointer } from "nostr-tools/lib/nip19";
