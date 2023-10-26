@@ -40,7 +40,6 @@ export default function BountyPage() {
   if (pathname && pathname.length > 60) {
     naddrStr = pathname.split("/").pop() || "";
   }
-  console.log("decoded!", nip19.decode(naddrStr));
 
   useEffect(() => {
     if (naddrStr) {
