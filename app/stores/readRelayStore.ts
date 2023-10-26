@@ -60,7 +60,7 @@ export const useReadRelayStore = create<RelayState>()(
           }),
       }),
       {
-        name: "neotweet-relay-store",
+        name: "resolvr-relay-store",
         storage: createJSONStorage(() => sessionStorage),
       },
     ),

@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
-import { type Event, Filter, getEventHash, nip19 } from "nostr-tools";
+import { UserCircleIcon } from "@heroicons/react/24/solid";
+import { type Event, Filter, nip19 } from "nostr-tools";
 import { Octokit } from "octokit";
 
 import { getITagValues, shortenHash, verifyGithub } from "../lib/utils";
@@ -43,18 +43,27 @@ export default function Settings() {
     setGithubVerified(githubUserVerified);
     if (githubUserVerified) {
       setGithubUser(tag[1]);
+    } else {
+      setGithubUser("");
     }
   }
 
   async function verifyGithubForUserOnLogin() {
     console.log("verifyGithubForUserOnLogin");
-    const userEvent = getUserEvent();
+    const userEvent = getUserEvent(relayUrl);
     console.log("userEvent", userEvent);
     if (userEvent) {
       const iTags = getITagValues(userEvent.tags);
+      if (iTags.length === 0) {
+        setGithubVerified(false);
+        setGithubUser("");
+      }
       iTags.forEach((tag) => {
         if (tag[0] === "github") {
           verifyGithubForUser(tag);
+        } else {
+          setGithubVerified(false);
+          setGithubUser("");
         }
       });
     }
@@ -63,6 +72,11 @@ export default function Settings() {
   useEffect(() => {
     verifyGithubForUserOnLogin();
   }, []);
+
+  useEffect(() => {
+    console.log("change on relay")
+    verifyGithubForUserOnLogin();
+  }, [relayUrl]);
 
   const userFilter: Filter = {
     kinds: [0],
@@ -78,7 +92,7 @@ export default function Settings() {
   const onSeen = () => { };
 
   const addGithubProfile = async (username: String) => {
-    const userProfileEvent = getUserEvent();
+    const userProfileEvent = getUserEvent(relayUrl);
     console.log("event", userProfileEvent);
 
     if (userProfileEvent) {
@@ -196,7 +210,7 @@ export default function Settings() {
     event = await window.nostr.signEvent(event);
     publish([relayUrl], event, onSeen);
     setUserProfile(relayUrl, profile);
-    setUserEvent(event);
+    setUserEvent(relayUrl, event);
   };
 
   function filterOutGithub(entries: any[]): any[] {
@@ -242,7 +256,7 @@ export default function Settings() {
     setGithubVerified(false);
     setGithubUser("");
     setGistId("");
-    setUserEvent(event);
+    setUserEvent(relayUrl, event);
   };
 
   useEffect(() => {

@@ -12,9 +12,9 @@ interface CurrentUserState {
   setUserProfile: (relay: string, profile: Profile) => void;
   getUserProfile: (relay: string) => Profile;
   clearUserProfile: () => void;
-  userEvent: Event | null;
-  setUserEvent: (userEvent: Event) => void;
-  getUserEvent: () => Event | null;
+  userEvent: Record<string, Event | null>;
+  setUserEvent: (relay: string, userEvent: Event) => void;
+  getUserEvent: (relay: string) => Event | null;
 }
 
 export const useUserProfileStore = create<CurrentUserState>()(
@@ -28,12 +28,12 @@ export const useUserProfileStore = create<CurrentUserState>()(
         setUserProfile: (relay, userProfile) => set((state) => ({ userProfile: { ...state.userProfile, [relay]: userProfile } })),
         getUserProfile: (relay) => get().userProfile && get().userProfile[relay],
         clearUserProfile: () => set({ userProfile: {} }),
-        userEvent: null,
-        setUserEvent: (userEvent) => set({ userEvent }),
-        getUserEvent: () => get().userEvent,
+        userEvent: {},
+        setUserEvent: (relay, userEvent) => set((state) => ({ userEvent: { ...state.userEvent, [relay]: userEvent } })),
+        getUserEvent: (relay) => get().userEvent && get().userEvent[relay],
       }),
       {
-        name: "notebin-login-storage",
+        name: "resolvr-login-storage",
         storage: createJSONStorage(() => sessionStorage),
       }
     )
