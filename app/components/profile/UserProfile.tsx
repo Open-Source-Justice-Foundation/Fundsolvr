@@ -44,7 +44,7 @@ export default function UserProfile() {
 
     const onEvent = (event: Event) => {
       console.log("event", event);
-      setUserEvent(event);
+      setUserEvent(relayUrl, event);
       const eventContent: EventProfileContent = JSON.parse(event.content);
 
       const profile: Profile = {
@@ -78,11 +78,7 @@ export default function UserProfile() {
       <UserMenu>
         {currentProfile && (
           <img
-            className="
-
-mt-2 inline-block h-10 w-10 rounded-full shadow-lg shadow-gray-800/10 ring-1
-
-          ring-gray-900/10 backdrop-blur hover:bg-gray-50 dark:ring-white/10 dark:hover:bg-gray-800/90"
+            className="mt-2 inline-block h-10 w-10 rounded-full shadow-lg shadow-gray-800/10 ring-1 ring-gray-900/10 backdrop-blur hover:bg-gray-50 dark:ring-white/10 dark:hover:bg-gray-800/90"
             src={currentProfile.picture}
             alt=""
           />

@@ -56,7 +56,7 @@ export const usePostRelayStore = create<RelayState>()(
           get().postRelays.filter((relay) => relay.isActive).length,
       }),
       {
-        name: "neotweet-relay-store",
+        name: "resolvr-relay-store",
         storage: createJSONStorage(() => sessionStorage),
       },
     ),

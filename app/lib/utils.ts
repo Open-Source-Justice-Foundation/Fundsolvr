@@ -1,6 +1,8 @@
 import * as crypto from "crypto";
 import { Octokit } from "octokit";
 
+import { Profile } from "../types";
+
 export const shortenHash = (hash: string, length = 4 as number) => {
   if (hash) {
     return hash.substring(0, length) + "..." + hash.substring(hash.length - length);
@@ -20,6 +22,21 @@ export function getITagValues(entries: any): string[][] {
       const [type, name] = entry[1].split(":");
       return [type, name, entry[2]];
     });
+}
+
+export function getITagValue(entries: any, platform: string): string | undefined {
+  if (!entries) {
+    return undefined;
+  }
+  const data = getITagValues(entries);
+
+  for (const entry of data) {
+    if (entry[0] === platform) {
+      return entry[1];
+    }
+  }
+
+  return undefined;
 }
 
 export const uniqBy = <T>(arr: T[], key: keyof T): T[] => {
@@ -105,4 +122,33 @@ export async function verifyGithub(npub: string, gistId: string) {
     return true;
   }
   return false;
+}
+
+export function parseProfileContent(stringifiedContent: string | undefined): Profile {
+  if (!stringifiedContent) {
+    return {
+      name: "",
+      about: "",
+      picture: "",
+      banner: "",
+      lud06: "",
+      lud16: "",
+      nip05: "",
+      website: "",
+    };
+  }
+  const content = JSON.parse(stringifiedContent);
+
+  const profile: Profile = {
+    name: content.name,
+    about: content.about,
+    picture: content.picture,
+    banner: content.banner,
+    lud06: content.lud06,
+    lud16: content.lud16,
+    nip05: content.nip05,
+    website: content.website,
+  };
+
+  return profile;
 }

@@ -1,27 +1,26 @@
+import type { Event } from "nostr-tools";
 import { create } from "zustand";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
 
-import type { Profile } from "../types";
-
 interface ProfileState {
-  profiles: Record<string, Profile>;
-  setProfile: (profile: Profile) => void;
-  getProfile: (relay: string, publicKey: string) => Profile | undefined;
+  profileEvents: Record<string, Event>;
+  setProfileEvent: (relay: string, publicKey: string, event: Event) => void;
+  getProfileEvent: (relay: string, publicKey: string) => Event | undefined;
 }
 
 export const useProfileStore = create<ProfileState>()(
   devtools(
     persist(
       (set, get) => ({
-        profiles: {},
-        setProfile: (profile: Profile) => {
-          const newProfile = { [`${profile.relay}_${profile.publicKey}`]: profile };
-          set((state) => ({ profiles: { ...state.profiles, ...newProfile } }));
+        profileEvents: {},
+        setProfileEvent: (relay: string, publicKey: string, event: Event) => {
+          const newProfileEvent = { [`${relay}_${publicKey}`]: event };
+          set((state) => ({ profileEvents: { ...state.profileEvents, ...newProfileEvent } }));
         },
-        getProfile: (relay: string, publicKey: string) => get().profiles[`${relay}_${publicKey}`],
+        getProfileEvent: (relay: string, publicKey: string) => get().profileEvents[`${relay}_${publicKey}`],
       }),
       {
-        name: "resolvr-storage",
+        name: "resolvr-profile-storage",
         storage: createJSONStorage(() => sessionStorage),
       }
     )
