@@ -43,7 +43,6 @@ export default function UserProfile() {
     };
 
     const onEvent = (event: Event) => {
-      console.log("event", event);
       setUserEvent(relayUrl, event);
       const eventContent: EventProfileContent = JSON.parse(event.content);
 

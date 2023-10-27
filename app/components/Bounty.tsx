@@ -33,7 +33,6 @@ export default function Bounty({ event }: Props) {
   const { getProfileEvent } = useProfileStore();
   const { setCachedBountyEvent } = useBountyEventStore();
   const { getUserPublicKey } = useUserProfileStore();
-  console.log(event);
 
   const tags = getBountyTags(event.tags);
 
