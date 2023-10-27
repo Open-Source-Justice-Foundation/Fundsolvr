@@ -31,6 +31,7 @@ import { NoComment } from "react-nocomment";
 import colors, { indigo } from "tailwindcss/colors";
 
 import DeleteBounty from "../../components/DeleteBounty";
+import ZapPoll from "../../components/ZapPoll";
 import { useUserProfileStore } from "../../stores/userProfileStore";
 import { Theme } from "../../types";
 
@@ -74,7 +75,7 @@ export default function BountyPage() {
           setCachedBountyEvent(event);
         };
 
-        const onEOSE = () => { };
+        const onEOSE = () => {};
 
         const filter = {
           kinds: [naddrPointer.kind],
@@ -235,6 +236,7 @@ export default function BountyPage() {
                           {/* <div className="flex cursor-pointer items-center justify-center rounded-lg bg-gray-400 px-2 text-white hover:bg-gray-500 dark:bg-gray-700/80 dark:hover:bg-gray-700"> */}
                           {/*   <PencilSquareIcon className="h-5 w-5" /> */}
                           {/* </div> */}
+                          <ZapPoll event={bountyEvent} />
                           <DeleteBounty
                             eventId={bountyEvent.id}
                             onDelete={() => {
