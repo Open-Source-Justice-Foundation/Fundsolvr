@@ -77,7 +77,7 @@ export default function BountyPage() {
             setProfileEvent(relayUrl, event.pubkey, event);
           };
 
-          const onEOSE = () => {};
+          const onEOSE = () => { };
 
           const userFilter = {
             kinds: [0],
@@ -109,6 +109,10 @@ export default function BountyPage() {
   }
 
   const markdown = setupMarkdown(bountyEvent?.content || "");
+
+  function classNames(...classes: any) {
+    return classes.filter(Boolean).join(" ");
+  }
 
   return (
     <div className="px-4 pb-20 pt-10">
@@ -203,15 +207,39 @@ export default function BountyPage() {
               </div>
             </div>
             <div className="flex divide-x divide-gray-600 px-2 pt-4 dark:text-gray-400">
-              <div onClick={() => setTab("details")} className="flex cursor-pointer items-center gap-x-2 pr-2">
+              <div
+                onClick={() => setTab("details")}
+                className={classNames(
+                  tab === "details"
+                    ? "border-indigo-300 text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
+                    : "border-transparent hover:text-gray-700 dark:hover:text-gray-200",
+                  "flex cursor-pointer select-none items-center gap-x-2 border-r border-gray-200 pr-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
+                )}
+              >
                 <BookOpenIcon className="h-5 w-5" />
                 <h3 className="">Details</h3>
               </div>
-              <div onClick={() => setTab("applications")} className="flex cursor-pointer items-center gap-x-2 px-2">
+              <div
+                onClick={() => setTab("applications")}
+                className={classNames(
+                  tab === "applications"
+                    ? "border-indigo-300 text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
+                    : "border-transparent hover:text-gray-700 dark:hover:text-gray-200",
+                  "flex cursor-pointer select-none items-center gap-x-2 border-r border-gray-200 px-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
+                )}
+              >
                 <UsersIcon className="h-5 w-5" />
                 <h3 className="">Applications</h3>
               </div>
-              <div onClick={() => setTab("discussion")} className="flex cursor-pointer items-center gap-x-2 pl-2">
+              <div
+                onClick={() => setTab("discussion")}
+                className={classNames(
+                  tab === "discussion"
+                    ? "border-indigo-300 text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
+                    : "border-transparent hover:text-gray-700 dark:hover:text-gray-200",
+                  "flex cursor-pointer select-none items-center gap-x-2 border-r border-gray-200 pl-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
+                )}
+              >
                 <ChatBubbleLeftRightIcon className="h-5 w-5" />
                 <h3 className="">Discussion</h3>
               </div>

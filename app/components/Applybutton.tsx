@@ -40,7 +40,7 @@ export default function Applybutton({ bountyEvent }: PropTypes) {
         ["p", bountyEvent.pubkey],
         ["k", "30050"],
       ],
-      content: "apply",
+      content: "apply", // or complete
       pubkey: userPublicKey,
     };
 
