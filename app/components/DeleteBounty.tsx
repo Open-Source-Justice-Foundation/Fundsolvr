@@ -58,7 +58,7 @@ export default function DeleteBounty({ eventId, onDelete }: Props) {
   }
   return (
     <>
-      <div onClick={openModal} className="flex cursor-pointer items-center justify-center rounded-lg bg-red-300/10 p-2 text-red-400">
+      <div onClick={openModal} className="flex cursor-pointer text-sm items-center justify-center rounded-lg bg-red-300/10 p-2 text-red-400">
         Remove
       </div>
 
