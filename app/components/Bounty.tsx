@@ -15,16 +15,6 @@ import { useUserProfileStore } from "../stores/userProfileStore";
 import DeleteBounty from "./DeleteBounty";
 import { UserIcon } from "@heroicons/react/24/outline";
 
-const statuses = {
-  Open: "text-yellow-400 bg-yellow-400/10",
-  Completed: "text-green-400 bg-green-400/10",
-  Withdrawn: "text-rose-400 bg-rose-400/10",
-};
-
-function classNames(...classes: Array<any>) {
-  return classes.filter(Boolean).join(" ");
-}
-
 interface Props {
   event: Event;
 }
@@ -32,7 +22,7 @@ interface Props {
 export default function Bounty({ event }: Props) {
   const { relayUrl } = useRelayStore();
   const { getProfileEvent } = useProfileStore();
-  const { setCachedBountyEvent } = useBountyEventStore();
+  const { setCachedBountyEvent, getApplicantEvents } = useBountyEventStore();
   const { getUserPublicKey } = useUserProfileStore();
 
   const tags = getBountyTags(event.tags);
@@ -76,12 +66,6 @@ export default function Bounty({ event }: Props) {
           </div>
 
           <div className="flex items-center justify-end gap-x-2 sm:justify-start">
-            {/*@ts-ignore*/}
-            {/*TODO: get status from event*/}
-            {/* <div className={classNames(statuses["Open"], "flex-none rounded-full p-1")}> */}
-            {/*   <div className="h-1.5 w-1.5 rounded-full bg-current" /> */}
-            {/* </div> */}
-            {/* <div className="hidden text-gray-800 dark:text-white sm:block">{"Open"}</div> */}
 
             {event.pubkey === getUserPublicKey() && <DeleteBounty eventId={event.id}></DeleteBounty>}
             {tags[0] && (
@@ -117,7 +101,7 @@ export default function Bounty({ event }: Props) {
           </div>
           <div className="sm:flex hidden items-center gap-x-2 text-sm leading-6 text-gray-700 dark:text-gray-400">
             <UserIcon className="h-4 w-4 " aria-hidden="true" />
-            <span>2 Applicants</span>
+            <span>{getApplicantEvents(relayUrl, getTagValues("d", event.tags)).length} Applicants</span>
           </div>
         </div>
       </li>

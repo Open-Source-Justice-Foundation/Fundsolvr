@@ -19,7 +19,18 @@ import Tag from "./Tag";
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
   const { setProfileEvent } = useProfileStore();
-  const { setBountyEvents, getBountyEvents, bountyEvents, setUserEvents, userEvents, bountyType, setBountyType, setApplicantEvents, getApplicantEvents } = useBountyEventStore();
+  const {
+    setBountyEvents,
+    getBountyEvents,
+    bountyEvents,
+    setUserEvents,
+    userEvents,
+    bountyType,
+    setBountyType,
+    setApplicantEvents,
+    getApplicantEvents,
+    applicantEvents,
+  } = useBountyEventStore();
   const { userPublicKey } = useUserProfileStore();
   const [mounted, setMounted] = useState(false);
   const [bountyTags, setBountyTags] = useState<string[]>([]);
@@ -58,6 +69,7 @@ export default function Bounties() {
     }
 
     const onEvent = (event: Event) => {
+      console.log("BOUNTY EVENT!!!!!", event);
       const value = getTagValues("value", event.tags);
       if (value && value.length > 0) {
         events.push(event);
@@ -72,7 +84,9 @@ export default function Bounties() {
 
         const onApplicantEvent = (event: Event) => {
           // add applicant to list of applicants
-          setApplicantEvents(relayUrl, event.pubkey, event);
+          const dValue = getTagValues("d", event.tags);
+          setApplicantEvents(relayUrl, dValue, [...getApplicantEvents(relayUrl, dValue), event]);
+          console.log("APPLICANT EVENT!!!!!", event);
         };
 
         const onApplicantEOSE = () => { };
