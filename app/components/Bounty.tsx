@@ -13,6 +13,7 @@ import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 import DeleteBounty from "./DeleteBounty";
+import { UserIcon } from "@heroicons/react/24/outline";
 
 const statuses = {
   Open: "text-yellow-400 bg-yellow-400/10",
@@ -77,10 +78,20 @@ export default function Bounty({ event }: Props) {
           <div className="flex items-center justify-end gap-x-2 sm:justify-start">
             {/*@ts-ignore*/}
             {/*TODO: get status from event*/}
-            <div className={classNames(statuses["Open"], "flex-none rounded-full p-1")}>
-              <div className="h-1.5 w-1.5 rounded-full bg-current" />
-            </div>
-            <div className="hidden text-gray-800 dark:text-white sm:block">{"Open"}</div>
+            {/* <div className={classNames(statuses["Open"], "flex-none rounded-full p-1")}> */}
+            {/*   <div className="h-1.5 w-1.5 rounded-full bg-current" /> */}
+            {/* </div> */}
+            {/* <div className="hidden text-gray-800 dark:text-white sm:block">{"Open"}</div> */}
+
+            {event.pubkey === getUserPublicKey() && <DeleteBounty eventId={event.id}></DeleteBounty>}
+            {tags[0] && (
+              <div
+                key={tags[0]}
+                className="flex cursor-pointer select-none items-center gap-x-2 rounded-lg bg-gray-200 px-3 py-2 text-sm font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-100"
+              >
+                {tags[0]}
+              </div>
+            )}
           </div>
         </div>
 
@@ -102,20 +113,12 @@ export default function Bounty({ event }: Props) {
             <div className="text-sm leading-6">
               <time>{new Date(event.created_at * 1000).toDateString()}</time>
             </div>
+
           </div>
-          <div className="flex items-center gap-x-2 text-sm leading-6 text-gray-700 dark:text-gray-400">
-            {/* <UserIcon className="h-4 w-4 " aria-hidden="true" /> */}
-            {/* <span>2 Applicants</span> */}
-            {tags[0] && (
-              <div
-                key={tags[0]}
-                className="flex cursor-pointer select-none items-center gap-x-2 rounded-lg bg-gray-200 px-3 py-2 text-sm font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-100"
-              >
-                {tags[0]}
-              </div>
-            )}
+          <div className="sm:flex hidden items-center gap-x-2 text-sm leading-6 text-gray-700 dark:text-gray-400">
+            <UserIcon className="h-4 w-4 " aria-hidden="true" />
+            <span>2 Applicants</span>
           </div>
-          {event.pubkey === getUserPublicKey() && <DeleteBounty eventId={event.id}></DeleteBounty>}
         </div>
       </li>
     </>
