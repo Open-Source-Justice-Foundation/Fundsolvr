@@ -249,7 +249,30 @@ export default function BountyPage() {
             </>
           )}
           {tab === "applications" && <div>apps</div>}
-          {tab === "discussion" && <div>discussion</div>}
+          {tab === "discussion" && (
+            <div>
+              <div className="mt-4">
+                <style>
+                  {`
+                  :root {
+                    --nc-primary-color: ${colors.indigo[500]};
+                  }
+                  :root.${Theme.light} {
+                    --nc-text-color: ${colors.gray[900]};
+                  }
+                  :root.${Theme.dark} {
+                    --nc-background: ${colors.gray[800]};
+                    --nc-text-background: ${colors.gray[800]};
+                    --nc-text-color: ${colors.gray[100]};
+                    --nc-text-color: ${colors.gray[100]};
+                    --nc-text-color-dark: ${colors.white};
+                  }
+                `}
+                </style>
+                <NoComment owner={getUserPublicKey()} relays={[relayUrl]} customBase={naddrStr} />
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
