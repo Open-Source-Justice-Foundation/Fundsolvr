@@ -99,7 +99,7 @@ export default function Applybutton({ bountyEvent }: PropTypes) {
                     </Dialog.Title>
 
                     <p className="pt-8 text-base text-gray-500 dark:text-gray-400">
-                      You're application will be sent to the bounty creator for review.
+                      {"You're application will be sent to the bounty creator for review."}
                     </p>
 
                     {/* TODO: do some math for the reward */}
