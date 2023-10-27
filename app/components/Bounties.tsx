@@ -66,6 +66,7 @@ export default function Bounties() {
     const onEvent = (event: Event) => {
       // TODO: check for zap recipt
       const value = getTagValues("value", event.tags);
+      console.log(event.id);
       if (value && value.length > 0) {
         events.push(event);
         pubkeys.add(event.pubkey);
@@ -250,20 +251,20 @@ export default function Bounties() {
           {loading.all
             ? Array.from(Array(5)).map((i) => <BountyPlaceholder key={i} />)
             : mounted &&
-            bountyType === BountyType.all &&
-            bountyEvents[relayUrl] &&
-            (bountyEvents[relayUrl].length ? (
-              bountyEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)
-            ) : (
-              <NoBounties />
-            ))}
+              bountyType === BountyType.all &&
+              bountyEvents[relayUrl] &&
+              (bountyEvents[relayUrl].length ? (
+                bountyEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)
+              ) : (
+                <NoBounties />
+              ))}
           {loading.posted
             ? Array.from(Array(5)).map((i) => <BountyPlaceholder key={i} />)
             : mounted &&
-            bountyType === BountyType.userPosted &&
-            userEvents[relayUrl] &&
-            userPublicKey &&
-            (userEvents[relayUrl].length ? userEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />) : <NoBounties />)}
+              bountyType === BountyType.userPosted &&
+              userEvents[relayUrl] &&
+              userPublicKey &&
+              (userEvents[relayUrl].length ? userEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />) : <NoBounties />)}
 
           {mounted && bountyType === BountyType.userPosted && !userPublicKey && (
             <div className="flex flex-col items-center gap-8 text-center text-black dark:text-white">
@@ -284,13 +285,13 @@ export default function Bounties() {
         {mounted && bountyType === BountyType.userPosted && !userPublicKey
           ? null
           : mounted && (
-            <button
-              onClick={loadMore}
-              className="mb-6 flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
-            >
-              Load More
-            </button>
-          )}
+              <button
+                onClick={loadMore}
+                className="mb-6 flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
+              >
+                Load More
+              </button>
+            )}
       </>
     </div>
   );

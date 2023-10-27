@@ -23,7 +23,7 @@ export default function Bounty({ event }: Props) {
   const { relayUrl } = useRelayStore();
   const { getProfileEvent } = useProfileStore();
   const { setCachedBountyEvent, getBountyApplicants } = useBountyEventStore();
-
+  const { getUserPublicKey } = useUserProfileStore();
   const tags = getBountyTags(event.tags);
 
   const router = useRouter();
