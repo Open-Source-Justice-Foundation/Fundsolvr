@@ -16,7 +16,7 @@ interface Props {
 export default function DeleteBounty({ eventId, onDelete }: Props) {
   const { getUserPublicKey } = useUserProfileStore();
   const { deleteBountyEvent, deleteUserEvent } = useBountyEventStore();
-  const { publish, subscribe, relayUrl } = useRelayStore();
+  const { publish, relayUrl } = useRelayStore();
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const inputRef = useRef(null);
@@ -58,8 +58,8 @@ export default function DeleteBounty({ eventId, onDelete }: Props) {
   }
   return (
     <>
-      <div onClick={openModal} className="flex cursor-pointer items-center justify-center text-red-400">
-        Delete
+      <div onClick={openModal} className="flex cursor-pointer items-center justify-center rounded-lg bg-red-300/10 p-2 text-red-400">
+        Remove
       </div>
 
       <Transition appear show={isOpen} as={Fragment}>
