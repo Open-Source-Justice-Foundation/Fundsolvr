@@ -73,7 +73,7 @@ export default function DeleteBounty({ eventId, onDelete }: Props) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
+            <div className="fixed inset-0 bg-black dark:bg-gray-800 dark:bg-opacity-75 bg-opacity-25" />
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
@@ -87,12 +87,12 @@ export default function DeleteBounty({ eventId, onDelete }: Props) {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
-                    Note
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-gray-900 p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900 dark:text-white">
+                    Remove Bounty
                   </Dialog.Title>
                   <div className="mt-2">
-                    <p className="text-sm text-gray-500">Include an optional note describing the reason for deletion</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Include an optional note describing the reason for deletion</p>
                   </div>
                   <div className="sm:col-span-4">
                     <div className="mt-4">
@@ -114,13 +114,13 @@ export default function DeleteBounty({ eventId, onDelete }: Props) {
                     </div>
                   </div>
 
-                  <div className="mt-4">
+                  <div className="mt-4 flex justify-end">
                     <button
                       type="button"
-                      className="flex cursor-pointer items-center justify-center py-2 text-red-400"
+                      className="flex cursor-pointer items-center justify-center p-2 text-red-400 hover:bg-red-300/10 rounded-lg"
                       onClick={handleDelete}
                     >
-                      Delete
+                      Remove Bounty
                     </button>
                   </div>
                 </Dialog.Panel>
