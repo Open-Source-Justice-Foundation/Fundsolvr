@@ -25,9 +25,13 @@ import {
 import { nip19 } from "nostr-tools";
 import { Event } from "nostr-tools";
 import { AddressPointer } from "nostr-tools/lib/nip19";
+// @ts-ignore
+import { NoComment } from "react-nocomment";
+import colors, { indigo } from "tailwindcss/colors";
 
 import DeleteBounty from "../../components/DeleteBounty";
 import { useUserProfileStore } from "../../stores/userProfileStore";
+import { Theme } from "../../types";
 
 export default function BountyPage() {
   const { subscribe, relayUrl } = useRelayStore();
@@ -73,7 +77,7 @@ export default function BountyPage() {
             setProfileEvent(relayUrl, event.pubkey, event);
           };
 
-          const onEOSE = () => { };
+          const onEOSE = () => {};
 
           const userFilter = {
             kinds: [0],
@@ -245,7 +249,30 @@ export default function BountyPage() {
             </>
           )}
           {tab === "applications" && <div>apps</div>}
-          {tab === "discussion" && <div>discussion</div>}
+          {tab === "discussion" && (
+            <div>
+              <div className="mt-4">
+                <style>
+                  {`
+                  :root {
+                    --nc-primary-color: ${colors.indigo[500]};
+                  }
+                  :root.${Theme.light} {
+                    --nc-text-color: ${colors.gray[900]};
+                  }
+                  :root.${Theme.dark} {
+                    --nc-background: ${colors.gray[800]};
+                    --nc-text-background: ${colors.gray[800]};
+                    --nc-text-color: ${colors.gray[100]};
+                    --nc-text-color: ${colors.gray[100]};
+                    --nc-text-color-dark: ${colors.white};
+                  }
+                `}
+                </style>
+                <NoComment owner={getUserPublicKey()} relays={[relayUrl]} customBase={naddrStr} />
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
