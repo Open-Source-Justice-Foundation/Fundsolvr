@@ -19,7 +19,7 @@ import Tag from "./Tag";
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
   const { setProfileEvent } = useProfileStore();
-  const { setBountyEvents, getBountyEvents, bountyEvents, setUserEvents, userEvents, bountyType, setBountyType } = useBountyEventStore();
+  const { setBountyEvents, getBountyEvents, bountyEvents, setUserEvents, userEvents, bountyType, setBountyType, setApplicantEvents, getApplicantEvents } = useBountyEventStore();
   const { userPublicKey } = useUserProfileStore();
   const [mounted, setMounted] = useState(false);
   const [bountyTags, setBountyTags] = useState<string[]>([]);
@@ -62,7 +62,24 @@ export default function Bounties() {
       if (value && value.length > 0) {
         events.push(event);
         pubkeys.add(event.pubkey);
+
+        const applicantFilter: Filter = {
+          kinds: [7],
+          "#d": [getTagValues("d", event.tags)],
+          "#k": ["30050"],
+          limit: 1000,
+        };
+
+        const onApplicantEvent = (event: Event) => {
+          // add applicant to list of applicants
+          setApplicantEvents(relayUrl, event.pubkey, event);
+        };
+
+        const onApplicantEOSE = () => { };
+
+        subscribe([relayUrl], applicantFilter, onApplicantEvent, onApplicantEOSE);
       }
+      // TODO: get reactions here for applicants
     };
 
     const onEOSE = () => {

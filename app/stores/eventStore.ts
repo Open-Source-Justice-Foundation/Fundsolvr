@@ -23,6 +23,10 @@ interface BountyEventState {
   setTag: (tag: string) => void;
   getTag: () => string;
 
+  applicantEvents: Record<string, Array<Event>>;
+  setApplicantEvents: (relayUrl: string, dValue: string, applicantEvents: Array<Event>) => void;
+  getApplicantEvents: (relayUrl: string, dValue: string) => Array<Event>;
+
   bountyType: "all" | "userPosted" | "assigned";
   setBountyType: (bountyType: "all" | "userPosted" | "assigned") => void;
 }
@@ -56,6 +60,10 @@ export const useBountyEventStore = create<BountyEventState>()(
         tag: "",
         setTag: (tag) => set({ tag }),
         getTag: () => get().tag,
+
+        applicantEvents: {},
+        setApplicantEvents: (relayUrl, dValue, applicantEvents) => set((prev) => ({ applicantEvents: { ...prev.applicantEvents, [`${relayUrl}_${dValue}`]: applicantEvents } })),
+        getApplicantEvents: (relayUrl: string, dValue: string) => get().applicantEvents[`${relayUrl}_${dValue}`] ?? [],
 
         bountyType: "all",
         setBountyType: (bountyType) => set({ bountyType }),
