@@ -20,6 +20,9 @@ interface Props {
 }
 
 export default function Applicant({ applicantEvent }: Props) {
+
+  console.log("applicantEvent", applicantEvent);
+
   const { relayUrl, subscribe } = useRelayStore();
   const { getProfileEvent, setProfileEvent } = useProfileStore();
   const { userPublicKey } = useUserProfileStore();
@@ -74,11 +77,11 @@ export default function Applicant({ applicantEvent }: Props) {
     subscribe([relayUrl], userFilter, onEvent, onEOSE);
   }, [relayUrl]);
 
-  useEffect(() => {
-    console.log("cachedBountyEvent", cachedBountyEvent);
-    console.log("userPublicKey", userPublicKey);
-    console.log("applicantEvent", applicantEvent);
-  }, [cachedBountyEvent, userPublicKey, applicantEvent]);
+  // useEffect(() => {
+  //   console.log("cachedBountyEvent", cachedBountyEvent);
+  //   console.log("userPublicKey", userPublicKey);
+  //   console.log("applicantEvent", applicantEvent);
+  // }, [cachedBountyEvent, userPublicKey, applicantEvent]);
 
   return (
     <div className="flex items-center justify-between rounded-lg bg-white p-4 dark:bg-gray-800">

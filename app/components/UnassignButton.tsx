@@ -47,7 +47,7 @@ export default function AssignButton() {
       setCachedBountyEvent(event);
     }
 
-    console.log("UPDATED EVENT:", event);
+    // console.log("UPDATED EVENT:", event);
 
     publish([relayUrl], event, onSeen);
   };

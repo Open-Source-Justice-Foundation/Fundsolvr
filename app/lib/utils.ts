@@ -129,6 +129,9 @@ export async function verifyGithub(npub: string, gistId: string) {
     return false;
   }
   let identityPhraseArr = identityPhrase.split(":");
+  if (identityPhraseArr.length !== 2) {
+    return false;
+  }
   const npubFromGist = identityPhraseArr[1].replace(/\r?\n|\r| /g, "");
   if (npubFromGist === npub) {
     return true;

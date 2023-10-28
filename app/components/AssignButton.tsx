@@ -51,47 +51,7 @@ export default function AssignButton() {
       setCachedBountyEvent(event);
     }
 
-    console.log("UPDATED EVENT:", event);
-
-    publish([relayUrl], event, onSeen);
-  };
-
-  const handleUnassign = async (e: any) => {
-    e.preventDefault();
-    if (!cachedBountyEvent) {
-      alert("No bounty event cached");
-      return;
-    }
-
-    let tags = removeTag("p", cachedBountyEvent.tags);
-    tags = removeTag("s", tags);
-    const status = ["s", "open"];
-    tags.push(status);
-
-    let event: Event = {
-      id: "",
-      sig: "",
-      kind: cachedBountyEvent.kind,
-      created_at: Math.floor(Date.now() / 1000),
-      tags: tags,
-      content: cachedBountyEvent.content,
-      pubkey: userPublicKey,
-    };
-
-    event.id = getEventHash(event);
-    event = await window.nostr.signEvent(event);
-
-    function onSeen() {
-      if (!cachedBountyEvent) {
-        return;
-      }
-
-      updateBountyEvent(relayUrl, cachedBountyEvent.id, event);
-      updateUserEvent(relayUrl, cachedBountyEvent.id, event);
-      setCachedBountyEvent(event);
-    }
-
-    console.log("UPDATED EVENT:", event);
+    // console.log("UPDATED EVENT:", event);
 
     publish([relayUrl], event, onSeen);
   };
