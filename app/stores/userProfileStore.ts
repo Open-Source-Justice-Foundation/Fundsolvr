@@ -34,7 +34,7 @@ export const useUserProfileStore = create<CurrentUserState>()(
       }),
       {
         name: "resolvr-login-storage",
-        storage: createJSONStorage(() => sessionStorage),
+        storage: createJSONStorage(() => localStorage),
       }
     )
   )

@@ -8,6 +8,7 @@ import PlusIcon from "@heroicons/react/20/solid/PlusIcon";
 import { ArrowUpTrayIcon, NewspaperIcon, UserIcon } from "@heroicons/react/24/outline";
 import type { Event, Filter } from "nostr-tools";
 
+import { getApplicants, retrieveProfiles } from "../lib/nostr";
 import { getBountyTags, getTagValues } from "../lib/utils";
 import { useBountyEventStore } from "../stores/eventStore";
 import { useProfileStore } from "../stores/profileStore";
@@ -15,20 +16,11 @@ import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 import Bounty from "./Bounty";
 import Tag from "./Tag";
-import { getApplicants, retrieveProfiles } from "../lib/nostr";
 
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
   const { setProfileEvent } = useProfileStore();
-  const {
-    setBountyEvents,
-    getBountyEvents,
-    bountyEvents,
-    setUserEvents,
-    userEvents,
-    bountyType,
-    setBountyType,
-  } = useBountyEventStore();
+  const { setBountyEvents, getBountyEvents, bountyEvents, setUserEvents, userEvents, bountyType, setBountyType } = useBountyEventStore();
   const { userPublicKey } = useUserProfileStore();
   const [mounted, setMounted] = useState(false);
   const [bountyTags, setBountyTags] = useState<string[]>([]);
@@ -49,19 +41,15 @@ export default function Bounties() {
     router.push("/create");
   }
 
-  const bountyFilter: Filter = {
-    kinds: [30050],
-    limit: 10,
-    until: undefined,
-    authors: undefined,
-  };
-
-
   const getBounties = async () => {
+    const bountyFilter: Filter = {
+      kinds: [30050],
+      limit: 10,
+      until: undefined,
+    };
     const events: Event[] = [];
     const pubkeys = new Set<string>();
     const dValues = new Set<string>();
-    bountyFilter.authors = undefined;
 
     if (bountyEvents[relayUrl]) {
       const lastEvent = bountyEvents[relayUrl].slice(-1)[0];
@@ -84,7 +72,7 @@ export default function Bounties() {
         setBountyEvents(relayUrl, events);
       }
 
-      retrieveProfiles(Array.from(pubkeys))
+      retrieveProfiles(Array.from(pubkeys));
       getApplicants(dValues);
     };
 
@@ -95,11 +83,18 @@ export default function Bounties() {
     const events: Event[] = [];
     const pubkeys = new Set<string>();
     const dValues = new Set<string>();
-    bountyFilter.authors = [userPublicKey];
+
+    const postedBountyFilter: Filter = {
+      kinds: [30050],
+      limit: 10,
+      until: undefined,
+    };
+
+    postedBountyFilter.authors = [userPublicKey];
 
     if (userEvents[relayUrl]) {
       const lastEvent = userEvents[relayUrl].slice(-1)[0];
-      bountyFilter.until = lastEvent.created_at - 10;
+      postedBountyFilter.until = lastEvent.created_at - 10;
     }
 
     const onEvent = (event: Event) => {
@@ -117,10 +112,10 @@ export default function Bounties() {
       } else {
         setUserEvents(relayUrl, events);
       }
-      retrieveProfiles(Array.from(pubkeys))
+      retrieveProfiles(Array.from(pubkeys));
     };
 
-    subscribe([relayUrl], bountyFilter, onEvent, onEOSE);
+    subscribe([relayUrl], postedBountyFilter, onEvent, onEOSE);
     getApplicants(dValues);
   };
 

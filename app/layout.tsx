@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 
 import Sidebar from "./components/Sidebar";
 import Header from "./components/header/Header";
+import Refresh from "./components/Refresh";
 import "./globals.css";
 import { Theme } from "./types";
 import RelayMenu from "./components/menus/RelayMenu";
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="min-h-screen">
           <Sidebar />
           <Header />
+          <Refresh />
           <RelayMenu />
           {children}
         </div>
