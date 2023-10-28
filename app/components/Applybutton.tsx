@@ -8,6 +8,7 @@ import { UserPlusIcon } from "@heroicons/react/24/outline";
 import { type Event, getEventHash } from "nostr-tools";
 
 import { getTagValues } from "../lib/utils";
+import { useBountyEventStore } from "../stores/eventStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 
@@ -17,6 +18,7 @@ interface PropTypes {
 
 export default function Applybutton({ bountyEvent }: PropTypes) {
   const { relayUrl, publish } = useRelayStore();
+  const { setApplicantEvent } = useBountyEventStore();
   const { userPublicKey } = useUserProfileStore();
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -27,7 +29,6 @@ export default function Applybutton({ bountyEvent }: PropTypes) {
 
   const handleApply = async (e: any) => {
     e.preventDefault();
-    console.log("apply to", bountyEvent);
 
     let event: Event = {
       id: "",
@@ -51,10 +52,10 @@ export default function Applybutton({ bountyEvent }: PropTypes) {
 
     function onSeen() {
       setOpen(false);
+      setApplicantEvent(relayUrl, getTagValues("d", bountyEvent.tags), userPublicKey, event);
       // TODO: add toast confirmation here
       // also cache the application event
     }
-
 
     publish([relayUrl], event, onSeen);
   };
