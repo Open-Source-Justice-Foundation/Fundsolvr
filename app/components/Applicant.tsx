@@ -148,10 +148,13 @@ export default function Applicant({ applicantEvent }: Props) {
           )}
         </div>
       </div>
-      {cachedBountyEvent && getTagValues("p", cachedBountyEvent.tags) === applicantEvent.pubkey && (
-        <UnassignButton />
-      )}
-      {getTagValues("p", applicantEvent.tags) === userPublicKey && <AssignButton pubkey={applicantEvent.pubkey} />}
+      {cachedBountyEvent && getTagValues("p", cachedBountyEvent.tags) === applicantEvent.pubkey && <UnassignButton />}
+      {cachedBountyEvent &&
+        getTagValues("p", applicantEvent.tags) === userPublicKey &&
+        getTagValues("p", cachedBountyEvent.tags) !== applicantEvent.pubkey &&
+        !getTagValues("p", cachedBountyEvent.tags) && (
+          <AssignButton pubkey={applicantEvent.pubkey} />
+        )}
     </div>
   );
 }
