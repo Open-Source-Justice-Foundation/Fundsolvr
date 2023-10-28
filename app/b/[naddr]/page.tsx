@@ -278,7 +278,7 @@ export default function BountyPage() {
               <h3 className="text-xl font-bold text-gray-800 dark:text-white">Applicants</h3>
               <div className="mt-6 flex flex-col gap-y-4">
                 {Object.values(getBountyApplicants(relayUrl, getTagValues("d", bountyEvent.tags))).map((applicantEvent) => (
-                  <Applicant applicantEvent={applicantEvent} />
+                  <Applicant key={applicantEvent.pubkey} applicantEvent={applicantEvent} />
                 ))}
               </div>
             </div>
