@@ -224,7 +224,9 @@ export default function BountyPage() {
                 )}
               >
                 <UsersIcon className="h-5 w-5" />
-                <h3 className="">Applications</h3>
+                <h3>
+                  Applications ({Object.values(getBountyApplicants(relayUrl, getTagValues("d", bountyEvent.tags))).length})
+                </h3>
               </div>
               <div
                 onClick={() => setTab("discussion")}

@@ -1,12 +1,16 @@
+"use client";
+
+import { useEffect } from "react";
+
 import Link from "next/link";
 
+import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { type Event, nip19 } from "nostr-tools";
 
+import { retrieveProfiles } from "../lib/nostr";
 import { getITagValue, getTagValues, parseProfileContent, websiteLink } from "../lib/utils";
 import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
-
-import { CheckCircleIcon } from "@heroicons/react/20/solid";
 
 interface Props {
   applicantEvent: Event;
@@ -14,10 +18,13 @@ interface Props {
 
 export default function Applicant({ applicantEvent }: Props) {
   const { relayUrl } = useRelayStore();
-  const { getProfileEvent, setProfileEvent } = useProfileStore();
+  const { getProfileEvent } = useProfileStore();
 
-  // check if user is in cache
-  // if not fetch profile
+  useEffect(() => {
+    if (!getProfileEvent(relayUrl, applicantEvent.pubkey)) {
+      retrieveProfiles([applicantEvent.pubkey]);
+    }
+  }, []);
 
   return (
     <div className="flex items-center justify-between rounded-lg bg-white p-4 dark:bg-gray-800">
@@ -25,8 +32,8 @@ export default function Applicant({ applicantEvent }: Props) {
         <Link href={`/u/${nip19.npubEncode(applicantEvent.pubkey)}`} className="flex cursor-pointer items-center gap-x-2">
           <img
             src={parseProfileContent(getProfileEvent(relayUrl, applicantEvent.pubkey)?.content).picture}
-            alt="avatar"
-            className="h-12 w-12 rounded-full"
+            alt=""
+            className="h-10 w-10 rounded-full"
           />
           <span className="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
             {parseProfileContent(getProfileEvent(relayUrl, applicantEvent.pubkey)?.content).name}
