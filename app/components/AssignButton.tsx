@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
-
 import { type Event, getEventHash } from "nostr-tools";
 
 import { removeTag } from "../lib/utils";
@@ -38,8 +36,6 @@ export default function AssignButton( props: any) {
       pubkey: userPublicKey,
     };
 
-    console.log("ASSIGNING TO:", props.pubkey)
-
     event.id = getEventHash(event);
     event = await window.nostr.signEvent(event);
 
@@ -52,8 +48,6 @@ export default function AssignButton( props: any) {
       updateUserEvent(relayUrl, cachedBountyEvent.id, event);
       setCachedBountyEvent(event);
     }
-
-    console.log("UPDATED EVENT:", event);
 
     publish([relayUrl], event, onSeen);
   };
