@@ -284,7 +284,8 @@ export default function BountyPage() {
             </div>
           )}
           {tab === "discussion" && (
-            <div>
+            <div className="mt-6 flex flex-col">
+              <h3 className="text-xl font-bold text-gray-800 dark:text-white">Discussion</h3>
               <div className="mt-4">
                 <style>
                   {`
