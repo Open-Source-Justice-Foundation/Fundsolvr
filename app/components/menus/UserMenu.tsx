@@ -78,30 +78,45 @@ export default function Example({ children }: any) {
                 </p>
               )}
             </span>
-            <Link
-              href={`/u/${nip19.npubEncode(userPublicKey)}`}
-              className="block select-none px-4 py-1 hover:bg-indigo-200 dark:hover:bg-indigo-600"
-            >
-              Profile
-            </Link>
-            <Link href="/messages" className="block select-none px-4 py-1 hover:bg-indigo-200 dark:hover:bg-indigo-600">
-              Messages
-            </Link>
-            <Link href="/settings" className="block select-none px-4 py-1 hover:bg-indigo-200 dark:hover:bg-indigo-600">
-              Settings
-            </Link>
+            {[
+              {
+                href: `/u/${nip19.npubEncode(userPublicKey)}`,
+                label: "Profile",
+              },
+              {
+                href: "/messages",
+                label: "Messages",
+              },
+              {
+                href: "/settings",
+                label: "Settings",
+              },
+            ].map(({ href, label }, idx) => (
+              <Popover.Button
+                key={idx}
+                as={Link}
+                href={href}
+                className="block select-none px-4 py-1 hover:bg-indigo-200 dark:hover:bg-indigo-600"
+              >
+                {label}
+              </Popover.Button>
+            ))}
 
-            {/* TODO: close menu when this is clicked */}
-            <span
-              className="block cursor-pointer select-none px-4 py-1 hover:bg-indigo-200 dark:hover:bg-indigo-600"
+            <Popover.Button
+              as="button"
+              className="block w-full cursor-pointer select-none px-4 py-1 text-left hover:bg-indigo-200 dark:hover:bg-indigo-600"
               onClick={handleRelayMenuReadFromClick}
             >
               Relays
-            </span>
+            </Popover.Button>
             <div className="mt-2 border-t border-gray-200 dark:border-gray-700/40" />
-            <span onClick={signOut} className="mt-2 block cursor-pointer px-4 py-1 hover:bg-indigo-200 dark:hover:bg-indigo-600">
+            <Popover.Button
+              as="button"
+              onClick={signOut}
+              className="mt-2 block w-full cursor-pointer px-4 py-1 text-left hover:bg-indigo-200 dark:hover:bg-indigo-600"
+            >
               <p>{"Sign out"}</p>
-            </span>
+            </Popover.Button>
           </div>
         </Popover.Panel>
       </Transition>
