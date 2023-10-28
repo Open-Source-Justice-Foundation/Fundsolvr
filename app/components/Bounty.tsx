@@ -67,7 +67,7 @@ export default function Bounty({ event }: Props) {
 
           <div className="flex items-center justify-end gap-x-2 sm:justify-start">
 
-            {event.pubkey === getUserPublicKey() && <DeleteBounty eventId={event.id}></DeleteBounty>}
+            {/* {event.pubkey === getUserPublicKey() && <DeleteBounty eventId={event.id}></DeleteBounty>} */}
             {tags[0] && (
               <div
                 key={tags[0]}
