@@ -61,7 +61,6 @@ export default function BountyPage() {
       if (naddrPointer) {
         if (cachedBountyEvent) {
           setBountyEvent(cachedBountyEvent);
-          setCachedBountyEvent(null);
           return;
         }
 
@@ -71,6 +70,7 @@ export default function BountyPage() {
           const dValues = new Set<string>();
           dValues.add(getTagValues("d", event.tags));
           getApplicants(dValues);
+          setCachedBountyEvent(event);
         };
 
         const onEOSE = () => { };
@@ -88,7 +88,13 @@ export default function BountyPage() {
         }
       }
     }
-  }, [naddr]);
+  }, [naddr, cachedBountyEvent]);
+
+  useEffect(() => {
+    return () => {
+      setCachedBountyEvent(null);
+    };
+  }, []);
 
   function setupMarkdown(content: string) {
     var md = require("markdown-it")();
@@ -123,10 +129,42 @@ export default function BountyPage() {
               </div>
 
               <span className="inline-flex items-center gap-x-3 rounded-md bg-white px-3 py-2 text-sm font-medium text-gray-600 ring-2 ring-inset ring-gray-300 dark:bg-gray-900 dark:text-white dark:ring-gray-800">
-                <svg className="h-2 w-2 fill-yellow-400" viewBox="0 0 6 6" aria-hidden="true">
-                  <circle cx={3} cy={3} r={3} />
-                </svg>
-                Open
+                {getTagValues("s", bountyEvent.tags) === "open" && (
+                  <>
+                    <svg className="h-2 w-2 fill-yellow-400" viewBox="0 0 6 6" aria-hidden="true">
+                      <circle cx={3} cy={3} r={3} />
+                    </svg>
+
+                    <span className="text-gray-700 dark:text-gray-300">Open</span>
+                  </>
+                )}
+                {getTagValues("s", bountyEvent.tags) === "assigned" && (
+                  <>
+                    <svg className="h-2 w-2 fill-blue-400" viewBox="0 0 6 6" aria-hidden="true">
+                      <circle cx={3} cy={3} r={3} />
+                    </svg>
+
+                    <span className="text-gray-700 dark:text-gray-300">Assigned</span>
+                  </>
+                )}
+                {getTagValues("s", bountyEvent.tags) === "withdrawn" && (
+                  <>
+                    <svg className="h-2 w-2 fill-red-400" viewBox="0 0 6 6" aria-hidden="true">
+                      <circle cx={3} cy={3} r={3} />
+                    </svg>
+
+                    <span className="text-gray-700 dark:text-gray-300">Withdrawn</span>
+                  </>
+                )}
+                {getTagValues("s", bountyEvent.tags) === "complete" && (
+                  <>
+                    <svg className="h-2 w-2 fill-green-400" viewBox="0 0 6 6" aria-hidden="true">
+                      <circle cx={3} cy={3} r={3} />
+                    </svg>
+
+                    <span className="text-gray-700 dark:text-gray-300">Complete</span>
+                  </>
+                )}
               </span>
             </div>
 
@@ -176,7 +214,7 @@ export default function BountyPage() {
                           {
                             // TODO: check if user has already applied
                             getApplicantEvent(relayUrl, getTagValues("d", bountyEvent.tags), userPublicKey) ? (
-                              <span className="text-green-500 dark:text-green-400 select-none">Applied</span>
+                              <span className="select-none text-green-500 dark:text-green-400">Applied</span>
                             ) : (
                               <Applybutton bountyEvent={bountyEvent} />
                             )
@@ -224,9 +262,7 @@ export default function BountyPage() {
                 )}
               >
                 <UsersIcon className="h-5 w-5" />
-                <h3>
-                  Applications ({Object.values(getBountyApplicants(relayUrl, getTagValues("d", bountyEvent.tags))).length})
-                </h3>
+                <h3>Applications ({Object.values(getBountyApplicants(relayUrl, getTagValues("d", bountyEvent.tags))).length})</h3>
               </div>
               <div
                 onClick={() => setTab("discussion")}

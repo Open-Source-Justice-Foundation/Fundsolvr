@@ -15,6 +15,10 @@ export const getTagValues = (name: string, tags: string[][]) => {
   return item;
 };
 
+export const removeTag = (name: string, tags: string[][]) => {
+  return tags.filter((tag: string[]) => tag[0] !== name);
+};
+
 export const getBountyTags = (tags: string[][]) => {
   return tags
     .filter((tag) => tag[0] === "t")

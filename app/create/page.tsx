@@ -135,8 +135,6 @@ export default function CreateBounty() {
       pubkey: userPublicKey,
     };
 
-    console.log("TEXT EVENT", event);
-
     event.id = getEventHash(event);
     event = await window.nostr.signEvent(event);
 
@@ -173,8 +171,8 @@ export default function CreateBounty() {
     const additionaltags = [
       ["d", uniqueUrl],
       ["title", title],
-      ["status", "open"],
-      ["assignedTo", ""],
+      ["s", "open"],
+      ["u", ""],
       ["value", reward],
     ];
 

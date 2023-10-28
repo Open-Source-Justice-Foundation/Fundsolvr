@@ -8,9 +8,12 @@ import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { type Event, nip19 } from "nostr-tools";
 
 import { getITagValue, getITagValues, getTagValues, parseProfileContent, verifyGithub, websiteLink } from "../lib/utils";
+import { useBountyEventStore } from "../stores/eventStore";
 import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
+import AssignButton from "./AssignButton";
+import UnassignButton from "./UnassignButton";
 
 interface Props {
   applicantEvent: Event;
@@ -20,6 +23,7 @@ export default function Applicant({ applicantEvent }: Props) {
   const { relayUrl, subscribe } = useRelayStore();
   const { getProfileEvent, setProfileEvent } = useProfileStore();
   const { userPublicKey } = useUserProfileStore();
+  const { cachedBountyEvent } = useBountyEventStore();
 
   const [githubVerified, setGithubVerified] = useState(false);
 
@@ -69,6 +73,12 @@ export default function Applicant({ applicantEvent }: Props) {
 
     subscribe([relayUrl], userFilter, onEvent, onEOSE);
   }, [relayUrl]);
+
+  useEffect(() => {
+    console.log("cachedBountyEvent", cachedBountyEvent);
+    console.log("userPublicKey", userPublicKey);
+    console.log("applicantEvent", applicantEvent);
+  }, [cachedBountyEvent, userPublicKey, applicantEvent]);
 
   return (
     <div className="flex items-center justify-between rounded-lg bg-white p-4 dark:bg-gray-800">
@@ -136,9 +146,10 @@ export default function Applicant({ applicantEvent }: Props) {
           )}
         </div>
       </div>
-
-      {getTagValues("p", applicantEvent.tags) === userPublicKey && (
-        <button className="mx-4 rounded-lg bg-green-500/20 p-2 text-green-600 dark:bg-green-400/10 dark:text-green-400">Assign</button>
+      {cachedBountyEvent && getTagValues("p", cachedBountyEvent.tags) === userPublicKey ? (
+        <UnassignButton />
+      ) : (
+        getTagValues("p", applicantEvent.tags) === userPublicKey && <AssignButton />
       )}
     </div>
   );

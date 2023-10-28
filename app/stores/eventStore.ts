@@ -10,6 +10,7 @@ interface BountyEventState {
   setCachedBountyEvent: (bounty: Event | null) => void;
   getCachedBountyEvent: () => Event | null;
   deleteBountyEvent: (key: string, id: string) => void;
+  updateBountyEvent: (key: string, id: string, bountyEvent: Event) => void;
 
   userEvents: Record<string, Array<Event>>;
   setUserEvents: (key: string, userEvents: Array<Event>) => void;
@@ -18,6 +19,7 @@ interface BountyEventState {
   setCachedUserEvent: (userEvent: Event | null) => void;
   getCachedUserEvent: () => Event | null;
   deleteUserEvent: (key: string, id: string) => void;
+  updateUserEvent: (key: string, id: string, userEvent: Event) => void;
 
   tag: string;
   setTag: (tag: string) => void;
@@ -46,6 +48,16 @@ export const useBountyEventStore = create<BountyEventState>()(
           set((prev) => ({
             bountyEvents: { [key]: prev.bountyEvents[key].filter((bountyEvent) => bountyEvent.id !== id) },
           })),
+        updateBountyEvent: (key: string, id: string, updatedBountyEvent: Event) => {
+          set((prev) => {
+            const currentBounties = prev.bountyEvents[key] || [];
+            const updatedBounties = currentBounties.map((bountyEvent) => (bountyEvent.id === id ? updatedBountyEvent : bountyEvent));
+
+            return {
+              bountyEvents: { ...prev.bountyEvents, [key]: updatedBounties },
+            };
+          });
+        },
 
         userEvents: {},
         setUserEvents: (key, userEvents) => set((prev) => ({ userEvents: { ...prev.userEvents, [key]: userEvents } })),
@@ -57,6 +69,18 @@ export const useBountyEventStore = create<BountyEventState>()(
           set((prev) => ({
             userEvents: { [key]: prev.userEvents[key].filter((userEvent) => userEvent.id !== id) },
           })),
+        updateUserEvent: (key: string, id: string, updatedUserEvent: Event) => {
+          set((prev) => {
+            const currentUserEvents = prev.userEvents[key] || [];
+            const updatedUserEvents = currentUserEvents.map(userEvent =>
+              userEvent.id === id ? updatedUserEvent : userEvent
+            );
+
+            return {
+              userEvents: { ...prev.userEvents, [key]: updatedUserEvents },
+            };
+          });
+        },
 
         tag: "",
         setTag: (tag) => set({ tag }),

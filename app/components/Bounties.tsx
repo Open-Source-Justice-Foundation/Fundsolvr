@@ -51,7 +51,9 @@ export default function Bounties() {
 
     if (bountyEvents[relayUrl]) {
       const lastEvent = bountyEvents[relayUrl].slice(-1)[0];
-      bountyFilter.until = lastEvent.created_at - 10;
+      if (lastEvent) {
+        bountyFilter.until = lastEvent.created_at - 10;
+      }
     }
 
     const onEvent = (event: Event) => {
@@ -92,7 +94,9 @@ export default function Bounties() {
 
     if (userEvents[relayUrl]) {
       const lastEvent = userEvents[relayUrl].slice(-1)[0];
-      postedBountyFilter.until = lastEvent.created_at - 10;
+      if (lastEvent) {
+        postedBountyFilter.until = lastEvent.created_at - 10;
+      }
     }
 
     const onEvent = (event: Event) => {
