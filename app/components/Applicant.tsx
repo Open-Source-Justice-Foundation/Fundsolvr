@@ -20,8 +20,7 @@ interface Props {
 }
 
 export default function Applicant({ applicantEvent }: Props) {
-
-  console.log("applicantEvent", applicantEvent);
+  // console.log("applicantEvent", applicantEvent);
 
   const { relayUrl, subscribe } = useRelayStore();
   const { getProfileEvent, setProfileEvent } = useProfileStore();
@@ -77,11 +76,11 @@ export default function Applicant({ applicantEvent }: Props) {
     subscribe([relayUrl], userFilter, onEvent, onEOSE);
   }, [relayUrl]);
 
-  // useEffect(() => {
-  //   console.log("cachedBountyEvent", cachedBountyEvent);
-  //   console.log("userPublicKey", userPublicKey);
-  //   console.log("applicantEvent", applicantEvent);
-  // }, [cachedBountyEvent, userPublicKey, applicantEvent]);
+  useEffect(() => {
+    console.log("CACHEDBOUNTYEVENT!!!!!", cachedBountyEvent);
+    // console.log("userPublicKey", userPublicKey);
+    // console.log("applicantEvent", applicantEvent);
+  }, [cachedBountyEvent]);
 
   return (
     <div className="flex items-center justify-between rounded-lg bg-white p-4 dark:bg-gray-800">
@@ -149,11 +148,10 @@ export default function Applicant({ applicantEvent }: Props) {
           )}
         </div>
       </div>
-      {cachedBountyEvent && getTagValues("p", cachedBountyEvent.tags) === userPublicKey ? (
+      {cachedBountyEvent && getTagValues("p", cachedBountyEvent.tags) === applicantEvent.pubkey && (
         <UnassignButton />
-      ) : (
-        getTagValues("p", applicantEvent.tags) === userPublicKey && <AssignButton />
       )}
+      {getTagValues("p", applicantEvent.tags) === userPublicKey && <AssignButton pubkey={applicantEvent.pubkey} />}
     </div>
   );
 }

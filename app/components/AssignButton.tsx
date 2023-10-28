@@ -9,7 +9,7 @@ import { useBountyEventStore } from "../stores/eventStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 
-export default function AssignButton() {
+export default function AssignButton( props: any) {
   const { cachedBountyEvent, setCachedBountyEvent, updateBountyEvent, updateUserEvent } = useBountyEventStore();
   const { publish, relayUrl } = useRelayStore();
   const { userPublicKey } = useUserProfileStore();
@@ -22,7 +22,7 @@ export default function AssignButton() {
     }
 
     let tags = removeTag("p", cachedBountyEvent.tags);
-    const assignedTo = ["p", userPublicKey];
+    const assignedTo = ["p", props.pubkey];
     tags.push(assignedTo);
     tags = removeTag("s", tags);
     const status = ["s", "assigned"];
@@ -38,6 +38,8 @@ export default function AssignButton() {
       pubkey: userPublicKey,
     };
 
+    console.log("ASSIGNING TO:", props.pubkey)
+
     event.id = getEventHash(event);
     event = await window.nostr.signEvent(event);
 
@@ -51,7 +53,7 @@ export default function AssignButton() {
       setCachedBountyEvent(event);
     }
 
-    // console.log("UPDATED EVENT:", event);
+    console.log("UPDATED EVENT:", event);
 
     publish([relayUrl], event, onSeen);
   };
