@@ -23,9 +23,10 @@ interface BountyEventState {
   setTag: (tag: string) => void;
   getTag: () => string;
 
-  applicantEvents: Record<string, Array<Event>>;
-  setApplicantEvents: (relayUrl: string, dValue: string, applicantEvents: Array<Event>) => void;
-  getApplicantEvents: (relayUrl: string, dValue: string) => Array<Event>;
+  applicantEvents: Record<string, Record<string, Record<string, Event>>>;
+  setApplicantEvent: (relayUrl: string, bountId: string, publicKey: string, applicantEvents: Event) => void;
+  getApplicantEvent: (relayUrl: string, bountyId: string, pubkey: string) => Event | null;
+  getBountyApplicants: (relayUrl: string, bountyId: string) => Record<string, Event>;
 
   bountyType: "all" | "userPosted" | "assigned";
   setBountyType: (bountyType: "all" | "userPosted" | "assigned") => void;
@@ -62,8 +63,40 @@ export const useBountyEventStore = create<BountyEventState>()(
         getTag: () => get().tag,
 
         applicantEvents: {},
-        setApplicantEvents: (relayUrl, dValue, applicantEvents) => set((prev) => ({ applicantEvents: { ...prev.applicantEvents, [`${relayUrl}_${dValue}`]: applicantEvents } })),
-        getApplicantEvents: (relayUrl: string, dValue: string) => get().applicantEvents[`${relayUrl}_${dValue}`] ?? [],
+
+        setApplicantEvent: (relayUrl: string, bountyId: string, pubkey: string, applicantEvent: Event) => {
+          set((prev) => {
+            const prevRelayEvents = prev.applicantEvents[relayUrl] || {};
+
+            const prevBountyEvents = prevRelayEvents[bountyId] || {};
+
+            return {
+              applicantEvents: {
+                ...prev.applicantEvents,
+                [relayUrl]: {
+                  ...prevRelayEvents,
+                  [bountyId]: {
+                    ...prevBountyEvents,
+                    [pubkey]: applicantEvent,
+                  },
+                },
+              },
+            };
+          });
+        },
+
+        getApplicantEvent: (relayUrl: string, bountyId: string, pubkey: string) => {
+          const relayEvents = get().applicantEvents[relayUrl] || {};
+          const bountyEvents = relayEvents[bountyId] || {};
+
+          return bountyEvents[pubkey] || null;
+        },
+
+        getBountyApplicants: (relayUrl: string, bountyId: string) => {
+          const relayEvents = get().applicantEvents[relayUrl] || {};
+
+          return relayEvents[bountyId] || {};
+        },
 
         bountyType: "all",
         setBountyType: (bountyType) => set({ bountyType }),

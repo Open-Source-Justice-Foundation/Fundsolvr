@@ -6,7 +6,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 
+import Applicant from "@/app/components/Applicant";
 import Applybutton from "@/app/components/Applybutton";
+import { getApplicants, retrieveProfiles } from "@/app/lib/nostr";
 import { getBountyTags, getTagValues, parseProfileContent } from "@/app/lib/utils";
 import { useBountyEventStore } from "@/app/stores/eventStore";
 import { useProfileStore } from "@/app/stores/profileStore";
@@ -15,11 +17,9 @@ import { SatoshiV2Icon } from "@bitcoin-design/bitcoin-icons-react/filled";
 import {
   ArrowLeftIcon,
   BookOpenIcon,
-  BookmarkIcon,
   ChatBubbleLeftRightIcon,
   PaperAirplaneIcon,
   PencilSquareIcon,
-  UserPlusIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
 import { nip19 } from "nostr-tools";
@@ -35,8 +35,8 @@ import { Theme } from "../../types";
 
 export default function BountyPage() {
   const { subscribe, relayUrl } = useRelayStore();
-  const { getProfileEvent, setProfileEvent } = useProfileStore();
-  const { cachedBountyEvent, setCachedBountyEvent } = useBountyEventStore();
+  const { getProfileEvent } = useProfileStore();
+  const { cachedBountyEvent, setCachedBountyEvent, getBountyApplicants, getApplicantEvent } = useBountyEventStore();
   const { getUserPublicKey, userPublicKey } = useUserProfileStore();
 
   const router = useRouter();
@@ -65,27 +65,15 @@ export default function BountyPage() {
           return;
         }
 
-        let pubkey = "";
-
         const onEvent = (event: any) => {
-          pubkey = event.pubkey;
           setBountyEvent(event);
+          retrieveProfiles([event.pubkey]);
+          const dValues = new Set<string>();
+          dValues.add(getTagValues("d", event.tags));
+          getApplicants(dValues);
         };
 
-        const onEOSE = () => {
-          const onEvent = (event: Event) => {
-            setProfileEvent(relayUrl, event.pubkey, event);
-          };
-
-          const onEOSE = () => { };
-
-          const userFilter = {
-            kinds: [0],
-            authors: [pubkey],
-          };
-
-          subscribe([relayUrl], userFilter, onEvent, onEOSE);
-        };
+        const onEOSE = () => { };
 
         const filter = {
           kinds: [naddrPointer.kind],
@@ -179,20 +167,27 @@ export default function BountyPage() {
                     <>
                       {userPublicKey && bountyEvent.pubkey !== userPublicKey && (
                         <>
-                          <Link
-                            className="flex items-center justify-center rounded-lg bg-gray-400 px-2 text-white hover:bg-gray-500 dark:bg-gray-700/80 dark:hover:bg-gray-700"
-                            href={`/messages/${nip19.npubEncode(bountyEvent.pubkey)}`}
-                          >
-                            <PaperAirplaneIcon className="h-5 w-5" />
-                          </Link>
-                          <Applybutton bountyEvent={bountyEvent} />
+                          {/* <Link */}
+                          {/*   className="flex items-center justify-center rounded-lg bg-gray-400 px-2 text-white hover:bg-gray-500 dark:bg-gray-700/80 dark:hover:bg-gray-700" */}
+                          {/*   href={`/messages/${nip19.npubEncode(bountyEvent.pubkey)}`} */}
+                          {/* > */}
+                          {/*   <PaperAirplaneIcon className="h-5 w-5" /> */}
+                          {/* </Link> */}
+                          {
+                            // TODO: check if user has already applied
+                            getApplicantEvent(relayUrl, getTagValues("d", bountyEvent.tags), userPublicKey) ? (
+                              <span className="text-green-500 dark:text-green-400">Applied</span>
+                            ) : (
+                              <Applybutton bountyEvent={bountyEvent} />
+                            )
+                          }
                         </>
                       )}
                       {bountyEvent.pubkey === getUserPublicKey() && (
                         <>
-                          <div className="flex cursor-pointer items-center justify-center rounded-lg bg-gray-400 px-2 text-white hover:bg-gray-500 dark:bg-gray-700/80 dark:hover:bg-gray-700">
-                            <PencilSquareIcon className="h-5 w-5" />
-                          </div>
+                          {/* <div className="flex cursor-pointer items-center justify-center rounded-lg bg-gray-400 px-2 text-white hover:bg-gray-500 dark:bg-gray-700/80 dark:hover:bg-gray-700"> */}
+                          {/*   <PencilSquareIcon className="h-5 w-5" /> */}
+                          {/* </div> */}
                           <DeleteBounty
                             eventId={bountyEvent.id}
                             onDelete={() => {
@@ -276,7 +271,16 @@ export default function BountyPage() {
               </div>
             </>
           )}
-          {tab === "applications" && <div>apps</div>}
+          {tab === "applications" && (
+            <div className="mt-6 flex flex-col">
+              <h3 className="text-xl font-bold text-gray-800 dark:text-white">Applicants</h3>
+              <div className="mt-6 flex flex-col gap-y-4">
+                {Object.values(getBountyApplicants(relayUrl, getTagValues("d", bountyEvent.tags))).map((applicantEvent) => (
+                  <Applicant applicantEvent={applicantEvent} />
+                ))}
+              </div>
+            </div>
+          )}
           {tab === "discussion" && (
             <div>
               <div className="mt-4">

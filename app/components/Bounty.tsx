@@ -22,7 +22,7 @@ interface Props {
 export default function Bounty({ event }: Props) {
   const { relayUrl } = useRelayStore();
   const { getProfileEvent } = useProfileStore();
-  const { setCachedBountyEvent, getApplicantEvents } = useBountyEventStore();
+  const { setCachedBountyEvent, getBountyApplicants } = useBountyEventStore();
   const { getUserPublicKey } = useUserProfileStore();
 
   const tags = getBountyTags(event.tags);
@@ -101,7 +101,7 @@ export default function Bounty({ event }: Props) {
           </div>
           <div className="sm:flex hidden items-center gap-x-2 text-sm leading-6 text-gray-700 dark:text-gray-400">
             <UserIcon className="h-4 w-4 " aria-hidden="true" />
-            <span>{getApplicantEvents(relayUrl, getTagValues("d", event.tags)).length} Applicants</span>
+            <span>{Object.keys(getBountyApplicants(relayUrl, getTagValues("d", event.tags))).length} Applicants</span>
           </div>
         </div>
       </li>

@@ -15,6 +15,7 @@ import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 import Bounty from "./Bounty";
 import Tag from "./Tag";
+import { getApplicants, retrieveProfiles } from "../lib/nostr";
 
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
@@ -27,9 +28,6 @@ export default function Bounties() {
     userEvents,
     bountyType,
     setBountyType,
-    setApplicantEvents,
-    getApplicantEvents,
-    applicantEvents,
   } = useBountyEventStore();
   const { userPublicKey } = useUserProfileStore();
   const [mounted, setMounted] = useState(false);
@@ -58,9 +56,11 @@ export default function Bounties() {
     authors: undefined,
   };
 
+
   const getBounties = async () => {
     const events: Event[] = [];
-    const pubkeys = new Set();
+    const pubkeys = new Set<string>();
+    const dValues = new Set<string>();
     bountyFilter.authors = undefined;
 
     if (bountyEvents[relayUrl]) {
@@ -69,31 +69,12 @@ export default function Bounties() {
     }
 
     const onEvent = (event: Event) => {
-      console.log("BOUNTY EVENT!!!!!", event);
       const value = getTagValues("value", event.tags);
       if (value && value.length > 0) {
         events.push(event);
         pubkeys.add(event.pubkey);
-
-        const applicantFilter: Filter = {
-          kinds: [7],
-          "#d": [getTagValues("d", event.tags)],
-          "#k": ["30050"],
-          limit: 1000,
-        };
-
-        const onApplicantEvent = (event: Event) => {
-          // add applicant to list of applicants
-          const dValue = getTagValues("d", event.tags);
-          setApplicantEvents(relayUrl, dValue, [...getApplicantEvents(relayUrl, dValue), event]);
-          console.log("APPLICANT EVENT!!!!!", event);
-        };
-
-        const onApplicantEOSE = () => { };
-
-        subscribe([relayUrl], applicantFilter, onApplicantEvent, onApplicantEOSE);
+        dValues.add(getTagValues("d", event.tags));
       }
-      // TODO: get reactions here for applicants
     };
 
     const onEOSE = () => {
@@ -102,20 +83,9 @@ export default function Bounties() {
       } else {
         setBountyEvents(relayUrl, events);
       }
-      const userFilter = {
-        kinds: [0],
-        authors: Array.from(pubkeys),
-      };
 
-      // getAllBountyTags(events);
-
-      const onEvent = (event: Event) => {
-        setProfileEvent(relayUrl, event.pubkey, event);
-      };
-
-      const onEOSE = () => { };
-
-      subscribe([relayUrl], userFilter, onEvent, onEOSE);
+      retrieveProfiles(Array.from(pubkeys))
+      getApplicants(dValues);
     };
 
     subscribe([relayUrl], bountyFilter, onEvent, onEOSE);
@@ -123,7 +93,8 @@ export default function Bounties() {
 
   const getPostedBounties = async () => {
     const events: Event[] = [];
-    const pubkeys = new Set();
+    const pubkeys = new Set<string>();
+    const dValues = new Set<string>();
     bountyFilter.authors = [userPublicKey];
 
     if (userEvents[relayUrl]) {
@@ -136,6 +107,7 @@ export default function Bounties() {
       if (value && value.length > 0) {
         events.push(event);
         pubkeys.add(event.pubkey);
+        dValues.add(getTagValues("d", event.tags));
       }
     };
 
@@ -145,21 +117,11 @@ export default function Bounties() {
       } else {
         setUserEvents(relayUrl, events);
       }
-      const userFilter = {
-        kinds: [0],
-        authors: Array.from(pubkeys),
-      };
-
-      const onEvent = (event: Event) => {
-        setProfileEvent(relayUrl, event.pubkey, event);
-      };
-
-      const onEOSE = () => { };
-
-      subscribe([relayUrl], userFilter, onEvent, onEOSE);
+      retrieveProfiles(Array.from(pubkeys))
     };
 
     subscribe([relayUrl], bountyFilter, onEvent, onEOSE);
+    getApplicants(dValues);
   };
 
   function getBountiesIfEmpty() {
@@ -214,19 +176,15 @@ export default function Bounties() {
     if (getBountyEvents(relayUrl).length < 1) {
       getBounties();
     } else {
-      getAllBountyTags(bountyEvents[relayUrl]);
+      // getAllBountyTags(bountyEvents[relayUrl]);
     }
-  }, []);
+  }, [relayUrl]);
 
   useEffect(() => {
     if (userPublicKey) {
       getPostedBounties();
     }
   }, [userPublicKey, relayUrl]);
-
-  useEffect(() => {
-    getBountiesIfEmpty();
-  }, [relayUrl]);
 
   function loadMore() {
     if (bountyType === BountyType.all) {
