@@ -9,9 +9,8 @@ import { ArrowUpTrayIcon, NewspaperIcon, UserIcon } from "@heroicons/react/24/ou
 import type { Event, Filter } from "nostr-tools";
 
 import { getApplicants, retrieveProfiles } from "../lib/nostr";
-import { getBountyTags, getTagValues } from "../lib/utils";
+import { getTagValues } from "../lib/utils";
 import { useBountyEventStore } from "../stores/eventStore";
-import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 import Bounty from "./Bounty";
@@ -19,11 +18,10 @@ import Tag from "./Tag";
 
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
-  const { setProfileEvent } = useProfileStore();
   const { setBountyEvents, getBountyEvents, bountyEvents, setUserEvents, userEvents, bountyType, setBountyType } = useBountyEventStore();
   const { userPublicKey } = useUserProfileStore();
   const [mounted, setMounted] = useState(false);
-  const [bountyTags, setBountyTags] = useState<string[]>([]);
+  const [bountyTags] = useState<string[]>([]);
 
   enum BountyType {
     all = "all",
@@ -147,32 +145,10 @@ export default function Bounties() {
     getPostedBountiesIfEmpty();
   }
 
-  function getAllBountyTags(events: Event[]) {
-    const bountyTagCountMap = new Map<string, number>();
-    bountyEvents[relayUrl].forEach((event) => {
-      getBountyTags(event.tags).forEach((tag: string) => {
-        if (bountyTagCountMap.get(tag)) {
-          bountyTagCountMap.set(tag, bountyTagCountMap.get(tag)! + 1);
-        } else {
-          bountyTagCountMap.set(tag, 1);
-        }
-      });
-    });
-
-    const sortMapByCount = Array.from(bountyTagCountMap.entries())
-      .sort((a, b) => {
-        return b[1] - a[1];
-      })
-      .map((entry) => entry[0]);
-    setBountyTags(sortMapByCount);
-  }
-
   useEffect(() => {
     if (getBountyEvents(relayUrl).length < 1) {
       getBounties();
-    } else {
-      // getAllBountyTags(bountyEvents[relayUrl]);
-    }
+    } 
   }, [relayUrl]);
 
   useEffect(() => {
