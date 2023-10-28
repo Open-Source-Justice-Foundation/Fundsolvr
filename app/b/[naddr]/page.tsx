@@ -176,7 +176,7 @@ export default function BountyPage() {
                           {
                             // TODO: check if user has already applied
                             getApplicantEvent(relayUrl, getTagValues("d", bountyEvent.tags), userPublicKey) ? (
-                              <span className="text-green-500 dark:text-green-400">Applied</span>
+                              <span className="text-green-500 dark:text-green-400 select-none">Applied</span>
                             ) : (
                               <Applybutton bountyEvent={bountyEvent} />
                             )
