@@ -48,13 +48,9 @@ export default function Applybutton({ bountyEvent }: PropTypes) {
     event.id = getEventHash(event);
     event = await window.nostr.signEvent(event);
 
-    console.log("apply event (sent)", event);
-
     function onSeen() {
       setOpen(false);
       setApplicantEvent(relayUrl, getTagValues("d", bountyEvent.tags), userPublicKey, event);
-      // TODO: add toast confirmation here
-      // also cache the application event
     }
 
     publish([relayUrl], event, onSeen);
