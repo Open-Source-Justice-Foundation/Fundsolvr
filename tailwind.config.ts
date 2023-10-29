@@ -9,6 +9,13 @@ const config: Config = {
       colors: {
         bitcoin: "#F6911D",
       },
+      keyframes: {
+        shimmer: {
+          "100%": {
+            transform: "translateX(100%)",
+          },
+        },
+      },
     },
   },
   plugins: [require("@tailwindcss/typography"), require("@tailwindcss/forms")],

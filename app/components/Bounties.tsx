@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
+import BountyPlaceholder from "@/app/components/Skeleton/Bounty";
 import PlusIcon from "@heroicons/react/20/solid/PlusIcon";
 import { ArrowUpTrayIcon, NewspaperIcon, UserIcon } from "@heroicons/react/24/outline";
 import type { Event, Filter } from "nostr-tools";
@@ -21,6 +22,7 @@ export default function Bounties() {
   const { setBountyEvents, getBountyEvents, bountyEvents, setUserEvents, userEvents, bountyType, setBountyType } = useBountyEventStore();
   const { userPublicKey } = useUserProfileStore();
   const [mounted, setMounted] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [bountyTags] = useState<string[]>([]);
 
   enum BountyType {
@@ -40,6 +42,7 @@ export default function Bounties() {
   }
 
   const getBounties = async () => {
+    setLoading(true);
     const bountyFilter: Filter = {
       kinds: [30050],
       limit: 10,
@@ -74,6 +77,7 @@ export default function Bounties() {
 
       retrieveProfiles(Array.from(pubkeys));
       getApplicants(dValues);
+      setLoading(false);
     };
 
     subscribe([relayUrl], bountyFilter, onEvent, onEOSE);
@@ -152,7 +156,7 @@ export default function Bounties() {
   useEffect(() => {
     if (getBountyEvents(relayUrl).length < 1) {
       getBounties();
-    } 
+    }
   }, [relayUrl]);
 
   useEffect(() => {
@@ -235,21 +239,24 @@ export default function Bounties() {
       )}
 
       {mounted && (
-        <ul className="flex w-full max-w-4xl flex-col items-center justify-center gap-y-4 rounded-lg py-6">
-          {bountyType === BountyType.all &&
-            bountyEvents[relayUrl] &&
-            bountyEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)}
-          {bountyType === BountyType.userPosted &&
-            userEvents[relayUrl] &&
-            userEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)}
-        </ul>
+        <>
+          <ul className="flex w-full max-w-4xl flex-col items-center justify-center gap-y-4 rounded-lg py-6">
+            {loading && Array.from(Array(5)).map((i) => <BountyPlaceholder key={i} />)}
+            {bountyType === BountyType.all &&
+              bountyEvents[relayUrl] &&
+              bountyEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)}
+            {bountyType === BountyType.userPosted &&
+              userEvents[relayUrl] &&
+              userEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)}
+          </ul>
+          <button
+            onClick={loadMore}
+            className="mb-6 flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
+          >
+            Load More
+          </button>
+        </>
       )}
-      <button
-        onClick={loadMore}
-        className="mb-6 flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
-      >
-        Load More
-      </button>
     </div>
   );
 }
