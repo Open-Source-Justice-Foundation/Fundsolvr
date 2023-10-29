@@ -20,7 +20,7 @@ const ChatPage = () => {
             <ChevronLeftIcon className="h-6 w-6" />
           </button>
           <Link href={`/u/npub`} className="group flex flex-1 items-center gap-4">
-            <Avatar src="https://www.chrisatmachine.com/assets/headshot.jpg" verified />
+            <Avatar className="h-12 w-12" src="https://www.chrisatmachine.com/assets/headshot.jpg" />
             <div className="flex flex-col gap-1">
               <h2 className="text-md font-bold group-hover:underline">Christian Chiarulli</h2>
               <p className="text-gray-700 dark:text-gray-400">✨ Designing, building and talking about digital products.</p>

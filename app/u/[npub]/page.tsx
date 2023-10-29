@@ -13,6 +13,7 @@ import { nip19 } from "nostr-tools";
 import type { Event } from "nostr-tools";
 
 import Timeline from "./Timeline";
+import Avatar from "@/app/messages/components/Avatar";
 
 export default function UserProfilePage() {
   const { subscribe, relayUrl } = useRelayStore();
@@ -85,9 +86,10 @@ export default function UserProfilePage() {
     <div className="flex flex-col items-center justify-center px-4 pb-20 pt-10">
       <div className="flex w-full max-w-3xl flex-col gap-y-4">
         <div className="flex w-full items-center justify-between">
-          <img
-            className="h-28 w-28 cursor-pointer rounded-full ring-2 ring-white dark:ring-gray-300"
+          <Avatar
+            className="h-28 w-28 cursor-pointer ring-2 ring-white dark:ring-gray-300"
             src={parseProfileContent(getProfileEvent(relayUrl, publicKey)?.content).picture}
+            seed={parseProfileContent(getProfileEvent(relayUrl, publicKey)?.content).publicKey}
           />
           <div className="flex gap-x-4">
             <Link

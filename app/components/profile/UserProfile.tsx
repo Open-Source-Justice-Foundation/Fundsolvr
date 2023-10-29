@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { RELAYS } from "@/app/lib/constants";
+import Avatar from "@/app/messages/components/Avatar";
 import { useRelayStore } from "@/app/stores/relayStore";
 import { useUserProfileStore } from "@/app/stores/userProfileStore";
 import type { Event } from "nostr-tools";
@@ -76,10 +77,10 @@ export default function UserProfile() {
     <>
       <UserMenu>
         {currentProfile && (
-          <img
-            className="mt-2 inline-block h-10 w-10 rounded-full shadow-lg shadow-gray-800/10 ring-1 ring-gray-900/10 backdrop-blur hover:bg-gray-50 dark:ring-white/10 dark:hover:bg-gray-800/90"
+          <Avatar
+            className="mt-2 inline-block h-10 w-10 shadow-lg shadow-gray-800/10 ring-1 ring-gray-900/10 backdrop-blur hover:bg-gray-50 dark:ring-white/10 dark:hover:bg-gray-800/90"
             src={currentProfile.picture}
-            alt=""
+            seed={currentProfile.publicKey}
           />
         )}
       </UserMenu>

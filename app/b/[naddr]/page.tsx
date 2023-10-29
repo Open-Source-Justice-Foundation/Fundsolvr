@@ -10,6 +10,7 @@ import Applicant from "@/app/components/Applicant";
 import Applybutton from "@/app/components/Applybutton";
 import { getApplicants, retrieveProfiles } from "@/app/lib/nostr";
 import { getBountyTags, getTagValues, parseProfileContent } from "@/app/lib/utils";
+import Avatar from "@/app/messages/components/Avatar";
 import { useBountyEventStore } from "@/app/stores/eventStore";
 import { useProfileStore } from "@/app/stores/profileStore";
 import { useRelayStore } from "@/app/stores/relayStore";
@@ -180,14 +181,18 @@ export default function BountyPage() {
                         getProfileEvent(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.pubkey || ""
                       )}`}
                     >
-                      <img
+                      <Avatar
                         src={
                           parseProfileContent(
                             getProfileEvent(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.content
                           )?.picture
                         }
-                        alt=""
-                        className="h-8 w-8 rounded-full ring-1 ring-white dark:ring-gray-700"
+                        seed={
+                          parseProfileContent(
+                            getProfileEvent(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.content
+                          )?.publicKey
+                        }
+                        className="h-8 w-8 ring-1 ring-white dark:ring-gray-700"
                       />
                       <div className="truncate text-sm font-medium leading-6 text-gray-800 dark:text-white">
                         {
