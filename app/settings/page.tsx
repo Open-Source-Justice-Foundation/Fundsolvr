@@ -50,9 +50,7 @@ export default function Settings() {
   }
 
   async function verifyGithubForUserOnLogin() {
-    console.log("verifyGithubForUserOnLogin");
     const userEvent = getUserEvent(relayUrl);
-    console.log("userEvent", userEvent);
     if (userEvent) {
       const iTags = getITagValues(userEvent.tags);
       if (iTags.length === 0) {
@@ -75,7 +73,6 @@ export default function Settings() {
   }, []);
 
   useEffect(() => {
-    console.log("change on relay");
     verifyGithubForUserOnLogin();
   }, [relayUrl]);
 
@@ -94,7 +91,6 @@ export default function Settings() {
 
   const addGithubProfile = async (username: String) => {
     const userProfileEvent = getUserEvent(relayUrl);
-    console.log("event", userProfileEvent);
 
     if (userProfileEvent) {
       const githubIdentity = [["i", `github:${username}`, gistId]];
@@ -171,7 +167,6 @@ export default function Settings() {
 
     // check if gistId is set
     if (gistId) {
-      console.log("gistId", gistId);
       identitiyTags = await connectGithub();
       // if it is, check if the public key in the gist matches the user public key
       if (identitiyTags) {
@@ -206,7 +201,6 @@ export default function Settings() {
       banner: currentContent.banner || "",
     };
 
-    console.log("event", event);
 
     event = await window.nostr.signEvent(event);
     publish([relayUrl], event, onSeen);
@@ -244,12 +238,9 @@ export default function Settings() {
       banner: currentContent.banner || "",
     };
 
-    console.log("event", event);
 
     // remove github tag from event
     event.tags = filterOutGithub(event.tags);
-
-    console.log("event no github tag", event);
 
     event = await window.nostr.signEvent(event);
     publish([relayUrl], event, onSeen);

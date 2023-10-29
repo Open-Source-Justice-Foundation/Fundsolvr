@@ -89,7 +89,7 @@ export default function Bounty({ event }: Props) {
             <Avatar
               src={parseProfileContent(getProfileEvent(relayUrl, event.pubkey)?.content).picture}
               className="h-8 w-8 ring-1 ring-white dark:ring-gray-700"
-              seed={parseProfileContent(getProfileEvent(relayUrl, event.pubkey)?.content).publicKey}
+              seed={event.pubkey}
             />
             <div className="truncate text-sm font-medium leading-6 ">
               {parseProfileContent(getProfileEvent(relayUrl, event.pubkey)?.content).name}

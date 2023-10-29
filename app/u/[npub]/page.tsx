@@ -89,7 +89,7 @@ export default function UserProfilePage() {
           <Avatar
             className="h-28 w-28 cursor-pointer ring-2 ring-white dark:ring-gray-300"
             src={parseProfileContent(getProfileEvent(relayUrl, publicKey)?.content).picture}
-            seed={parseProfileContent(getProfileEvent(relayUrl, publicKey)?.content).publicKey}
+            seed={publicKey}
           />
           <div className="flex gap-x-4">
             <Link

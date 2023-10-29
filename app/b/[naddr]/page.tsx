@@ -177,9 +177,7 @@ export default function BountyPage() {
                   {bountyEvent?.pubkey && naddrPointer && (
                     <Link
                       className="flex items-center gap-x-2"
-                      href={`/u/${nip19.npubEncode(
-                        getProfileEvent(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.pubkey || ""
-                      )}`}
+                      href={`/u/${nip19.npubEncode(bountyEvent.pubkey)}`}
                     >
                       <Avatar
                         src={
@@ -187,11 +185,7 @@ export default function BountyPage() {
                             getProfileEvent(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.content
                           )?.picture
                         }
-                        seed={
-                          parseProfileContent(
-                            getProfileEvent(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.content
-                          )?.publicKey
-                        }
+                        seed={bountyEvent.pubkey}
                         className="h-8 w-8 ring-1 ring-white dark:ring-gray-700"
                       />
                       <div className="truncate text-sm font-medium leading-6 text-gray-800 dark:text-white">

@@ -21,7 +21,6 @@ interface Props {
 }
 
 export default function Applicant({ applicantEvent }: Props) {
-  // console.log("applicantEvent", applicantEvent);
 
   const { relayUrl, subscribe } = useRelayStore();
   const { getProfileEvent, setProfileEvent } = useProfileStore();
@@ -77,19 +76,13 @@ export default function Applicant({ applicantEvent }: Props) {
     subscribe([relayUrl], userFilter, onEvent, onEOSE);
   }, [relayUrl]);
 
-  useEffect(() => {
-    console.log("CACHEDBOUNTYEVENT!!!!!", cachedBountyEvent);
-    // console.log("userPublicKey", userPublicKey);
-    // console.log("applicantEvent", applicantEvent);
-  }, [cachedBountyEvent]);
-
   return (
     <div className="flex items-center justify-between rounded-lg bg-white p-4 dark:bg-gray-800">
       <div className="flex flex-col gap-y-6">
         <Link href={`/u/${nip19.npubEncode(applicantEvent.pubkey)}`} className="flex cursor-pointer items-center gap-x-3">
           <Avatar
             src={parseProfileContent(getProfileEvent(relayUrl, applicantEvent.pubkey)?.content).picture}
-            seed={parseProfileContent(getProfileEvent(relayUrl, applicantEvent.pubkey)?.content).publicKey}
+            seed={applicantEvent.pubkey}
             className="h-8 w-8"
           />
           <span className="font-medium leading-6 text-gray-900 dark:text-gray-100">
