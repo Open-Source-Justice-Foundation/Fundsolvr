@@ -14,6 +14,7 @@ import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 import AssignButton from "./AssignButton";
 import UnassignButton from "./UnassignButton";
+import Avatar from "../messages/components/Avatar";
 
 interface Props {
   applicantEvent: Event;
@@ -86,10 +87,10 @@ export default function Applicant({ applicantEvent }: Props) {
     <div className="flex items-center justify-between rounded-lg bg-white p-4 dark:bg-gray-800">
       <div className="flex flex-col gap-y-6">
         <Link href={`/u/${nip19.npubEncode(applicantEvent.pubkey)}`} className="flex cursor-pointer items-center gap-x-3">
-          <img
+          <Avatar
             src={parseProfileContent(getProfileEvent(relayUrl, applicantEvent.pubkey)?.content).picture}
-            alt=""
-            className="h-8 w-8 rounded-full"
+            seed={parseProfileContent(getProfileEvent(relayUrl, applicantEvent.pubkey)?.content).publicKey}
+            className="h-8 w-8"
           />
           <span className="font-medium leading-6 text-gray-900 dark:text-gray-100">
             {parseProfileContent(getProfileEvent(relayUrl, applicantEvent.pubkey)?.content).name}

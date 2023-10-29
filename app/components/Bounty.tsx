@@ -14,6 +14,7 @@ import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 import DeleteBounty from "./DeleteBounty";
 import { UserIcon } from "@heroicons/react/24/outline";
+import Avatar from "../messages/components/Avatar";
 
 interface Props {
   event: Event;
@@ -85,10 +86,10 @@ export default function Bounty({ event }: Props) {
         </div>
         <div className="flex justify-between">
           <div className="flex items-center gap-x-2 pl-4 text-gray-700 dark:text-gray-400">
-            <img
+            <Avatar
               src={parseProfileContent(getProfileEvent(relayUrl, event.pubkey)?.content).picture}
-              alt=""
-              className="h-8 w-8 rounded-full bg-gray-800 ring-1 ring-white dark:ring-gray-700"
+              className="h-8 w-8 ring-1 ring-white dark:ring-gray-700"
+              seed={parseProfileContent(getProfileEvent(relayUrl, event.pubkey)?.content).publicKey}
             />
             <div className="truncate text-sm font-medium leading-6 ">
               {parseProfileContent(getProfileEvent(relayUrl, event.pubkey)?.content).name}
