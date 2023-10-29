@@ -12,7 +12,7 @@ interface IAvatarProps extends DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElem
 
 const Avatar = ({ src, seed = "", alt = "avatar", className = "", ...props }: IAvatarProps) => {
   const RANDOM_SEED = useId();
-  const BOT_AVATAR_ENDPOINT = `https://api.dicebear.com/7.x/bottts/svg?seed=${seed || RANDOM_SEED}`;
+  const BOT_AVATAR_ENDPOINT = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed || RANDOM_SEED}`;
 
   return (
     <img
