@@ -17,6 +17,7 @@ import { useUserProfileStore } from "../stores/userProfileStore";
 import Bounty from "./Bounty";
 import NoBounties from "./NoBounties";
 import Tag from "./Tag";
+import Login from "./header/Login";
 
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
@@ -44,6 +45,7 @@ export default function Bounties() {
 
   const getBounties = async () => {
     setLoading({ ...loading, all: true });
+
     const bountyFilter: Filter = {
       kinds: [30050],
       limit: 10,
@@ -85,7 +87,10 @@ export default function Bounties() {
   };
 
   const getPostedBounties = async () => {
-    setLoading({ ...loading, posted: true });
+    if (userPublicKey) {
+      setLoading({ ...loading, posted: true });
+    }
+
     const events: Event[] = [];
     const pubkeys = new Set<string>();
     const dValues = new Set<string>();
@@ -254,16 +259,35 @@ export default function Bounties() {
             : mounted &&
             bountyType === BountyType.userPosted &&
             userEvents[relayUrl] &&
+            userPublicKey &&
             (userEvents[relayUrl].length ? userEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />) : <NoBounties />)}
+
+          {mounted && bountyType === BountyType.userPosted && !userPublicKey && (
+            <div className="flex flex-col items-center gap-8 text-center text-black dark:text-white">
+              <p className="text-lg">you must be logged in to see your posted bounties</p>
+              <Login>
+                <div className="flex flex-1 justify-end">
+                  <a
+                    href="#"
+                    className="mb-6 flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
+                  >
+                    Log in <span aria-hidden="true">&rarr;</span>
+                  </a>
+                </div>
+              </Login>
+            </div>
+          )}
         </ul>
-        {mounted && (
-          <button
-            onClick={loadMore}
-            className="mb-6 flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
-          >
-            Load More
-          </button>
-        )}
+        {mounted && bountyType === BountyType.userPosted && !userPublicKey
+          ? null
+          : mounted && (
+            <button
+              onClick={loadMore}
+              className="mb-6 flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
+            >
+              Load More
+            </button>
+          )}
       </>
     </div>
   );
