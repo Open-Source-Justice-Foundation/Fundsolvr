@@ -3,18 +3,18 @@
 import { useRouter } from "next/navigation";
 
 import { SatoshiV2Icon } from "@bitcoin-design/bitcoin-icons-react/filled";
+import { UserIcon } from "@heroicons/react/24/outline";
 import { nip19 } from "nostr-tools";
 import type { Event } from "nostr-tools";
 import { AddressPointer } from "nostr-tools/lib/nip19";
 
-import { getBountyTags, getTagValues, parseProfileContent, removeMarkdownTitles, truncateText } from "../lib/utils";
+import { getBountyTags, getTagValues, parseProfileContent, removeMarkdownTitles, shortenHash, truncateText } from "../lib/utils";
+import Avatar from "../messages/components/Avatar";
 import { useBountyEventStore } from "../stores/eventStore";
 import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 import DeleteBounty from "./DeleteBounty";
-import { UserIcon } from "@heroicons/react/24/outline";
-import Avatar from "../messages/components/Avatar";
 
 interface Props {
   event: Event;
@@ -67,7 +67,6 @@ export default function Bounty({ event }: Props) {
           </div>
 
           <div className="flex items-center justify-end gap-x-2 sm:justify-start">
-
             {/* {event.pubkey === getUserPublicKey() && <DeleteBounty eventId={event.id}></DeleteBounty>} */}
             {tags[0] && (
               <div
@@ -92,15 +91,14 @@ export default function Bounty({ event }: Props) {
               seed={event.pubkey}
             />
             <div className="truncate text-sm font-medium leading-6 ">
-              {parseProfileContent(getProfileEvent(relayUrl, event.pubkey)?.content).name}
+              {parseProfileContent(getProfileEvent(relayUrl, event.pubkey)?.content).name || shortenHash(nip19.npubEncode(event.pubkey))}
             </div>
             <span>•</span>
             <div className="text-sm leading-6">
               <time>{new Date(event.created_at * 1000).toDateString()}</time>
             </div>
-
           </div>
-          <div className="sm:flex hidden items-center gap-x-2 text-sm leading-6 text-gray-700 dark:text-gray-400">
+          <div className="hidden items-center gap-x-2 text-sm leading-6 text-gray-700 dark:text-gray-400 sm:flex">
             <UserIcon className="h-4 w-4 " aria-hidden="true" />
             <span>{Object.keys(getBountyApplicants(relayUrl, getTagValues("d", event.tags))).length} Applicants</span>
           </div>

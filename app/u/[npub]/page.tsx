@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { getITagValue, getITagValues, parseProfileContent, verifyGithub, websiteLink } from "@/app/lib/utils";
+import { getITagValue, getITagValues, parseProfileContent, shortenHash, verifyGithub, websiteLink } from "@/app/lib/utils";
+import Avatar from "@/app/messages/components/Avatar";
 import { useProfileStore } from "@/app/stores/profileStore";
 import { useRelayStore } from "@/app/stores/relayStore";
 import { CheckCircleIcon, PaperAirplaneIcon, UserPlusIcon } from "@heroicons/react/20/solid";
@@ -13,7 +14,6 @@ import { nip19 } from "nostr-tools";
 import type { Event } from "nostr-tools";
 
 import Timeline from "./Timeline";
-import Avatar from "@/app/messages/components/Avatar";
 
 export default function UserProfilePage() {
   const { subscribe, relayUrl } = useRelayStore();
@@ -109,7 +109,7 @@ export default function UserProfilePage() {
         <div className="flex w-full items-center gap-x-4">
           <div className="flex flex-col gap-y-2">
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-              {parseProfileContent(getProfileEvent(relayUrl, publicKey)?.content).name}
+              {parseProfileContent(getProfileEvent(relayUrl, publicKey)?.content).name || shortenHash(nip19.npubEncode(publicKey))}
             </h2>
             <div className="flex items-center gap-x-2">
               {parseProfileContent(getProfileEvent(relayUrl, publicKey)?.content).nip05 && (

@@ -7,21 +7,20 @@ import Link from "next/link";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { type Event, nip19 } from "nostr-tools";
 
-import { getITagValue, getITagValues, getTagValues, parseProfileContent, verifyGithub, websiteLink } from "../lib/utils";
+import { getITagValue, getITagValues, getTagValues, parseProfileContent, shortenHash, verifyGithub, websiteLink } from "../lib/utils";
+import Avatar from "../messages/components/Avatar";
 import { useBountyEventStore } from "../stores/eventStore";
 import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 import AssignButton from "./AssignButton";
 import UnassignButton from "./UnassignButton";
-import Avatar from "../messages/components/Avatar";
 
 interface Props {
   applicantEvent: Event;
 }
 
 export default function Applicant({ applicantEvent }: Props) {
-
   const { relayUrl, subscribe } = useRelayStore();
   const { getProfileEvent, setProfileEvent } = useProfileStore();
   const { userPublicKey } = useUserProfileStore();
@@ -86,7 +85,8 @@ export default function Applicant({ applicantEvent }: Props) {
             className="h-8 w-8"
           />
           <span className="font-medium leading-6 text-gray-900 dark:text-gray-100">
-            {parseProfileContent(getProfileEvent(relayUrl, applicantEvent.pubkey)?.content).name}
+            {parseProfileContent(getProfileEvent(relayUrl, applicantEvent.pubkey)?.content).name ||
+              shortenHash(nip19.npubEncode(applicantEvent.pubkey))}
           </span>
         </Link>
         <span className="flex gap-x-1 text-sm leading-6 text-gray-900 dark:text-gray-400">

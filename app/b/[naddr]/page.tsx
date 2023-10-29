@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import Applicant from "@/app/components/Applicant";
 import Applybutton from "@/app/components/Applybutton";
 import { getApplicants, retrieveProfiles } from "@/app/lib/nostr";
-import { getBountyTags, getTagValues, parseProfileContent } from "@/app/lib/utils";
+import { getBountyTags, getTagValues, parseProfileContent, shortenHash } from "@/app/lib/utils";
 import Avatar from "@/app/messages/components/Avatar";
 import { useBountyEventStore } from "@/app/stores/eventStore";
 import { useProfileStore } from "@/app/stores/profileStore";
@@ -192,7 +192,7 @@ export default function BountyPage() {
                         {
                           parseProfileContent(
                             getProfileEvent(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.content
-                          )?.name
+                          )?.name || shortenHash(nip19.npubEncode(bountyEvent.pubkey))
                         }
                       </div>
                     </Link>
