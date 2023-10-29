@@ -22,7 +22,7 @@ export default function Bounties() {
   const { setBountyEvents, getBountyEvents, bountyEvents, setUserEvents, userEvents, bountyType, setBountyType } = useBountyEventStore();
   const { userPublicKey } = useUserProfileStore();
   const [mounted, setMounted] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [bountyTags] = useState<string[]>([]);
 
   enum BountyType {
@@ -238,25 +238,27 @@ export default function Bounties() {
         </div>
       )}
 
-      {mounted && (
-        <>
-          <ul className="flex w-full max-w-4xl flex-col items-center justify-center gap-y-4 rounded-lg py-6">
-            {loading && Array.from(Array(5)).map((i) => <BountyPlaceholder key={i} />)}
-            {bountyType === BountyType.all &&
-              bountyEvents[relayUrl] &&
-              bountyEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)}
-            {bountyType === BountyType.userPosted &&
-              userEvents[relayUrl] &&
-              userEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)}
-          </ul>
+      <>
+        <ul className="flex w-full max-w-4xl flex-col items-center justify-center gap-y-4 rounded-lg py-6">
+          {loading && Array.from(Array(5)).map((i) => <BountyPlaceholder key={i} />)}
+          {mounted &&
+            bountyType === BountyType.all &&
+            bountyEvents[relayUrl] &&
+            bountyEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)}
+          {mounted &&
+            bountyType === BountyType.userPosted &&
+            userEvents[relayUrl] &&
+            userEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)}
+        </ul>
+        {mounted && (
           <button
             onClick={loadMore}
             className="mb-6 flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
           >
             Load More
           </button>
-        </>
-      )}
+        )}
+      </>
     </div>
   );
 }
