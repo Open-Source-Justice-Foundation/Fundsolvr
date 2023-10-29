@@ -151,8 +151,9 @@ export default function Applicant({ applicantEvent }: Props) {
       {cachedBountyEvent &&
         getTagValues("p", cachedBountyEvent.tags) === applicantEvent.pubkey &&
         cachedBountyEvent.pubkey !== userPublicKey && <span className="text-green-500 dark:text-green-400">Assigned</span>}
-
-      {cachedBountyEvent && getTagValues("p", cachedBountyEvent.tags) === applicantEvent.pubkey && <UnassignButton />}
+      {cachedBountyEvent &&
+        getTagValues("p", cachedBountyEvent.tags) === applicantEvent.pubkey &&
+        cachedBountyEvent.pubkey === userPublicKey && <UnassignButton />}
       {cachedBountyEvent &&
         getTagValues("p", applicantEvent.tags) === userPublicKey &&
         getTagValues("p", cachedBountyEvent.tags) !== applicantEvent.pubkey &&
