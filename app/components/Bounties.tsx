@@ -22,7 +22,7 @@ export default function Bounties() {
   const { setBountyEvents, getBountyEvents, bountyEvents, setUserEvents, userEvents, bountyType, setBountyType } = useBountyEventStore();
   const { userPublicKey } = useUserProfileStore();
   const [mounted, setMounted] = useState(false);
-  const [loading, setLoading] = useState({ all: false, user: false });
+  const [loading, setLoading] = useState({ all: false, posted: false });
   const [bountyTags] = useState<string[]>([]);
 
   enum BountyType {
@@ -84,7 +84,7 @@ export default function Bounties() {
   };
 
   const getPostedBounties = async () => {
-    setLoading({ ...loading, user: true });
+    setLoading({ ...loading, posted: true });
     const events: Event[] = [];
     const pubkeys = new Set<string>();
     const dValues = new Set<string>();
@@ -120,11 +120,11 @@ export default function Bounties() {
         setUserEvents(relayUrl, events);
       }
       retrieveProfiles(Array.from(pubkeys));
+      setLoading({ ...loading, posted: false });
     };
 
     subscribe([relayUrl], postedBountyFilter, onEvent, onEOSE);
     getApplicants(dValues);
-    setLoading({ ...loading, user: false });
   };
 
   function getBountiesIfEmpty() {
@@ -244,7 +244,7 @@ export default function Bounties() {
             bountyType === BountyType.all &&
             bountyEvents[relayUrl] &&
             bountyEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)}
-          {loading.user
+          {loading.posted
             ? Array.from(Array(5)).map((i) => <BountyPlaceholder key={i} />)
             : mounted &&
             bountyType === BountyType.userPosted &&
