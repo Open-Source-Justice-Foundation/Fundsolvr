@@ -7,6 +7,7 @@ import { type Event, Filter, nip19 } from "nostr-tools";
 import { Octokit } from "octokit";
 
 import { getITagValues, shortenHash, verifyGithub } from "../lib/utils";
+import Avatar from "../messages/components/Avatar";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 import { Profile } from "../types";
@@ -292,8 +293,8 @@ export default function Settings() {
                   Photo
                 </label>
                 <div className="mt-2 flex items-center gap-x-3">
-                  {imageURL ? (
-                    <img className="inline-block h-12 w-12 rounded-full" src={imageURL} alt="" />
+                  {getUserPublicKey() ? (
+                    <Avatar src={imageURL} seed={getUserPublicKey()} className="inline-block h-12 w-12" />
                   ) : (
                     <UserCircleIcon className="h-12 w-12 text-gray-300 dark:text-gray-600" aria-hidden="true" />
                   )}
