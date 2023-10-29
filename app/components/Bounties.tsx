@@ -10,7 +10,7 @@ import { ArrowUpTrayIcon, NewspaperIcon, UserIcon } from "@heroicons/react/24/ou
 import type { Event, Filter } from "nostr-tools";
 
 import { getApplicants, retrieveProfiles } from "../lib/nostr";
-import { getTagValues } from "../lib/utils";
+import { classNames, getTagValues } from "../lib/utils";
 import { useBountyEventStore } from "../stores/eventStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
@@ -22,7 +22,7 @@ export default function Bounties() {
   const { setBountyEvents, getBountyEvents, bountyEvents, setUserEvents, userEvents, bountyType, setBountyType } = useBountyEventStore();
   const { userPublicKey } = useUserProfileStore();
   const [mounted, setMounted] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState({ all: false, user: false });
   const [bountyTags] = useState<string[]>([]);
 
   enum BountyType {
@@ -42,7 +42,7 @@ export default function Bounties() {
   }
 
   const getBounties = async () => {
-    setLoading(true);
+    setLoading({ ...loading, all: true });
     const bountyFilter: Filter = {
       kinds: [30050],
       limit: 10,
@@ -77,13 +77,14 @@ export default function Bounties() {
 
       retrieveProfiles(Array.from(pubkeys));
       getApplicants(dValues);
-      setLoading(false);
+      setLoading({ ...loading, all: false });
     };
 
     subscribe([relayUrl], bountyFilter, onEvent, onEOSE);
   };
 
   const getPostedBounties = async () => {
+    setLoading({ ...loading, user: true });
     const events: Event[] = [];
     const pubkeys = new Set<string>();
     const dValues = new Set<string>();
@@ -123,6 +124,7 @@ export default function Bounties() {
 
     subscribe([relayUrl], postedBountyFilter, onEvent, onEOSE);
     getApplicants(dValues);
+    setLoading({ ...loading, user: false });
   };
 
   function getBountiesIfEmpty() {
@@ -171,10 +173,6 @@ export default function Bounties() {
     } else if (bountyType === BountyType.userPosted) {
       getPostedBounties();
     }
-  }
-
-  function classNames(...classes: any) {
-    return classes.filter(Boolean).join(" ");
   }
 
   return (
@@ -240,12 +238,15 @@ export default function Bounties() {
 
       <>
         <ul className="flex w-full max-w-4xl flex-col items-center justify-center gap-y-4 rounded-lg py-6">
-          {loading && Array.from(Array(5)).map((i) => <BountyPlaceholder key={i} />)}
-          {mounted &&
+          {loading.all
+            ? Array.from(Array(5)).map((i) => <BountyPlaceholder key={i} />)
+            : mounted &&
             bountyType === BountyType.all &&
             bountyEvents[relayUrl] &&
             bountyEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)}
-          {mounted &&
+          {loading.user
+            ? Array.from(Array(5)).map((i) => <BountyPlaceholder key={i} />)
+            : mounted &&
             bountyType === BountyType.userPosted &&
             userEvents[relayUrl] &&
             userEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)}
