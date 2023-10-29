@@ -1,4 +1,4 @@
-import { DetailedHTMLProps, ImgHTMLAttributes } from "react";
+import { DetailedHTMLProps, ImgHTMLAttributes, useId } from "react";
 
 import { classNames } from "@/app/lib/utils";
 
@@ -11,7 +11,8 @@ interface IAvatarProps extends DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElem
 }
 
 const Avatar = ({ src, seed = "", alt = "avatar", className = "", ...props }: IAvatarProps) => {
-  const BOT_AVATAR_ENDPOINT = `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}`;
+  const RANDOM_SEED = useId();
+  const BOT_AVATAR_ENDPOINT = `https://api.dicebear.com/7.x/bottts/svg?seed=${seed || RANDOM_SEED}`;
 
   return (
     <img
