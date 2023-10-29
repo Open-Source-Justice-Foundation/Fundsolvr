@@ -15,6 +15,7 @@ import { useBountyEventStore } from "../stores/eventStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 import Bounty from "./Bounty";
+import NoBounties from "./NoBounties";
 import Tag from "./Tag";
 
 export default function Bounties() {
@@ -243,13 +244,17 @@ export default function Bounties() {
             : mounted &&
             bountyType === BountyType.all &&
             bountyEvents[relayUrl] &&
-            bountyEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)}
+            (bountyEvents[relayUrl].length ? (
+              bountyEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)
+            ) : (
+              <NoBounties />
+            ))}
           {loading.posted
             ? Array.from(Array(5)).map((i) => <BountyPlaceholder key={i} />)
             : mounted &&
             bountyType === BountyType.userPosted &&
             userEvents[relayUrl] &&
-            userEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)}
+            (userEvents[relayUrl].length ? userEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />) : <NoBounties />)}
         </ul>
         {mounted && (
           <button
