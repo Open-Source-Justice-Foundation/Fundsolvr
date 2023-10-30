@@ -53,6 +53,8 @@ export default function BountyPage() {
     naddrStr = pathname.split("/").pop() || "";
   }
 
+  // TODO: check for zap recipt
+
   useEffect(() => {
     if (naddrStr) {
       const naddr_data: any = nip19.decode(naddrStr).data;

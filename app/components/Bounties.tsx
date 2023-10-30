@@ -63,6 +63,7 @@ export default function Bounties() {
     }
 
     const onEvent = (event: Event) => {
+      // TODO: check for zap recipt
       const value = getTagValues("value", event.tags);
       if (value && value.length > 0) {
         events.push(event);
@@ -111,6 +112,7 @@ export default function Bounties() {
     }
 
     const onEvent = (event: Event) => {
+      // TODO: check for zap recipt
       const value = getTagValues("value", event.tags);
       if (value && value.length > 0) {
         events.push(event);

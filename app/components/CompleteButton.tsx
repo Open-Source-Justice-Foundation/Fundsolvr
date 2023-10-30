@@ -1,8 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 
 import { Dialog, Transition } from "@headlessui/react";
-import { BoltIcon, CheckCircleIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import type { Satoshis } from "lnurl-pay/dist/types/types";
+import { CheckCircleIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { type Event, EventTemplate, Filter, UnsignedEvent, getEventHash, nip57 } from "nostr-tools";
 
 import { fetchInvoice, getZapEndpoint } from "../lib/nostr";
@@ -17,10 +16,8 @@ interface Props {
 
 export default function CompleteButton({ applicantProfile }: Props) {
   let [isOpen, setIsOpen] = useState(false);
-  const defaultZapAmount = 100 as Satoshis;
   const [isZapConfirmationOpen, setIsZapConfirmationOpen] = useState(false);
   const [isZapSuccess, setIsZapSuccess] = useState(true);
-  const [tipInputValue, setZapInputValue] = useState<Satoshis>(defaultZapAmount);
   const [tipMessage, setZapMessage] = useState<string>();
   const [paymentHash, setPaymentHash] = useState();
   const [tippedAmount, setZappedAmount] = useState<any>();
@@ -39,7 +36,6 @@ export default function CompleteButton({ applicantProfile }: Props) {
 
   useEffect(() => {
     setZapMessage("");
-    setZapInputValue(defaultZapAmount);
   }, [isOpen]);
 
   const connectHandler = async () => {
