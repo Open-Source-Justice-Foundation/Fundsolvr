@@ -4,23 +4,27 @@ import { useEffect, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
+import BountyPlaceholder from "@/app/components/Skeleton/Bounty";
 import PlusIcon from "@heroicons/react/20/solid/PlusIcon";
 import { ArrowUpTrayIcon, NewspaperIcon, UserIcon } from "@heroicons/react/24/outline";
 import type { Event, Filter } from "nostr-tools";
 
 import { getApplicants, retrieveProfiles } from "../lib/nostr";
-import { getTagValues } from "../lib/utils";
+import { classNames, getTagValues } from "../lib/utils";
 import { useBountyEventStore } from "../stores/eventStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 import Bounty from "./Bounty";
+import NoBounties from "./NoBounties";
 import Tag from "./Tag";
+import Login from "./header/Login";
 
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
   const { setBountyEvents, getBountyEvents, bountyEvents, setUserEvents, userEvents, bountyType, setBountyType } = useBountyEventStore();
   const { userPublicKey } = useUserProfileStore();
   const [mounted, setMounted] = useState(false);
+  const [loading, setLoading] = useState({ all: false, posted: false });
   const [bountyTags] = useState<string[]>([]);
 
   enum BountyType {
@@ -40,6 +44,8 @@ export default function Bounties() {
   }
 
   const getBounties = async () => {
+    setLoading({ ...loading, all: true });
+
     const bountyFilter: Filter = {
       kinds: [30050],
       limit: 10,
@@ -74,12 +80,17 @@ export default function Bounties() {
 
       retrieveProfiles(Array.from(pubkeys));
       getApplicants(dValues);
+      setLoading({ ...loading, all: false });
     };
 
     subscribe([relayUrl], bountyFilter, onEvent, onEOSE);
   };
 
   const getPostedBounties = async () => {
+    if (userPublicKey) {
+      setLoading({ ...loading, posted: true });
+    }
+
     const events: Event[] = [];
     const pubkeys = new Set<string>();
     const dValues = new Set<string>();
@@ -115,6 +126,7 @@ export default function Bounties() {
         setUserEvents(relayUrl, events);
       }
       retrieveProfiles(Array.from(pubkeys));
+      setLoading({ ...loading, posted: false });
     };
 
     subscribe([relayUrl], postedBountyFilter, onEvent, onEOSE);
@@ -152,7 +164,7 @@ export default function Bounties() {
   useEffect(() => {
     if (getBountyEvents(relayUrl).length < 1) {
       getBounties();
-    } 
+    }
   }, [relayUrl]);
 
   useEffect(() => {
@@ -167,10 +179,6 @@ export default function Bounties() {
     } else if (bountyType === BountyType.userPosted) {
       getPostedBounties();
     }
-  }
-
-  function classNames(...classes: any) {
-    return classes.filter(Boolean).join(" ");
   }
 
   return (
@@ -234,22 +242,53 @@ export default function Bounties() {
         </div>
       )}
 
-      {mounted && (
+      <>
         <ul className="flex w-full max-w-4xl flex-col items-center justify-center gap-y-4 rounded-lg py-6">
-          {bountyType === BountyType.all &&
+          {loading.all
+            ? Array.from(Array(5)).map((i) => <BountyPlaceholder key={i} />)
+            : mounted &&
+            bountyType === BountyType.all &&
             bountyEvents[relayUrl] &&
-            bountyEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)}
-          {bountyType === BountyType.userPosted &&
+            (bountyEvents[relayUrl].length ? (
+              bountyEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)
+            ) : (
+              <NoBounties />
+            ))}
+          {loading.posted
+            ? Array.from(Array(5)).map((i) => <BountyPlaceholder key={i} />)
+            : mounted &&
+            bountyType === BountyType.userPosted &&
             userEvents[relayUrl] &&
-            userEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)}
+            userPublicKey &&
+            (userEvents[relayUrl].length ? userEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />) : <NoBounties />)}
+
+          {mounted && bountyType === BountyType.userPosted && !userPublicKey && (
+            <div className="flex flex-col items-center gap-8 text-center text-black dark:text-white">
+              <p className="text-lg">you must be logged in to see your posted bounties</p>
+              <Login>
+                <div className="flex flex-1 justify-end">
+                  <a
+                    href="#"
+                    className="mb-6 flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
+                  >
+                    Log in <span aria-hidden="true">&rarr;</span>
+                  </a>
+                </div>
+              </Login>
+            </div>
+          )}
         </ul>
-      )}
-      <button
-        onClick={loadMore}
-        className="mb-6 flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
-      >
-        Load More
-      </button>
+        {mounted && bountyType === BountyType.userPosted && !userPublicKey
+          ? null
+          : mounted && (
+            <button
+              onClick={loadMore}
+              className="mb-6 flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
+            >
+              Load More
+            </button>
+          )}
+      </>
     </div>
   );
 }
