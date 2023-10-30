@@ -172,7 +172,6 @@ export default function CreateBounty() {
       ["d", uniqueUrl],
       ["title", title],
       ["s", "open"],
-      ["u", ""],
       ["value", reward],
     ];
 

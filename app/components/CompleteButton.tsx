@@ -3,7 +3,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { BoltIcon, CheckCircleIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import type { Satoshis } from "lnurl-pay/dist/types/types";
-import { type Event, EventTemplate, Filter, Kind, UnsignedEvent, getEventHash, nip57 } from "nostr-tools";
+import { type Event, EventTemplate, Filter, UnsignedEvent, getEventHash, nip57 } from "nostr-tools";
 
 import { fetchInvoice, getZapEndpoint } from "../lib/nostr";
 import { getTagValues, removeTag } from "../lib/utils";
@@ -25,7 +25,15 @@ export default function CompleteButton({ applicantProfile }: Props) {
   const [paymentHash, setPaymentHash] = useState();
   const [tippedAmount, setZappedAmount] = useState<any>();
 
-  const { cachedBountyEvent, setCachedBountyEvent, updateBountyEvent, updateUserEvent, setZapReceiptEvent } = useBountyEventStore();
+  const {
+    cachedBountyEvent,
+    setCachedBountyEvent,
+    updateBountyEvent,
+    updateUserEvent,
+    setZapReceiptEvent,
+    getZapReceiptEvent,
+    zapReceiptEvents,
+  } = useBountyEventStore();
   const { relayUrl, publish, subscribe } = useRelayStore();
   const { userPublicKey } = useUserProfileStore();
 
@@ -108,50 +116,67 @@ export default function CompleteButton({ applicantProfile }: Props) {
     setIsZapConfirmationOpen(!isZapConfirmationOpen);
   };
 
+  const updateBountyEventComplete = async () => {
+    if (!cachedBountyEvent) {
+      alert("No bounty event cached");
+      return;
+    }
+
+    const zapReceiptEvent = getZapReceiptEvent(relayUrl, cachedBountyEvent.id);
+
+    if (!zapReceiptEvent) {
+      return;
+    }
+
+    const bountyValue = getTagValues("value", cachedBountyEvent.tags);
+    const zapEvent = JSON.parse(getTagValues("description", zapReceiptEvent.tags));
+    const zapAmount = getTagValues("amount", zapEvent.tags);
+
+    if (Number(bountyValue) === Number(zapAmount) / 1000) {
+      // TODO: need to simplify this code an abstract it to nostr lib
+      let tags = removeTag("s", cachedBountyEvent.tags);
+      const status = ["s", "complete"];
+      tags = removeTag("s", tags);
+      tags.push(status);
+      tags = removeTag("c", tags);
+      const acceptedUser = ["c", applicantProfile.pubkey];
+      tags.push(acceptedUser);
+
+      let event: Event = {
+        id: "",
+        sig: "",
+        kind: cachedBountyEvent.kind,
+        created_at: Math.floor(Date.now() / 1000),
+        tags: tags,
+        content: cachedBountyEvent.content,
+        pubkey: userPublicKey,
+      };
+
+      event.id = getEventHash(event);
+      event = await window.nostr.signEvent(event);
+
+      function onSeen() {
+        if (!cachedBountyEvent) {
+          return;
+        }
+
+        updateBountyEvent(relayUrl, cachedBountyEvent.id, event);
+        updateUserEvent(relayUrl, cachedBountyEvent.id, event);
+        setCachedBountyEvent(event);
+      }
+
+      publish([relayUrl], event, onSeen);
+    }
+  };
+
   // TODO: abstract to nostr lib
   const completeBounty = async () => {
     if (paymentHash && cachedBountyEvent) {
-    // if (cachedBountyEvent) {
+      // if (cachedBountyEvent) {
       const postedBountyFilter: Filter = {
         kinds: [9735],
         limit: 100,
         "#e": [cachedBountyEvent.id],
-      };
-
-      const updateBountyEventComplete = async () => {
-        // TODO: need to simplify this code an abstract it to nostr lib
-        let tags = removeTag("s", cachedBountyEvent.tags);
-        const status = ["s", "complete"];
-        tags = removeTag("s", tags);
-        tags.push(status);
-        tags = removeTag("c", tags);
-        const acceptedUser = ["c", applicantProfile.pubkey];
-        tags.push(acceptedUser);
-
-        let event: Event = {
-          id: "",
-          sig: "",
-          kind: cachedBountyEvent.kind,
-          created_at: Math.floor(Date.now() / 1000),
-          tags: tags,
-          content: cachedBountyEvent.content,
-          pubkey: userPublicKey,
-        };
-
-        event.id = getEventHash(event);
-        event = await window.nostr.signEvent(event);
-
-        function onSeen() {
-          if (!cachedBountyEvent) {
-            return;
-          }
-
-          updateBountyEvent(relayUrl, cachedBountyEvent.id, event);
-          updateUserEvent(relayUrl, cachedBountyEvent.id, event);
-          setCachedBountyEvent(event);
-        }
-
-        publish([relayUrl], event, onSeen);
       };
 
       const onEvent = (event: Event) => {
@@ -173,9 +198,9 @@ export default function CompleteButton({ applicantProfile }: Props) {
     }
   };
 
-  // useEffect(() => {
-  //   completeBounty();
-  // }, []);
+  useEffect(() => {
+    updateBountyEventComplete();
+  }, [zapReceiptEvents]);
 
   useEffect(() => {
     completeBounty();

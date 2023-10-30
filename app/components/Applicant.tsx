@@ -152,7 +152,8 @@ export default function Applicant({ applicantEvent }: Props) {
       {cachedBountyEvent &&
         getTagValues("p", cachedBountyEvent.tags) === applicantEvent.pubkey &&
         cachedBountyEvent.pubkey === userPublicKey &&
-        getTagValues("s", cachedBountyEvent.tags) !== "complete" && (
+        getTagValues("s", cachedBountyEvent.tags) !== "complete" &&
+        getProfileEvent(relayUrl, applicantEvent.pubkey) && (
           <div className="flex flex-wrap justify-end gap-y-4">
             <UnassignButton />
             <CompleteButton applicantProfile={getProfileEvent(relayUrl, applicantEvent.pubkey)} />

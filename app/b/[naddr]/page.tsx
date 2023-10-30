@@ -113,13 +113,13 @@ export default function BountyPage() {
     <div className="px-4 pb-20 pt-10">
       {bountyEvent && (
         <div className="mx-auto max-w-4xl">
-          <button
-            onClick={() => router.back()}
-            className="flex items-center gap-x-2 rounded-lg bg-gray-50 px-3 py-2 text-sm font-medium text-gray-800 shadow-lg shadow-gray-900/5 ring-1 ring-gray-300 hover:bg-white dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-800 dark:hover:bg-gray-700/50"
+          <Link
+            href={`/`}
+            className="flex items-center w-48 gap-x-2 rounded-lg bg-gray-50 px-3 py-2 text-sm font-medium text-gray-800 shadow-lg shadow-gray-900/5 ring-1 ring-gray-300 hover:bg-white dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-800 dark:hover:bg-gray-700/50"
           >
             <ArrowLeftIcon className="h-4 w-4" />
             Back to all Bounties
-          </button>
+          </Link>
           <div className="flex flex-col gap-6 border-b border-gray-600 pb-3">
             <div className="mt-6 flex items-center justify-between">
               <div className="flex items-center text-3xl text-white">
