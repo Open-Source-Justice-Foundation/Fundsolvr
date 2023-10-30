@@ -14,6 +14,7 @@ import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 import AssignButton from "./AssignButton";
+import CompleteButton from "./CompleteButton";
 import UnassignButton from "./UnassignButton";
 
 interface Props {
@@ -144,10 +145,25 @@ export default function Applicant({ applicantEvent }: Props) {
       </div>
       {cachedBountyEvent &&
         getTagValues("p", cachedBountyEvent.tags) === applicantEvent.pubkey &&
-        cachedBountyEvent.pubkey !== userPublicKey && <span className="text-green-500 dark:text-green-400">Assigned</span>}
+        cachedBountyEvent.pubkey !== userPublicKey &&
+        getTagValues("s", cachedBountyEvent.tags) !== "complete" && (
+          <span className="rounded-lg bg-green-500 p-4 text-center text-green-500 dark:text-green-400">Assigned</span>
+        )}
       {cachedBountyEvent &&
         getTagValues("p", cachedBountyEvent.tags) === applicantEvent.pubkey &&
-        cachedBountyEvent.pubkey === userPublicKey && <UnassignButton />}
+        cachedBountyEvent.pubkey === userPublicKey &&
+        getTagValues("s", cachedBountyEvent.tags) !== "complete" && (
+          <div className="flex flex-wrap justify-end gap-y-4">
+            <UnassignButton />
+            <CompleteButton applicantProfile={getProfileEvent(relayUrl, applicantEvent.pubkey)} />
+          </div>
+        )}
+      {cachedBountyEvent &&
+        getTagValues("s", cachedBountyEvent.tags) === "complete" &&
+        cachedBountyEvent &&
+        getTagValues("c", cachedBountyEvent.tags) === applicantEvent.pubkey && (
+          <span className="rounded-lg bg-blue-500/20 p-4 text-center text-blue-500 dark:text-blue-400">Solution Accepted</span>
+        )}
       {cachedBountyEvent &&
         getTagValues("p", applicantEvent.tags) === userPublicKey &&
         getTagValues("p", cachedBountyEvent.tags) !== applicantEvent.pubkey &&

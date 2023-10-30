@@ -7,7 +7,7 @@ import { useBountyEventStore } from "../stores/eventStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 
-export default function AssignButton() {
+export default function UnassignButton() {
   const { cachedBountyEvent, setCachedBountyEvent, updateBountyEvent, updateUserEvent } = useBountyEventStore();
   const { publish, relayUrl } = useRelayStore();
   const { userPublicKey } = useUserProfileStore();

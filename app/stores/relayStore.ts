@@ -1,6 +1,6 @@
 import { RELAYS } from "@/app/lib/constants";
 import { relayInit } from "nostr-tools";
-import type { Event, Relay } from "nostr-tools";
+import type { Event, Filter, Relay } from "nostr-tools";
 import { create } from "zustand";
 
 export interface RelaysState {

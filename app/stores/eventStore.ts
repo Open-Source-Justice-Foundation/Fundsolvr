@@ -26,9 +26,14 @@ interface BountyEventState {
   getTag: () => string;
 
   applicantEvents: Record<string, Record<string, Record<string, Event>>>;
-  setApplicantEvent: (relayUrl: string, bountId: string, publicKey: string, applicantEvents: Event) => void;
+  setApplicantEvent: (relayUrl: string, bountyId: string, publicKey: string, applicantEvents: Event) => void;
   getApplicantEvent: (relayUrl: string, bountyId: string, pubkey: string) => Event | null;
   getBountyApplicants: (relayUrl: string, bountyId: string) => Record<string, Event>;
+
+  zapReceiptEvents: Record<string, Record<string, Event>>;
+  setZapReceiptEvent: (relayUrl: string, bountyId: string, zapReceiptEvent: Event) => void;
+  getZapReceiptEvent: (relayUrl: string, bountyId: string) => Event | null;
+  getZapReceiptEvents: (relayUrl: string) => Record<string, Event>;
 
   bountyType: "all" | "userPosted" | "assigned";
   setBountyType: (bountyType: "all" | "userPosted" | "assigned") => void;
@@ -72,9 +77,7 @@ export const useBountyEventStore = create<BountyEventState>()(
         updateUserEvent: (key: string, id: string, updatedUserEvent: Event) => {
           set((prev) => {
             const currentUserEvents = prev.userEvents[key] || [];
-            const updatedUserEvents = currentUserEvents.map(userEvent =>
-              userEvent.id === id ? updatedUserEvent : userEvent
-            );
+            const updatedUserEvents = currentUserEvents.map((userEvent) => (userEvent.id === id ? updatedUserEvent : userEvent));
 
             return {
               userEvents: { ...prev.userEvents, [key]: updatedUserEvents },
@@ -120,6 +123,32 @@ export const useBountyEventStore = create<BountyEventState>()(
           const relayEvents = get().applicantEvents[relayUrl] || {};
 
           return relayEvents[bountyId] || {};
+        },
+
+        zapReceiptEvents: {},
+
+        setZapReceiptEvent: (relayUrl: string, bountyId: string, zapReceiptEvent: Event) => {
+          set((prev) => {
+            const prevRelayEvents = prev.zapReceiptEvents[relayUrl] || {};
+            return {
+              zapReceiptEvents: {
+                ...prev.zapReceiptEvents,
+                [relayUrl]: {
+                  ...prevRelayEvents,
+                  [bountyId]: zapReceiptEvent,
+                },
+              },
+            };
+          });
+        },
+
+        getZapReceiptEvent: (relayUrl: string, bountyId: string) => {
+          const relayEvents = get().zapReceiptEvents[relayUrl] || {};
+          return relayEvents[bountyId] || null;
+        },
+
+        getZapReceiptEvents: (relayUrl: string) => {
+          return get().zapReceiptEvents[relayUrl] || {};
         },
 
         bountyType: "all",

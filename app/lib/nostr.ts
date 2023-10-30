@@ -1,4 +1,4 @@
-import { Event, Filter } from "nostr-tools";
+import { Event, Filter, Kind } from "nostr-tools";
 
 import { useBountyEventStore } from "../stores/eventStore";
 import { useProfileStore } from "../stores/profileStore";
@@ -45,3 +45,43 @@ export function getApplicants(dValues: Set<string>) {
 
   subscribe([relayUrl], applicantFilter, onApplicantEvent, onApplicantEOSE);
 }
+
+export async function getZapEndpoint(metadata: Event<Kind.Metadata>): Promise<null | string> {
+  try {
+    let lnurl: string = "";
+    let { lud16 } = JSON.parse(metadata.content);
+    if (lud16) {
+      let [name, domain] = lud16.split("@");
+      lnurl = `https://${domain}/.well-known/lnurlp/${name}`;
+    } else {
+      return null;
+    }
+
+    let res = await fetch(lnurl);
+    let body = await res.json();
+
+    if (body.allowsNostr && body.nostrPubkey) {
+      return body.callback;
+    }
+  } catch (err) {
+    /*-*/
+  }
+
+  return null;
+}
+
+export const fetchInvoice = async (zapEndpoint: any, zapEvent: any) => {
+  const comment = zapEvent.content;
+  const amount = getTagValues("amount", zapEvent.tags);
+
+  let url = `${zapEndpoint}?amount=${amount}&nostr=${encodeURIComponent(JSON.stringify(zapEvent))}`;
+
+  if (comment) {
+    url = `${url}&comment=${encodeURIComponent(comment)}`;
+  }
+
+  const res = await fetch(url);
+  const { pr: invoice } = await res.json();
+
+  return invoice;
+};

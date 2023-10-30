@@ -69,6 +69,7 @@ export default function UserProfilePage() {
 
       const onEvent = (event: Event) => {
         setupProfile(event);
+        console.log("event", event);
       };
 
       const onEOSE = () => { };
