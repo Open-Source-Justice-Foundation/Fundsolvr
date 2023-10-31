@@ -14,7 +14,6 @@ import { useBountyEventStore } from "../stores/eventStore";
 import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
-import DeleteBounty from "./DeleteBounty";
 
 interface Props {
   event: Event;
@@ -24,7 +23,6 @@ export default function Bounty({ event }: Props) {
   const { relayUrl } = useRelayStore();
   const { getProfileEvent } = useProfileStore();
   const { setCachedBountyEvent, getBountyApplicants } = useBountyEventStore();
-  const { getUserPublicKey } = useUserProfileStore();
 
   const tags = getBountyTags(event.tags);
 

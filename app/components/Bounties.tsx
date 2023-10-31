@@ -129,11 +129,11 @@ export default function Bounties() {
         setUserEvents(relayUrl, events);
       }
       retrieveProfiles(Array.from(pubkeys));
+      getApplicants(dValues);
       setLoading({ ...loading, posted: false });
     };
 
     subscribe([relayUrl], postedBountyFilter, onEvent, onEOSE);
-    getApplicants(dValues);
   };
 
   function getBountiesIfEmpty() {
