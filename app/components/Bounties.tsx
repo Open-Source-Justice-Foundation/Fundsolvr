@@ -50,6 +50,7 @@ export default function Bounties() {
       kinds: [30050],
       limit: 10,
       until: undefined,
+      "#s": ["open"]
     };
     const events: Event[] = [];
     const pubkeys = new Set<string>();

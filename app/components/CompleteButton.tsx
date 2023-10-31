@@ -4,7 +4,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { CheckCircleIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { type Event, EventTemplate, Filter, UnsignedEvent, getEventHash, nip57 } from "nostr-tools";
 
-import { fetchInvoice, getZapEndpoint } from "../lib/nostr";
+import { fetchInvoice, getZapEndpoint, getZapRecieptFromRelay } from "../lib/nostr";
 import { getTagValues, removeTag } from "../lib/utils";
 import { useBountyEventStore } from "../stores/eventStore";
 import { useRelayStore } from "../stores/relayStore";
@@ -111,96 +111,12 @@ export default function CompleteButton({ applicantProfile }: Props) {
     setIsZapConfirmationOpen(!isZapConfirmationOpen);
   };
 
-  const updateBountyEventComplete = async () => {
-    if (!cachedBountyEvent) {
-      alert("No bounty event cached");
-      return;
-    }
-
-    const zapReceiptEvent = getZapReceiptEvent(relayUrl, cachedBountyEvent.id);
-
-    // if (!zapReceiptEvent) {
-    //   return;
-    // }
-    //
-    // const bountyValue = getTagValues("value", cachedBountyEvent.tags);
-    // const zapEvent = JSON.parse(getTagValues("description", zapReceiptEvent.tags));
-    // const zapAmount = getTagValues("amount", zapEvent.tags);
-    //
-    // if (Number(bountyValue) === Number(zapAmount) / 1000) {
-    //   // TODO: need to simplify this code an abstract it to nostr lib
-    //   let tags = removeTag("s", cachedBountyEvent.tags);
-    //   const status = ["s", "complete"];
-    //   tags = removeTag("s", tags);
-    //   tags.push(status);
-    //   tags = removeTag("c", tags);
-    //   const acceptedUser = ["c", applicantProfile.pubkey];
-    //   tags.push(acceptedUser);
-    //
-    //   let event: Event = {
-    //     id: "",
-    //     sig: "",
-    //     kind: cachedBountyEvent.kind,
-    //     created_at: Math.floor(Date.now() / 1000),
-    //     tags: tags,
-    //     content: cachedBountyEvent.content,
-    //     pubkey: userPublicKey,
-    //   };
-    //
-    //   event.id = getEventHash(event);
-    //   event = await window.nostr.signEvent(event);
-    //
-    //   function onSeen() {
-    //     if (!cachedBountyEvent) {
-    //       return;
-    //     }
-    //
-    //     updateBountyEvent(relayUrl, cachedBountyEvent.id, event);
-    //     updateUserEvent(relayUrl, cachedBountyEvent.id, event);
-    //     setCachedBountyEvent(event);
-    //   }
-    //
-    //   publish([relayUrl], event, onSeen);
-    // }
-  };
-
-  // TODO: abstract to nostr lib
-  const retrieveZapReciept = async () => {
-    if (paymentHash && cachedBountyEvent) {
-      // if (cachedBountyEvent) {
-      const postedBountyFilter: Filter = {
-        kinds: [9735],
-        limit: 100,
-        "#e": [cachedBountyEvent.id],
-      };
-
-      const onEvent = (event: Event) => {
-        console.log("zap reciept event", event);
-        // TODO: check the zap receipt amount
-        if (getZapReceiptEvent(relayUrl, cachedBountyEvent.id)) {
-          setZapReceiptEvent(relayUrl, cachedBountyEvent.id, event);
-          const bountyValue = getTagValues("value", cachedBountyEvent.tags);
-          const zapEvent = JSON.parse(getTagValues("description", event.tags));
-          const zapAmount = getTagValues("amount", zapEvent.tags);
-          if (Number(bountyValue) === Number(zapAmount) / 1000) {
-            updateBountyEventComplete();
-          }
-        }
-      };
-
-      const onEOSE = () => { };
-
-      subscribe([relayUrl], postedBountyFilter, onEvent, onEOSE);
-    }
-  };
-
-  useEffect(() => {
-    updateBountyEventComplete();
-  }, [zapReceiptEvents]);
-
   useEffect(() => {
     // poll the relay for the zap receipt
-    retrieveZapReciept();
+    if (!cachedBountyEvent) {
+      return;
+    }
+    getZapRecieptFromRelay(cachedBountyEvent);
   }, [paymentHash]);
 
   return (
