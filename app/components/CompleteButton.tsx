@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 
 import { Dialog, Transition } from "@headlessui/react";
 import { CheckCircleIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
@@ -22,16 +22,11 @@ export default function CompleteButton({ applicantProfile }: Props) {
   const [paymentHash, setPaymentHash] = useState();
   const [tippedAmount, setZappedAmount] = useState<any>();
 
-  const {
-    cachedBountyEvent,
-    setCachedBountyEvent,
-    updateBountyEvent,
-    updateUserEvent,
-    setZapReceiptEvent,
-    getZapReceiptEvent,
-    zapReceiptEvents,
-  } = useBountyEventStore();
-  const { relayUrl, publish, subscribe } = useRelayStore();
+  const [callCount, setCallCount] = useState(0); // State to track the number of calls
+  const intervalRef = useRef<number | undefined>(); // Explicitly typing intervalRef
+
+  const { cachedBountyEvent } = useBountyEventStore();
+  const { relayUrl } = useRelayStore();
   const { userPublicKey } = useUserProfileStore();
 
   useEffect(() => {
@@ -113,10 +108,29 @@ export default function CompleteButton({ applicantProfile }: Props) {
 
   useEffect(() => {
     // poll the relay for the zap receipt
-    if (!cachedBountyEvent) {
+    if (!cachedBountyEvent || paymentHash == null) {
       return;
     }
-    getZapRecieptFromRelay(cachedBountyEvent);
+
+    // Reset call count on every paymentHash change
+    setCallCount(0);
+
+    // Set an interval to call the function every 2 seconds
+    intervalRef.current = window.setInterval(() => {
+      getZapRecieptFromRelay(cachedBountyEvent);
+
+      // Increment the call count and clear the interval after 5 calls
+      setCallCount((prevCount) => {
+        const newCount = prevCount + 1;
+        if (newCount >= 5) {
+          clearInterval(intervalRef.current);
+        }
+        return newCount;
+      });
+    }, 2000);
+
+    // Clean up the interval when the component unmounts or paymentHash changes
+    return () => clearInterval(intervalRef.current);
   }, [paymentHash]);
 
   return (

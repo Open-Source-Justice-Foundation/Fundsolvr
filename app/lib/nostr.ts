@@ -87,6 +87,7 @@ export const fetchInvoice = async (zapEndpoint: any, zapEvent: any) => {
 };
 
 export const getZapRecieptFromRelay = async (cachedBountyEvent: Event) => {
+  console.log("CALLING GET ZAP RECIEPT FROM RELAY");
   if (cachedBountyEvent) {
     const postedBountyFilter: Filter = {
       kinds: [9735],

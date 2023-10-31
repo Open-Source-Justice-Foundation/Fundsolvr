@@ -163,6 +163,7 @@ export default function Applicant({ applicantEvent }: Props) {
         )}
       {cachedBountyEvent &&
         getTagValues("p", cachedBountyEvent.tags) === applicantEvent.pubkey &&
+        !getZapReceiptEvent(relayUrl, cachedBountyEvent.id) &&
         cachedBountyEvent.pubkey === userPublicKey &&
         getTagValues("s", cachedBountyEvent.tags) !== "complete" &&
         getProfileEvent(relayUrl, applicantEvent.pubkey) && (
