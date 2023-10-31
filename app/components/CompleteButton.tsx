@@ -9,6 +9,7 @@ import { getTagValues, removeTag } from "../lib/utils";
 import { useBountyEventStore } from "../stores/eventStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
+import { LightningCircleIcon, LightningIcon } from "@bitcoin-design/bitcoin-icons-react/filled";
 
 interface Props {
   applicantProfile: Event;
@@ -137,9 +138,10 @@ export default function CompleteButton({ applicantProfile }: Props) {
     <>
       <button
         onClick={openZapModal}
-        className="mx-4 rounded-lg bg-green-500 p-2 text-white hover:bg-green-600 dark:bg-green-600 dark:text-white hover:dark:bg-green-500"
+        className="mx-4 flex items-center rounded-lg bg-green-500 p-2 text-white hover:bg-green-600 dark:bg-green-600 dark:text-white hover:dark:bg-green-500"
       >
-        Accept
+        <LightningIcon className="h-5 w-5" />
+        Pay
       </button>
 
       <Transition.Root show={isOpen} as={Fragment}>
