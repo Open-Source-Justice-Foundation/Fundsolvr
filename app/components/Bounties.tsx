@@ -211,7 +211,7 @@ export default function Bounties() {
           )}
         >
           <NewspaperIcon className="h-5 w-5" aria-hidden="true" />
-          <span className="whitespace-nowrap">All Bounties</span>
+          <span className="whitespace-nowrap">Open Bounties</span>
         </div>
         <div
           onClick={switchToPosted}
