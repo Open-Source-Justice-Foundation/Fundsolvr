@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 
 import Applicant from "@/app/components/Applicant";
 import Applybutton from "@/app/components/Applybutton";
-import { getApplicants, retrieveProfiles } from "@/app/lib/nostr";
+import { getApplicants, getZapRecieptFromRelay, retrieveProfiles } from "@/app/lib/nostr";
 import { getBountyTags, getTagValues, parseProfileContent, shortenHash } from "@/app/lib/utils";
 import Avatar from "@/app/messages/components/Avatar";
 import { useBountyEventStore } from "@/app/stores/eventStore";
@@ -37,7 +37,7 @@ import { Theme } from "../../types";
 export default function BountyPage() {
   const { subscribe, relayUrl } = useRelayStore();
   const { getProfileEvent } = useProfileStore();
-  const { cachedBountyEvent, setCachedBountyEvent, getBountyApplicants, getApplicantEvent } = useBountyEventStore();
+  const { cachedBountyEvent, setCachedBountyEvent, getBountyApplicants, getApplicantEvent, getZapReceiptEvent } = useBountyEventStore();
   const { getUserPublicKey, userPublicKey } = useUserProfileStore();
 
   const router = useRouter();
@@ -52,8 +52,6 @@ export default function BountyPage() {
   if (pathname && pathname.length > 60) {
     naddrStr = pathname.split("/").pop() || "";
   }
-
-  // TODO: check for zap recipt
 
   useEffect(() => {
     if (naddrStr) {
@@ -94,6 +92,16 @@ export default function BountyPage() {
   }, [naddr, cachedBountyEvent]);
 
   useEffect(() => {
+    if (!cachedBountyEvent) {
+      return;
+    }
+    // TODO: check value against bounty value
+    if (!getZapReceiptEvent(relayUrl, cachedBountyEvent.id)) {
+      getZapRecieptFromRelay(cachedBountyEvent);
+    }
+  }, [cachedBountyEvent]);
+
+  useEffect(() => {
     return () => {
       setCachedBountyEvent(null);
     };
@@ -117,7 +125,7 @@ export default function BountyPage() {
         <div className="mx-auto max-w-4xl">
           <Link
             href={`/`}
-            className="flex items-center w-48 gap-x-2 rounded-lg bg-gray-50 px-3 py-2 text-sm font-medium text-gray-800 shadow-lg shadow-gray-900/5 ring-1 ring-gray-300 hover:bg-white dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-800 dark:hover:bg-gray-700/50"
+            className="flex w-48 items-center gap-x-2 rounded-lg bg-gray-50 px-3 py-2 text-sm font-medium text-gray-800 shadow-lg shadow-gray-900/5 ring-1 ring-gray-300 hover:bg-white dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-800 dark:hover:bg-gray-700/50"
           >
             <ArrowLeftIcon className="h-4 w-4" />
             Back to all Bounties
@@ -141,15 +149,17 @@ export default function BountyPage() {
                     <span className="text-gray-700 dark:text-gray-300">Open</span>
                   </>
                 )}
-                {getTagValues("s", bountyEvent.tags) === "assigned" && (
-                  <>
-                    <svg className="h-2 w-2 fill-blue-400" viewBox="0 0 6 6" aria-hidden="true">
-                      <circle cx={3} cy={3} r={3} />
-                    </svg>
+                {cachedBountyEvent &&
+                  getTagValues("s", bountyEvent.tags) === "assigned" &&
+                  !getZapReceiptEvent(relayUrl, cachedBountyEvent.id) && (
+                    <>
+                      <svg className="h-2 w-2 fill-blue-400" viewBox="0 0 6 6" aria-hidden="true">
+                        <circle cx={3} cy={3} r={3} />
+                      </svg>
 
-                    <span className="text-gray-700 dark:text-gray-300">Assigned</span>
-                  </>
-                )}
+                      <span className="text-gray-700 dark:text-gray-300">Assigned</span>
+                    </>
+                  )}
                 {getTagValues("s", bountyEvent.tags) === "withdrawn" && (
                   <>
                     <svg className="h-2 w-2 fill-red-400" viewBox="0 0 6 6" aria-hidden="true">
@@ -159,15 +169,18 @@ export default function BountyPage() {
                     <span className="text-gray-700 dark:text-gray-300">Withdrawn</span>
                   </>
                 )}
-                {getTagValues("s", bountyEvent.tags) === "complete" && (
-                  <>
-                    <svg className="h-2 w-2 fill-green-400" viewBox="0 0 6 6" aria-hidden="true">
-                      <circle cx={3} cy={3} r={3} />
-                    </svg>
 
-                    <span className="text-gray-700 dark:text-gray-300">Complete</span>
-                  </>
-                )}
+                {cachedBountyEvent &&
+                  (getTagValues("s", bountyEvent.tags) === "assigned" || getTagValues("s", bountyEvent.tags) === "complete") &&
+                  getZapReceiptEvent(relayUrl, cachedBountyEvent.id) && (
+                    <>
+                      <svg className="h-2 w-2 fill-green-400" viewBox="0 0 6 6" aria-hidden="true">
+                        <circle cx={3} cy={3} r={3} />
+                      </svg>
+
+                      <span className="text-gray-700 dark:text-gray-300">Bounty Paid</span>
+                    </>
+                  )}
               </span>
             </div>
 
@@ -177,10 +190,7 @@ export default function BountyPage() {
               <div className="flex justify-between">
                 <div className="flex items-center gap-x-4">
                   {bountyEvent?.pubkey && naddrPointer && (
-                    <Link
-                      className="flex items-center gap-x-2"
-                      href={`/u/${nip19.npubEncode(bountyEvent.pubkey)}`}
-                    >
+                    <Link className="flex items-center gap-x-2" href={`/u/${nip19.npubEncode(bountyEvent.pubkey)}`}>
                       <Avatar
                         src={
                           parseProfileContent(
@@ -191,11 +201,9 @@ export default function BountyPage() {
                         className="h-8 w-8 ring-1 ring-white dark:ring-gray-700"
                       />
                       <div className="truncate text-sm font-medium leading-6 text-gray-800 dark:text-white">
-                        {
-                          parseProfileContent(
-                            getProfileEvent(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.content
-                          )?.name || shortenHash(nip19.npubEncode(bountyEvent.pubkey))
-                        }
+                        {parseProfileContent(
+                          getProfileEvent(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.content
+                        )?.name || shortenHash(nip19.npubEncode(bountyEvent.pubkey))}
                       </div>
                     </Link>
                   )}

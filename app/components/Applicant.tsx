@@ -25,7 +25,7 @@ export default function Applicant({ applicantEvent }: Props) {
   const { relayUrl, subscribe } = useRelayStore();
   const { getProfileEvent, setProfileEvent } = useProfileStore();
   const { userPublicKey } = useUserProfileStore();
-  const { cachedBountyEvent } = useBountyEventStore();
+  const { cachedBountyEvent, getZapReceiptEvent } = useBountyEventStore();
 
   const [githubVerified, setGithubVerified] = useState(false);
 
@@ -75,6 +75,17 @@ export default function Applicant({ applicantEvent }: Props) {
 
     subscribe([relayUrl], userFilter, onEvent, onEOSE);
   }, [relayUrl]);
+
+  function getZapReceiptTags() {
+    if (!cachedBountyEvent) {
+      return [];
+    }
+    const zapReceiptEvent = getZapReceiptEvent(relayUrl, cachedBountyEvent.id);
+    if (!zapReceiptEvent) {
+      return [];
+    }
+    return zapReceiptEvent.tags;
+  }
 
   return (
     <div className="flex items-center justify-between rounded-lg bg-white p-4 dark:bg-gray-800">
@@ -145,9 +156,10 @@ export default function Applicant({ applicantEvent }: Props) {
       </div>
       {cachedBountyEvent &&
         getTagValues("p", cachedBountyEvent.tags) === applicantEvent.pubkey &&
+        !getZapReceiptEvent(relayUrl, cachedBountyEvent.id) &&
         cachedBountyEvent.pubkey !== userPublicKey &&
         getTagValues("s", cachedBountyEvent.tags) !== "complete" && (
-          <span className="rounded-lg bg-green-500 p-4 text-center text-green-500 dark:text-green-400">Assigned</span>
+          <span className="rounded-lg bg-green-500/20 p-4 text-center text-green-500 dark:text-green-400">Assigned</span>
         )}
       {cachedBountyEvent &&
         getTagValues("p", cachedBountyEvent.tags) === applicantEvent.pubkey &&
@@ -160,9 +172,9 @@ export default function Applicant({ applicantEvent }: Props) {
           </div>
         )}
       {cachedBountyEvent &&
-        getTagValues("s", cachedBountyEvent.tags) === "complete" &&
-        cachedBountyEvent &&
-        getTagValues("c", cachedBountyEvent.tags) === applicantEvent.pubkey && (
+        getZapReceiptEvent(relayUrl, cachedBountyEvent.id) &&
+        getZapReceiptEvent(relayUrl, cachedBountyEvent.id) &&
+        getTagValues("p", getZapReceiptTags()) === applicantEvent.pubkey && (
           <span className="rounded-lg bg-blue-500/20 p-4 text-center text-blue-500 dark:text-blue-400">Solution Accepted</span>
         )}
       {cachedBountyEvent &&

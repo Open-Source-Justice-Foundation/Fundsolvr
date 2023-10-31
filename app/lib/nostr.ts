@@ -5,7 +5,7 @@ import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
 import { getTagValues } from "./utils";
 
-const { getApplicantEvent, setApplicantEvent } = useBountyEventStore.getState();
+const { getApplicantEvent, setApplicantEvent, getZapReceiptEvent, setZapReceiptEvent } = useBountyEventStore.getState();
 const { setProfileEvent } = useProfileStore.getState();
 const { relayUrl, subscribe } = useRelayStore.getState();
 
@@ -84,4 +84,29 @@ export const fetchInvoice = async (zapEndpoint: any, zapEvent: any) => {
   const { pr: invoice } = await res.json();
 
   return invoice;
+};
+
+export const getZapRecieptFromRelay = async (cachedBountyEvent: Event) => {
+  if (cachedBountyEvent) {
+    const postedBountyFilter: Filter = {
+      kinds: [9735],
+      limit: 100,
+      "#e": [cachedBountyEvent.id],
+    };
+
+    const onEvent = (event: Event) => {
+      console.log("zap reciept event", event);
+      const bountyValue = getTagValues("value", cachedBountyEvent.tags);
+      const zapEvent = JSON.parse(getTagValues("description", event.tags));
+      const zapAmount = getTagValues("amount", zapEvent.tags);
+      if (Number(bountyValue) === Number(zapAmount) / 1000) {
+        console.log("caching zap reciept event", event);
+        setZapReceiptEvent(relayUrl, cachedBountyEvent.id, event);
+      }
+    };
+
+    const onEOSE = () => { };
+
+    subscribe([relayUrl], postedBountyFilter, onEvent, onEOSE);
+  }
 };
