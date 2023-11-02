@@ -1,5 +1,11 @@
 import { SimplePool } from "nostr-tools";
 
+export enum BountyTab {
+    all = "all",
+    userPosted = "userPosted",
+    assigned = "assigned",
+  }
+
 export const RELAYS = [
   "wss://relay.damus.io",
   "wss://nos.lol",

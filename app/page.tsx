@@ -1,4 +1,4 @@
-import Bounties from "./components/Bounties";
+import Bounties from "./components/bounties/Bounties";
 
 export default function Example() {
   return (

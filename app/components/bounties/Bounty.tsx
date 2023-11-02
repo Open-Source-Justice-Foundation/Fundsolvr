@@ -8,12 +8,11 @@ import { nip19 } from "nostr-tools";
 import type { Event } from "nostr-tools";
 import { AddressPointer } from "nostr-tools/lib/nip19";
 
-import { getBountyTags, getTagValues, parseProfileContent, removeMarkdownTitles, shortenHash, truncateText } from "../lib/utils";
-import Avatar from "../messages/components/Avatar";
-import { useBountyEventStore } from "../stores/eventStore";
-import { useProfileStore } from "../stores/profileStore";
-import { useRelayStore } from "../stores/relayStore";
-import { useUserProfileStore } from "../stores/userProfileStore";
+import { getBountyTags, getTagValues, parseProfileContent, removeMarkdownTitles, shortenHash, truncateText } from "../../lib/utils";
+import Avatar from "../../messages/components/Avatar";
+import { useBountyEventStore } from "../../stores/eventStore";
+import { useProfileStore } from "../../stores/profileStore";
+import { useRelayStore } from "../../stores/relayStore";
 
 interface Props {
   event: Event;
