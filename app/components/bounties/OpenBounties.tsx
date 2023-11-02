@@ -24,9 +24,9 @@ export default function Bounties() {
 
     const bountyFilter: Filter = {
       kinds: [30050],
-      limit: 3,
+      limit: 10,
       until: undefined,
-      // "#s": ["open"],
+      "#s": ["open"],
     };
     const events: Event[] = [];
     const pubkeys = new Set<string>();

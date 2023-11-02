@@ -21,6 +21,10 @@ interface BountyEventState {
   deleteUserEvent: (key: string, id: string) => void;
   updateUserEvent: (key: string, id: string, userEvent: Event) => void;
 
+  assignedEvents: Record<string, Array<Event>>;
+  setAssignedEvents: (key: string, assignedEvents: Array<Event>) => void;
+  getAssignedEvents: (key: string) => Array<Event>;
+
   tag: string;
   setTag: (tag: string) => void;
   getTag: () => string;
@@ -88,6 +92,10 @@ export const useBountyEventStore = create<BountyEventState>()(
         tag: "",
         setTag: (tag) => set({ tag }),
         getTag: () => get().tag,
+
+        assignedEvents: {},
+        setAssignedEvents: (key, assignedEvents) => set((prev) => ({ assignedEvents: { ...prev.assignedEvents, [key]: assignedEvents } })),
+        getAssignedEvents: (key: string) => get().assignedEvents[key] ?? [],
 
         applicantEvents: {},
 

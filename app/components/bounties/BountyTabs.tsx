@@ -15,6 +15,10 @@ export default function BountyTabs() {
     setBountyType(BountyTab.userPosted);
   }
 
+  function switchToAssigned() {
+    setBountyType(BountyTab.assigned);
+  }
+
   return (
     <div className="flex w-full max-w-4xl justify-start gap-x-2 overflow-auto border-b border-gray-300 px-2 pb-3 text-gray-600 dark:border-gray-600 dark:text-gray-300 md:overflow-hidden">
       <div
@@ -42,6 +46,7 @@ export default function BountyTabs() {
         <span className="whitespace-nowrap">Posted Bounties</span>
       </div>
       <div
+        onClick={switchToAssigned}
         className={classNames(
           bountyType === BountyTab.assigned
             ? "border-indigo-300 text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"

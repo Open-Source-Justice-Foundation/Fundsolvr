@@ -14,6 +14,7 @@ import OpenBounties from "./OpenBounties";
 import PostedBounties from "./PostedBounties";
 import Tag from "../Tag";
 import Login from "../header/Login";
+import AssignedBounties from "./AssignedBounties";
 
 export default function Bounties() {
   const { bountyType } = useBountyEventStore();
@@ -62,6 +63,22 @@ export default function Bounties() {
           {mounted && bountyType === BountyTab.userPosted && !userPublicKey && (
             <div className="flex flex-col items-center gap-8 text-center text-black dark:text-white">
               <p className="text-lg">you must be logged in to see your posted bounties</p>
+              <Login>
+                <div className="flex flex-1 justify-end">
+                  <a
+                    href="#"
+                    className="mb-6 flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
+                  >
+                    Log in <span aria-hidden="true">&rarr;</span>
+                  </a>
+                </div>
+              </Login>
+            </div>
+          )}
+          {BountyTab.assigned === bountyType && <AssignedBounties />}
+          {mounted && bountyType === BountyTab.assigned && !userPublicKey && (
+            <div className="flex flex-col items-center gap-8 text-center text-black dark:text-white">
+              <p className="text-lg">you must be logged in to see your assigned bounties</p>
               <Login>
                 <div className="flex flex-1 justify-end">
                   <a
