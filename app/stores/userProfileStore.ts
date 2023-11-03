@@ -1,13 +1,16 @@
+import type { Event } from "nostr-tools";
 import { create } from "zustand";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
 
 import type { Profile } from "../types";
-import type { Event } from "nostr-tools";
 
 interface CurrentUserState {
   userPublicKey: string;
+  userPrivateKey: string;
   setUserPublicKey: (userPublicKey: string) => void;
+  setUserPrivateKey: (userPrivateKey: string) => void;
   getUserPublicKey: () => string;
+  getUserPrivateKey: () => string;
   userProfile: Record<string, Profile>;
   setUserProfile: (relay: string, profile: Profile) => void;
   getUserProfile: (relay: string) => Profile;
@@ -22,8 +25,11 @@ export const useUserProfileStore = create<CurrentUserState>()(
     persist(
       (set, get) => ({
         userPublicKey: "",
+        userPrivateKey: "",
         setUserPublicKey: (userPublicKey) => set({ userPublicKey }),
+        setUserPrivateKey: (userPrivateKey) => set({ userPrivateKey }),
         getUserPublicKey: () => get().userPublicKey,
+        getUserPrivateKey: () => get().userPrivateKey,
         userProfile: {},
         setUserProfile: (relay, userProfile) => set((state) => ({ userProfile: { ...state.userProfile, [relay]: userProfile } })),
         getUserProfile: (relay) => get().userProfile && get().userProfile[relay],

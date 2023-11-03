@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react";
 
+import Link from "next/link";
+
 import { useUserProfileStore } from "@/app/stores/userProfileStore";
+
 import UserProfile from "../profile/UserProfile";
 
 export default function Login({ children }: any) {
@@ -14,14 +17,7 @@ export default function Login({ children }: any) {
     setMounted(true);
   }, []);
 
-  const loginHandler = async () => {
-    if (typeof nostr !== "undefined") {
-      const publicKey: string = await nostr.getPublicKey();
-      setUserPublicKey(publicKey);
-    }
-  };
-
-  return mounted && <div>{userPublicKey === "" ? <button onClick={loginHandler}>{children}</button> : <UserProfile />}</div>;
+  return mounted && <div>{userPublicKey === "" ? <Link href="/login">{children}</Link> : <UserProfile />}</div>;
   // : (
   // <UserCircleIcon className="h-7 w-7 text-smoke-400" aria-hidden="true" />
   // );
