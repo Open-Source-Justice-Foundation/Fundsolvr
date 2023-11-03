@@ -30,16 +30,16 @@ export default function Header() {
             <div className="flex items-center gap-x-6">
               <ThemeToggle theme={theme} />
               <div className="cursor-pointer rounded-full p-2 shadow-lg shadow-gray-800/10 ring-1 ring-gray-900/10 backdrop-blur hover:bg-gray-50 dark:ring-white/10 dark:hover:bg-gray-800/90">
-            <Link href="/messages">
-                <BellIcon className="h-6 w-6 stroke-gray-600 dark:stroke-gray-300" />
-            </Link>
+                <Link href="/messages">
+                  <BellIcon className="h-6 w-6 stroke-gray-600 dark:stroke-gray-300" />
+                </Link>
               </div>
               <Login>
                 <div className="flex flex-1 justify-end">
-                  <a href="#" className="dark:text-smoke-100 text-sm font-semibold leading-6 text-gray-700 dark:text-gray-200">
+                  <span className="dark:text-smoke-100 text-sm font-semibold leading-6 text-gray-700 dark:text-gray-200">
                     Log in <span aria-hidden="true">&rarr;</span>
                     {/* <UserCircleIcon className="h-7 w-7 text-smoke-400" aria-hidden="true" /> */}
-                  </a>
+                  </span>
                 </div>
               </Login>
             </div>
