@@ -5,7 +5,7 @@ import { Fragment, useState } from "react";
 import { SatoshiV2Icon } from "@bitcoin-design/bitcoin-icons-react/filled";
 import { Dialog, Transition } from "@headlessui/react";
 import { UserPlusIcon } from "@heroicons/react/24/outline";
-import { type Event, getEventHash } from "nostr-tools";
+import { type Event, getEventHash, getSignature } from "nostr-tools";
 
 import { getTagValues } from "../lib/utils";
 import { useBountyEventStore } from "../stores/eventStore";
@@ -19,7 +19,7 @@ interface PropTypes {
 export default function Applybutton({ bountyEvent }: PropTypes) {
   const { relayUrl, publish } = useRelayStore();
   const { setApplicantEvent } = useBountyEventStore();
-  const { userPublicKey } = useUserProfileStore();
+  const { userPublicKey, userPrivateKey } = useUserProfileStore();
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -46,7 +46,11 @@ export default function Applybutton({ bountyEvent }: PropTypes) {
     };
 
     event.id = getEventHash(event);
-    event = await window.nostr.signEvent(event);
+    if (userPrivateKey) {
+      event.sig = getSignature(event, userPrivateKey);
+    } else {
+      event = await window.nostr.signEvent(event);
+    }
 
     function onSeen() {
       setOpen(false);

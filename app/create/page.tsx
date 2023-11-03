@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
 import MarkdownIt from "markdown-it";
-import { getEventHash, nip19 } from "nostr-tools";
+import { getEventHash, getSignature, nip19 } from "nostr-tools";
 import type { Event } from "nostr-tools";
 import { AddressPointer } from "nostr-tools/lib/nip19";
 
@@ -25,7 +25,7 @@ const MdEditor = dynamic(() => import("react-markdown-editor-lite"), {
 
 export default function CreateBounty() {
   const { publish, relayUrl } = useRelayStore();
-  const { userPublicKey } = useUserProfileStore();
+  const { userPublicKey, userPrivateKey } = useUserProfileStore();
   const { setCachedBountyEvent, getBountyEvents, setBountyEvents } = useBountyEventStore();
 
   // TODO: use this
@@ -136,7 +136,13 @@ export default function CreateBounty() {
     };
 
     event.id = getEventHash(event);
-    event = await window.nostr.signEvent(event);
+
+    if (userPrivateKey) {
+      event.sig = getSignature(event, userPrivateKey);
+    } else {
+      // TODO: should check if nostr is connected
+      event = await window.nostr.signEvent(event);
+    }
 
     function onSeen() { }
 
@@ -192,7 +198,11 @@ export default function CreateBounty() {
     };
 
     event.id = getEventHash(event);
-    event = await window.nostr.signEvent(event);
+    if (userPrivateKey) {
+      event.sig = getSignature(event, userPrivateKey);
+    } else {
+      event = await window.nostr.signEvent(event);
+    }
 
     const ttags = tags.map((tag) => {
       return ["t", tag];

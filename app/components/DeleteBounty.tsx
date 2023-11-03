@@ -3,7 +3,7 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 
 import { Dialog, Transition } from "@headlessui/react";
-import type { Event } from "nostr-tools";
+import { getSignature, type Event } from "nostr-tools";
 
 import { useBountyEventStore } from "../stores/eventStore";
 import { useRelayStore } from "../stores/relayStore";
@@ -14,7 +14,7 @@ interface Props {
   onDelete?: Function;
 }
 export default function DeleteBounty({ eventId, onDelete }: Props) {
-  const { getUserPublicKey } = useUserProfileStore();
+  const { getUserPublicKey, userPrivateKey } = useUserProfileStore();
   const { deleteBountyEvent, deleteUserEvent } = useBountyEventStore();
   const { publish, relayUrl } = useRelayStore();
   const [isOpen, setIsOpen] = useState(false);
@@ -52,7 +52,12 @@ export default function DeleteBounty({ eventId, onDelete }: Props) {
       pubkey: getUserPublicKey(),
     };
 
-    event = await window.nostr.signEvent(event);
+    if (userPrivateKey) {
+      event.sig = getSignature(event, userPrivateKey);
+    } else {
+      event = await window.nostr.signEvent(event);
+    }
+
     publish([relayUrl], event, onSeen);
     closeModal(e);
   }

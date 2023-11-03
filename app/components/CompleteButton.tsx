@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 
+import { LightningCircleIcon, LightningIcon } from "@bitcoin-design/bitcoin-icons-react/filled";
 import { Dialog, Transition } from "@headlessui/react";
 import { CheckCircleIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { type Event, EventTemplate, Filter, UnsignedEvent, getEventHash, nip57 } from "nostr-tools";
@@ -9,7 +10,6 @@ import { getTagValues, removeTag } from "../lib/utils";
 import { useBountyEventStore } from "../stores/eventStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
-import { LightningCircleIcon, LightningIcon } from "@bitcoin-design/bitcoin-icons-react/filled";
 
 interface Props {
   applicantProfile: Event;
@@ -28,7 +28,7 @@ export default function CompleteButton({ applicantProfile }: Props) {
 
   const { cachedBountyEvent } = useBountyEventStore();
   const { relayUrl } = useRelayStore();
-  const { userPublicKey } = useUserProfileStore();
+  const { userPublicKey, userPrivateKey } = useUserProfileStore();
 
   useEffect(() => {
     setZapMessage("");
@@ -81,7 +81,19 @@ export default function CompleteButton({ applicantProfile }: Props) {
       };
 
       const zapId = getEventHash(unsignedZapEvent);
-      const zapEvent = await window.nostr.signEvent({ ...unsignedZapEvent, id: zapId });
+
+      let zapEvent: Event = {
+        ...unsignedZapEvent,
+        id: zapId,
+        sig: "",
+      };
+
+      if (userPrivateKey) {
+        zapEvent.sig = getSignature(unsignedZapEvent, userPrivateKey);
+      } else {
+        zapEvent = await window.nostr.signEvent({ ...unsignedZapEvent, id: zapId });
+      }
+
       console.log("zapEvent", zapEvent);
 
       const invoice = await fetchInvoice(zapEndpoint, zapEvent);
@@ -262,4 +274,7 @@ export default function CompleteButton({ applicantProfile }: Props) {
       </Transition.Root>
     </>
   );
+}
+function getSignature(unsignedZapEvent: UnsignedEvent, userPrivateKey: string): any {
+  throw new Error("Function not implemented.");
 }

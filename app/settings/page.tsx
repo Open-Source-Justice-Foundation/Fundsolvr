@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { UserCircleIcon } from "@heroicons/react/24/solid";
-import { type Event, Filter, nip19 } from "nostr-tools";
+import { type Event, Filter, nip19, getSignature } from "nostr-tools";
 import { Octokit } from "octokit";
 
 import { getITagValues, shortenHash, verifyGithub } from "../lib/utils";
@@ -13,7 +13,7 @@ import { useUserProfileStore } from "../stores/userProfileStore";
 import { Profile } from "../types";
 
 export default function Settings() {
-  const { getUserPublicKey, getUserEvent, getUserProfile, setUserProfile, setUserEvent } = useUserProfileStore();
+  const { getUserPublicKey, getUserEvent, getUserProfile, setUserProfile, setUserEvent, userPrivateKey } = useUserProfileStore();
   const { userPublicKey, userEvent } = useUserProfileStore();
   const { publish, subscribe, relayUrl } = useRelayStore();
 
@@ -202,7 +202,12 @@ export default function Settings() {
     };
 
 
-    event = await window.nostr.signEvent(event);
+    if (userPrivateKey) {
+      event.sig = getSignature(event, userPrivateKey);
+    } else {
+      event = await window.nostr.signEvent(event);
+    }
+
     publish([relayUrl], event, onSeen);
     setUserProfile(relayUrl, profile);
     setUserEvent(relayUrl, event);
@@ -242,7 +247,12 @@ export default function Settings() {
     // remove github tag from event
     event.tags = filterOutGithub(event.tags);
 
-    event = await window.nostr.signEvent(event);
+    if (userPrivateKey) {
+      event.sig = getSignature(event, userPrivateKey);
+    } else {
+      event = await window.nostr.signEvent(event);
+    }
+
     publish([relayUrl], event, onSeen);
     setUserProfile(relayUrl, profile);
     setGithubVerified(false);

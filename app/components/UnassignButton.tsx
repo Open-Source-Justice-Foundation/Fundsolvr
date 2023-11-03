@@ -1,6 +1,6 @@
 "use client";
 
-import { type Event, getEventHash } from "nostr-tools";
+import { type Event, getEventHash, getSignature } from "nostr-tools";
 
 import { removeTag } from "../lib/utils";
 import { useBountyEventStore } from "../stores/eventStore";
@@ -10,7 +10,7 @@ import { useUserProfileStore } from "../stores/userProfileStore";
 export default function UnassignButton() {
   const { cachedBountyEvent, setCachedBountyEvent, updateBountyEvent, updateUserEvent } = useBountyEventStore();
   const { publish, relayUrl } = useRelayStore();
-  const { userPublicKey } = useUserProfileStore();
+  const { userPublicKey, userPrivateKey } = useUserProfileStore();
 
   const handleUnassign = async (e: any) => {
     e.preventDefault();
@@ -35,7 +35,11 @@ export default function UnassignButton() {
     };
 
     event.id = getEventHash(event);
-    event = await window.nostr.signEvent(event);
+    if (userPrivateKey) {
+      event.sig = getSignature(event, userPrivateKey);
+    } else {
+      event = await window.nostr.signEvent(event);
+    }
 
     function onSeen() {
       if (!cachedBountyEvent) {
