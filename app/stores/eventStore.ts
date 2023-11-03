@@ -21,9 +21,11 @@ interface BountyEventState {
   deleteUserEvent: (key: string, id: string) => void;
   updateUserEvent: (key: string, id: string, userEvent: Event) => void;
 
-  assignedEvents: Record<string, Array<Event>>;
-  setAssignedEvents: (key: string, assignedEvents: Array<Event>) => void;
-  getAssignedEvents: (key: string) => Array<Event>;
+  taggedBountyEvents: Record<string, Record<string, Array<Event>>>;
+  setTaggedBountyEvents: (key: string, tag: string, bountyEvents: Array<Event>) => void;
+  getTaggedBountyEvents: (key: string, tag: string) => Array<Event>;
+  deleteTaggedBountyEvent: (key: string, tag: string, id: string) => void;
+  updateTaggedBountyEvent: (key: string, tag: string, id: string, bountyEvent: Event) => void;
 
   tag: string;
   setTag: (tag: string) => void;
@@ -89,13 +91,41 @@ export const useBountyEventStore = create<BountyEventState>()(
           });
         },
 
+        taggedBountyEvents: {},
+        setTaggedBountyEvents: (key, tag, bountyEvents) =>
+          set((prev) => ({
+            taggedBountyEvents: {
+              ...prev.taggedBountyEvents,
+              [key]: { ...(prev.taggedBountyEvents[key] || {}), [tag]: bountyEvents },
+            },
+          })),
+        getTaggedBountyEvents: (key: string, tag: string) => get().taggedBountyEvents[key]?.[tag] ?? [],
+        deleteTaggedBountyEvent: (key: string, tag: string, id: string) =>
+          set((prev) => ({
+            taggedBountyEvents: {
+              ...prev.taggedBountyEvents,
+              [key]: {
+                ...prev.taggedBountyEvents[key],
+                [tag]: prev.taggedBountyEvents[key]?.[tag]?.filter((bountyEvent) => bountyEvent.id !== id) || [],
+              },
+            },
+          })),
+        updateTaggedBountyEvent: (key: string, tag: string, id: string, updatedBountyEvent: Event) =>
+          set((prev) => {
+            const currentBounties = prev.taggedBountyEvents[key]?.[tag] || [];
+            const updatedBounties = currentBounties.map((bountyEvent) => (bountyEvent.id === id ? updatedBountyEvent : bountyEvent));
+
+            return {
+              taggedBountyEvents: {
+                ...prev.taggedBountyEvents,
+                [key]: { ...prev.taggedBountyEvents[key], [tag]: updatedBounties },
+              },
+            };
+          }),
+
         tag: "",
         setTag: (tag) => set({ tag }),
         getTag: () => get().tag,
-
-        assignedEvents: {},
-        setAssignedEvents: (key, assignedEvents) => set((prev) => ({ assignedEvents: { ...prev.assignedEvents, [key]: assignedEvents } })),
-        getAssignedEvents: (key: string) => get().assignedEvents[key] ?? [],
 
         applicantEvents: {},
 

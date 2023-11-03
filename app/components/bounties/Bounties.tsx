@@ -9,12 +9,13 @@ import PlusIcon from "@heroicons/react/20/solid/PlusIcon";
 import { BountyTab } from "../../lib/constants";
 import { useBountyEventStore } from "../../stores/eventStore";
 import { useUserProfileStore } from "../../stores/userProfileStore";
-import BountyTabs from "./BountyTabs";
-import OpenBounties from "./OpenBounties";
-import PostedBounties from "./PostedBounties";
 import Tag from "../Tag";
 import Login from "../header/Login";
 import AssignedBounties from "./AssignedBounties";
+import BountyTabs from "./BountyTabs";
+import BountyTags from "./BountyTags";
+import OpenBounties from "./OpenBounties";
+import PostedBounties from "./PostedBounties";
 
 export default function Bounties() {
   const { bountyType } = useBountyEventStore();
@@ -33,7 +34,7 @@ export default function Bounties() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center gap-y-8 rounded-lg py-6">
+    <div className="flex flex-col items-center justify-center rounded-lg py-6">
       <div className="flex w-full max-w-4xl flex-col gap-y-2">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-medium leading-6 text-gray-800 dark:text-gray-100">Bounties</h1>
@@ -45,19 +46,14 @@ export default function Bounties() {
             Bounty
           </button>
         </div>
-        <p className="hidden text-lg text-gray-500 dark:text-gray-400 md:block">Bounties are a way to incentivize work on a project.</p>
+        <p className="hidden text-lg text-gray-500 dark:text-gray-400 md:block pb-8">Bounties are a way to incentivize work on a project.</p>
       </div>
       <BountyTabs />
-      {bountyTags && (
-        <div className="flex w-full max-w-4xl justify-start gap-x-2 overflow-auto">
-          {Array.from(bountyTags).map((tag: any) => (
-            <Tag key={tag} tag={tag} />
-          ))}
-        </div>
-      )}
-
+      {/* <div className="flex sticky top-0 z-50 bg-gray-100 dark:bg-gray-900/80 dark:backdrop-blur justify-start w-full max-w-4xl pt-7 pb-8"> */}
+      {/*   <BountyTags /> */}
+      {/* </div> */}
       <>
-        <div className="flex w-full max-w-4xl flex-col items-center justify-center gap-y-4 rounded-lg py-6">
+        <div className="flex w-full pt-16 max-w-4xl flex-col items-center justify-center gap-y-4 rounded-lg py-2">
           {BountyTab.all === bountyType && <OpenBounties />}
           {BountyTab.userPosted === bountyType && <PostedBounties />}
           {mounted && bountyType === BountyTab.userPosted && !userPublicKey && (
