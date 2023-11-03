@@ -18,6 +18,7 @@
     "lnurl-pay": "^3.0.1",
     "markdown-it": "^13.0.2",
     "next": "13.5.4",
+    "next-client-cookies": "^1.0.6",
     "nostr-tools": "^1.16.0",
     "octokit": "^3.1.1",
     "react": "^18",

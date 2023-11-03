@@ -167,7 +167,7 @@ export default function LoginPage() {
   return (
     mounted && (
       <>
-        <div className="px-4 py-6">
+        <div className="flex h-screen items-center justify-center p-4">
           {signupStep === SignupStep.Start && (
             <div className="container m-auto flex w-full max-w-sm flex-col gap-10">
               <h1 className="text-5xl dark:text-white">Get Started</h1>

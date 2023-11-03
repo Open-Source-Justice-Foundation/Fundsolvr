@@ -1,17 +1,25 @@
-import { cookies } from "next/headers";
+"use client";
+
+// import { cookies } from "next/headers";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { Theme } from "@/app/types";
 import { BellIcon } from "@heroicons/react/24/outline";
+import { useCookies } from "next-client-cookies";
 
 import Login from "./Login";
 import SidebarToggle from "./SidebarToggle";
 import ThemeToggle from "./ThemeToggle";
 
 export default function Header() {
-  const theme = cookies().get("theme")?.value === "dark" ? Theme.dark : Theme.light;
+  const cookies = useCookies();
+  const theme = cookies.get("theme") === "dark" ? Theme.dark : Theme.light;
+  const pathname = usePathname();
 
-  return (
+  return pathname === "/login" ? (
+    <></>
+  ) : (
     <div className="container mx-auto flex max-w-4xl flex-col border-b border-gray-100 dark:border-gray-800">
       <div className="top-0 z-40 flex h-16 w-full shrink-0 items-center gap-x-4 py-12 shadow-sm">
         <div className="flex flex-1 justify-end gap-x-4 self-stretch px-4 lg:px-0">

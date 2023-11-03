@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 
+import Refresh from "./components/Refresh";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/header/Header";
-import Refresh from "./components/Refresh";
-import "./globals.css";
-import { Theme } from "./types";
 import RelayMenu from "./components/menus/RelayMenu";
+import "./globals.css";
+import { ClientCookiesProvider } from "./provider";
+import { Theme } from "./types";
 
 export const metadata: Metadata = {
   title: "resolvr",
@@ -18,16 +19,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html className={theme?.value || Theme.light}>
       <head />
-
-      <body className="h-full bg-gray-100 dark:bg-gray-900">
-        <div className="min-h-screen">
-          <Sidebar />
-          <Header />
-          <Refresh />
-          <RelayMenu />
-          {children}
-        </div>
-      </body>
+      <ClientCookiesProvider value={cookies().getAll()}>
+        <body className="h-full bg-gray-100 dark:bg-gray-900">
+          <div className="min-h-screen">
+            <Sidebar />
+            <Header />
+            <Refresh />
+            <RelayMenu />
+            {children}
+          </div>
+        </body>
+      </ClientCookiesProvider>
     </html>
   );
 }
