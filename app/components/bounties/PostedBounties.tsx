@@ -6,7 +6,7 @@ import BountyPlaceholder from "@/app/components/Skeleton/Bounty";
 import type { Event, Filter } from "nostr-tools";
 
 import { BountyTab } from "../../lib/constants";
-import { getApplicants, retrieveProfiles } from "../../lib/nostr";
+import { filterBounties, getApplicants, retrieveProfiles } from "../../lib/nostr";
 import { getTagValues } from "../../lib/utils";
 import { useBountyEventStore } from "../../stores/eventStore";
 import { useRelayStore } from "../../stores/relayStore";
@@ -17,7 +17,7 @@ import NoBounties from "./NoBounties";
 
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
-  const { setUserEvents, userEvents, bountyType } = useBountyEventStore();
+  const { setUserEvents, userEvents, bountyType, search } = useBountyEventStore();
   const { userPublicKey } = useUserProfileStore();
   const [loading, setLoading] = useState({ posted: false });
 
@@ -82,7 +82,7 @@ export default function Bounties() {
         : bountyType === BountyTab.userPosted &&
         userEvents[relayUrl] &&
         userPublicKey &&
-        (userEvents[relayUrl].length ? userEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />) : <NoBounties />)}
+        (userEvents[relayUrl].length ? filterBounties(search, userEvents[relayUrl]).map((event) => <Bounty key={event.id} event={event} />) : <NoBounties />)}
       <LoadBountiesButton action={getPostedBounties} />
     </>
   );

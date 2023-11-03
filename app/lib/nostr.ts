@@ -1,3 +1,4 @@
+import Fuse from "fuse.js";
 import { Event, Filter, Kind } from "nostr-tools";
 
 import { useBountyEventStore } from "../stores/eventStore";
@@ -110,4 +111,24 @@ export const getZapRecieptFromRelay = async (cachedBountyEvent: Event) => {
 
     subscribe([relayUrl], postedBountyFilter, onEvent, onEOSE);
   }
+};
+
+export const filterBounties = (search: string, list: Event[]) => {
+  const options = {
+    keys: ["content", "tags"],
+    includeScore: true,
+    distance: 100000,
+    includeMatches: true,
+    minMatchCharLength: 1,
+    threshold: 0.1,
+    // ignoreLocation: true,
+  };
+
+  if (!search) {
+    return list;
+  }
+
+  const fuse = new Fuse(list, options);
+  const result = fuse.search(search);
+  return result.map((r) => r.item);
 };

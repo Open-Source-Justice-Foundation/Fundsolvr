@@ -6,7 +6,7 @@ import BountyPlaceholder from "@/app/components/Skeleton/Bounty";
 import type { Event, Filter } from "nostr-tools";
 
 import { BountyTab } from "../../lib/constants";
-import { getApplicants, retrieveProfiles } from "../../lib/nostr";
+import { getApplicants, retrieveProfiles, filterBounties } from "../../lib/nostr";
 import { getTagValues } from "../../lib/utils";
 import { useBountyEventStore } from "../../stores/eventStore";
 import { useRelayStore } from "../../stores/relayStore";
@@ -17,7 +17,7 @@ import NoBounties from "./NoBounties";
 
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
-  const { setAssignedEvents, assignedEvents, bountyType } = useBountyEventStore();
+  const { setAssignedEvents, assignedEvents, bountyType, search } = useBountyEventStore();
   const { userPublicKey } = useUserProfileStore();
   const [loading, setLoading] = useState({ assigned: false });
 
@@ -84,7 +84,7 @@ export default function Bounties() {
         assignedEvents[relayUrl] &&
         userPublicKey &&
         (assignedEvents[relayUrl].length ? (
-          assignedEvents[relayUrl].map((event) => <Bounty key={event.id} event={event} />)
+          filterBounties(search, assignedEvents[relayUrl]).map((event) => <Bounty key={event.id} event={event} />)
         ) : (
           <NoBounties />
         ))}

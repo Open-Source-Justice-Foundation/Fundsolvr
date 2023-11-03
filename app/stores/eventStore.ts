@@ -29,6 +29,10 @@ interface BountyEventState {
   setTag: (tag: string) => void;
   getTag: () => string;
 
+  search: string;
+  setSearch: (search: string) => void;
+  getSearch: () => string;
+
   applicantEvents: Record<string, Record<string, Record<string, Event>>>;
   setApplicantEvent: (relayUrl: string, bountyId: string, publicKey: string, applicantEvents: Event) => void;
   getApplicantEvent: (relayUrl: string, bountyId: string, pubkey: string) => Event | null;
@@ -92,6 +96,10 @@ export const useBountyEventStore = create<BountyEventState>()(
         tag: "",
         setTag: (tag) => set({ tag }),
         getTag: () => get().tag,
+
+        search: "",
+        setSearch: (search) => set({ search }),
+        getSearch: () => get().search,
 
         assignedEvents: {},
         setAssignedEvents: (key, assignedEvents) => set((prev) => ({ assignedEvents: { ...prev.assignedEvents, [key]: assignedEvents } })),
