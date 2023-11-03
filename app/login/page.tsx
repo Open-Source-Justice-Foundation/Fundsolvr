@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { Transition } from "@headlessui/react";
 import { Event, Filter, generatePrivateKey, getEventHash, getPublicKey, getSignature, nip19 } from "nostr-tools";
 
 import { useRelayStore } from "../stores/relayStore";
@@ -12,7 +11,7 @@ import { useUserProfileStore } from "../stores/userProfileStore";
 import type { Profile } from "../types";
 
 export default function LoginPage() {
-  const { setUserProfile, setUserPublicKey, setUserPrivateKey, getUserPrivateKey, getUserPublicKey } = useUserProfileStore();
+  const { setUserProfile, setUserPublicKey, setUserPrivateKey } = useUserProfileStore();
   const { relayUrl, publish, subscribe } = useRelayStore();
   const [mounted, setMounted] = useState(false);
   const [name, setName] = useState("");
@@ -121,7 +120,7 @@ export default function LoginPage() {
       authors: [publicKey],
     };
 
-    const onEvent = (event: Event) => {
+    const onEvent = (_: Event) => {
       setUserPublicKey(publicKey);
       setUserPrivateKey(decodedPrivateKey);
     };
@@ -277,7 +276,7 @@ export default function LoginPage() {
                     placeholder="Enter name here"
                     value={name}
                     onChange={handleOnChange}
-                    className="w-full rounded border border-gray-300 p-2 dark:border-gray-600 dark:bg-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:text-white"
+                    className="w-full rounded border border-gray-300 p-2 dark:border-gray-600 dark:bg-gray-600 dark:text-gray-100"
                   />
                   <button
                     className="rounded-3xl bg-indigo-500 px-2 py-4 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
@@ -319,7 +318,7 @@ export default function LoginPage() {
                         onClick={async () => {
                           await copyTextToClipboard(nip19.npubEncode(pubKey));
                         }}
-                        className="w-full cursor-pointer rounded border border-gray-300 p-2 caret-transparent dark:border-gray-600 dark:bg-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:text-white"
+                        className="w-full cursor-pointer rounded border border-gray-300 p-2 caret-transparent dark:border-gray-600 dark:bg-gray-600 dark:text-gray-100"
                       />
 
                       <div className="right-0 top-0 flex h-full items-center justify-center lg:absolute ">
@@ -347,7 +346,7 @@ export default function LoginPage() {
                           await copyTextToClipboard(nip19.nsecEncode(privKey));
                         }}
                         onChange={(e) => e.preventDefault()}
-                        className="w-full cursor-pointer rounded border border-gray-300 p-2 caret-transparent dark:border-gray-600 dark:bg-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:text-white"
+                        className="w-full cursor-pointer rounded border border-gray-300 p-2 caret-transparent dark:border-gray-600 dark:bg-gray-600 dark:text-gray-100"
                       />
                       <div className="right-0 top-0 flex h-full items-center justify-center lg:absolute">
                         <button
