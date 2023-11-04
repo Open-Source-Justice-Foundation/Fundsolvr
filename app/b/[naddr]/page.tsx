@@ -33,6 +33,7 @@ import colors, { indigo } from "tailwindcss/colors";
 import DeleteBounty from "../../components/DeleteBounty";
 import { useUserProfileStore } from "../../stores/userProfileStore";
 import { Theme } from "../../types";
+import Discussion from "@/app/components/Discussion";
 
 export default function BountyPage() {
   const { subscribe, relayUrl } = useRelayStore();
@@ -331,26 +332,27 @@ export default function BountyPage() {
           {tab === "discussion" && (
             <div className="mt-6 flex flex-col">
               <h3 className="text-xl font-bold text-gray-800 dark:text-white">Discussion</h3>
-              <div className="mt-4">
-                <style>
-                  {`
-                  :root {
-                    --nc-primary-color: ${colors.indigo[500]};
-                  }
-                  :root.${Theme.light} {
-                    --nc-text-color: ${colors.gray[900]};
-                  }
-                  :root.${Theme.dark} {
-                    --nc-background: ${colors.gray[800]};
-                    --nc-text-background: ${colors.gray[800]};
-                    --nc-text-color: ${colors.gray[100]};
-                    --nc-text-color: ${colors.gray[100]};
-                    --nc-text-color-dark: ${colors.white};
-                  }
-                `}
-                </style>
-                <NoComment owner={getUserPublicKey()} relays={[relayUrl]} customBase={naddrStr} />
-              </div>
+              <Discussion />
+              {/* <div className="mt-4"> */}
+              {/*   <style> */}
+              {/*     {` */}
+              {/*     :root { */}
+              {/*       --nc-primary-color: ${colors.indigo[500]}; */}
+              {/*     } */}
+              {/*     :root.${Theme.light} { */}
+              {/*       --nc-text-color: ${colors.gray[900]}; */}
+              {/*     } */}
+              {/*     :root.${Theme.dark} { */}
+              {/*       --nc-background: ${colors.gray[800]}; */}
+              {/*       --nc-text-background: ${colors.gray[800]}; */}
+              {/*       --nc-text-color: ${colors.gray[100]}; */}
+              {/*       --nc-text-color: ${colors.gray[100]}; */}
+              {/*       --nc-text-color-dark: ${colors.white}; */}
+              {/*     } */}
+              {/*   `} */}
+              {/*   </style> */}
+              {/*   <NoComment owner={getUserPublicKey()} relays={[relayUrl]} customBase={naddrStr} /> */}
+              {/* </div> */}
             </div>
           )}
         </div>
