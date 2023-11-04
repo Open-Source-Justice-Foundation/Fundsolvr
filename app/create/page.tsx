@@ -15,7 +15,9 @@ import { useBountyEventStore } from "../stores/eventStore";
 import { usePostRelayStore } from "../stores/postRelayStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
+import BountyTags from "./BountyTags";
 import "./markdown-editor.css";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 
@@ -57,10 +59,6 @@ export default function CreateBounty() {
     } else {
       setRewardError("Invalid input. Only positive whole numbers allowed.");
     }
-  };
-
-  const handleTagChange = (event: any) => {
-    setTagInput(event.target.value);
   };
 
   function handleEditorChange({ html, text }: any) {
@@ -251,28 +249,17 @@ export default function CreateBounty() {
             />
 
             <h2 className="pt-8 font-semibold text-gray-800 dark:text-gray-100">Tags</h2>
-            <div className="mt-4 flex gap-x-4">
-              <input
-                type="text"
-                value={tagInput}
-                onChange={handleTagChange}
-                className="w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
-                placeholder="nostr"
-              />
-
-              <button
-                onClick={addTag}
-                className="flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
-              >
-                Add
-              </button>
+            <div className="pt-4">
+              <BountyTags tags={tags} setTags={setTags} />
             </div>
 
             <div className="mt-4 flex gap-x-4">
+              <span className="flex items-center gap-x-2 my-2 rounded-lg text-sm font-medium dark:text-gray-300">Selected:</span>
+              <div className="overflow-x-auto flex gap-x-4">
               {tags.map((tag) => (
                 <div
                   key={tag}
-                  className="flex items-center gap-x-2 rounded-lg bg-indigo-500 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
+                  className="flex items-center gap-x-2 border rounded-lg border-indigo-500 px-2 py-1 text-sm font-medium text-white dark:border-indigo-600"
                 >
                   {tag}
                   <button
@@ -280,10 +267,12 @@ export default function CreateBounty() {
                       setTags(tags.filter((t) => t !== tag));
                     }}
                   >
-                    X
+                    <XMarkIcon className="h-4 w-4 hover:bg-red-500 rounded-full" aria-hidden="true" />
                   </button>
                 </div>
               ))}
+
+              </div>
             </div>
 
             <h2 className="pt-8 font-semibold text-gray-800 dark:text-gray-100">Reward</h2>
