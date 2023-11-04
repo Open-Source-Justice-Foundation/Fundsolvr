@@ -1,11 +1,10 @@
 import { useState } from "react";
 
+import { POSSIBLE_TAGS } from "@/app/lib/constants";
 import { classNames } from "@/app/lib/utils";
+import { useBountyEventStore } from "@/app/stores/eventStore";
 import { Combobox } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
-import { useBountyEventStore } from "@/app/stores/eventStore";
-
-const people: string[] = ["All", "Nostr", "Bitcoin", "Lightning", "AI", "javascript"];
 
 export default function BountyTags() {
   const [query, setQuery] = useState("");
@@ -13,8 +12,8 @@ export default function BountyTags() {
 
   const filteredPeople =
     query === ""
-      ? people
-      : people.filter((person: string) => {
+      ? POSSIBLE_TAGS
+      : POSSIBLE_TAGS.filter((person: string) => {
         return person.toLowerCase().includes(query.toLowerCase());
       });
 

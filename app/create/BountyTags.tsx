@@ -4,7 +4,7 @@ import { classNames } from "@/app/lib/utils";
 import { Combobox } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 
-const possibleTags = ["All", "Nostr", "Bitcoin", "Lightning", "AI", "javascript"];
+import { POSSIBLE_TAGS } from "../lib/constants";
 
 interface PropTypes {
   tags: string[];
@@ -14,13 +14,18 @@ interface PropTypes {
 export default function BountyTags({ tags, setTags }: PropTypes) {
   const [query, setQuery] = useState("");
 
+  const possibleTagsSansAll = POSSIBLE_TAGS.filter((tag) => {
+    if (tag === "All") return false;
+    if (query === "") return true;
+    return tag.toLowerCase().includes(query.toLowerCase());
+  });
+
   const filteredPossibleTags =
     query === ""
-      ? possibleTags
-      : possibleTags.filter((tag) => {
+      ? possibleTagsSansAll
+      : possibleTagsSansAll.filter((tag) => {
         return tag.toLowerCase().includes(query.toLowerCase());
       });
-
 
   const handleTagChange = (newTag: string) => {
     if (tags.includes(newTag)) {
