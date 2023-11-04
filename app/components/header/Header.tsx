@@ -1,6 +1,7 @@
 "use client";
 
-// import { cookies } from "next/headers";
+import { useState } from "react";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -14,7 +15,7 @@ import ThemeToggle from "./ThemeToggle";
 
 export default function Header() {
   const cookies = useCookies();
-  const theme = cookies.get("theme") === "dark" ? Theme.dark : Theme.light;
+  const [theme, setTheme] = useState<Theme>(cookies.get("theme") === "dark" ? Theme.dark : Theme.light);
   const pathname = usePathname();
 
   return pathname === "/login" ? (
@@ -27,16 +28,23 @@ export default function Header() {
             <SidebarToggle />
             <Link className="hidden md:flex" href="/">
               <div className="flex items-center gap-x-2">
-                <img
-                  className="h-8"
-                  src="https://user-images.githubusercontent.com/29136904/276887775-0b18141f-1b7b-48c1-9df2-77f0509ad8d7.png"
-                  alt="Your Company"
-                />
-                <div className="hidden text-4xl text-black dark:text-white sm:block">resolvr</div>
+                {theme === "light" ? (
+                  <img
+                    className="h-8"
+                    src="https://user-images.githubusercontent.com/81318863/280472537-02cdaaa6-493c-4b58-805d-f86fd449f71d.png"
+                    alt="resolvr"
+                  />
+                ) : (
+                  <img
+                    className="h-8"
+                    src="https://user-images.githubusercontent.com/81318863/280472542-76f5046f-806a-407a-9782-3dfbf103e452.png"
+                    alt="resolvr"
+                  />
+                )}
               </div>
             </Link>
             <div className="flex items-center gap-x-6">
-              <ThemeToggle theme={theme} />
+              <ThemeToggle theme={theme} setTheme={setTheme} />
               <div className="cursor-pointer rounded-full p-2 shadow-lg shadow-gray-800/10 ring-1 ring-gray-900/10 backdrop-blur hover:bg-gray-50 dark:ring-white/10 dark:hover:bg-gray-800/90">
                 <Link href="/messages">
                   <BellIcon className="h-6 w-6 stroke-gray-600 dark:stroke-gray-300" />
@@ -46,7 +54,6 @@ export default function Header() {
                 <div className="flex flex-1 justify-end">
                   <span className="dark:text-smoke-100 text-sm font-semibold leading-6 text-gray-700 dark:text-gray-200">
                     Log in <span aria-hidden="true">&rarr;</span>
-                    {/* <UserCircleIcon className="h-7 w-7 text-smoke-400" aria-hidden="true" /> */}
                   </span>
                 </div>
               </Login>

@@ -1,17 +1,13 @@
-"use client";
-
-import { useState } from "react";
-
 import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
 
 import { Theme } from "../../types";
 
 interface Props {
   theme: Theme;
+  setTheme: (theme: Theme) => void;
 }
 
-export default function ThemeToggle({ theme }: Props) {
-  const [_theme, setTheme] = useState<Theme>(theme);
+export default function ThemeToggle({ theme, setTheme }: Props) {
 
   const toggleTheme = () => {
     const root = document.getElementsByTagName("html")[0];
@@ -29,7 +25,7 @@ export default function ThemeToggle({ theme }: Props) {
   return (
     <>
       <button onClick={toggleTheme}>
-        {_theme === Theme.light ? (
+        {theme === Theme.light ? (
           <div className="cursor-pointer rounded-full p-2 shadow-lg shadow-gray-800/10 ring-1 ring-gray-900/10 backdrop-blur hover:bg-gray-50 dark:ring-white/10 dark:hover:bg-gray-800/90">
             <SunIcon className="h-6 w-6 stroke-teal-400" />
           </div>
