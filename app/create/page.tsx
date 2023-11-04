@@ -259,7 +259,7 @@ export default function CreateBounty() {
               {tags.map((tag) => (
                 <div
                   key={tag}
-                  className="flex items-center gap-x-2 border rounded-lg border-indigo-500 px-2 py-1 text-sm font-medium text-white dark:border-indigo-600"
+                  className="flex items-center gap-x-2 border rounded-lg border-indigo-500 px-2 py-1 text-sm font-medium dark:text-white text-gray-700 dark:border-indigo-600"
                 >
                   {tag}
                   <button
