@@ -253,9 +253,9 @@ export default function BountyPage() {
                 onClick={() => setTab("details")}
                 className={classNames(
                   tab === "details"
-                    ? "border-indigo-300 text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
-                    : "border-transparent hover:text-gray-700 dark:hover:text-gray-200",
-                  "flex cursor-pointer select-none items-center gap-x-2 border-r border-gray-200 pr-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
+                    ? "text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
+                    : "hover:text-gray-700 dark:hover:text-gray-200",
+                  "flex cursor-pointer select-none items-center gap-x-2 pr-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
                 )}
               >
                 <BookOpenIcon className="h-5 w-5" />
@@ -265,9 +265,9 @@ export default function BountyPage() {
                 onClick={() => setTab("applications")}
                 className={classNames(
                   tab === "applications"
-                    ? "border-indigo-300 text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
-                    : "border-transparent hover:text-gray-700 dark:hover:text-gray-200",
-                  "flex cursor-pointer select-none items-center gap-x-2 border-r border-gray-200 px-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
+                    ? "text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
+                    : "hover:text-gray-700 dark:hover:text-gray-200",
+                  "flex cursor-pointer select-none items-center gap-x-2 px-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
                 )}
               >
                 <UsersIcon className="h-5 w-5" />
@@ -277,9 +277,9 @@ export default function BountyPage() {
                 onClick={() => setTab("discussion")}
                 className={classNames(
                   tab === "discussion"
-                    ? "border-indigo-300 text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
-                    : "border-transparent hover:text-gray-700 dark:hover:text-gray-200",
-                  "flex cursor-pointer select-none items-center gap-x-2 border-r border-gray-200 pl-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
+                    ? "text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
+                    : "hover:text-gray-700 dark:hover:text-gray-200",
+                  "flex cursor-pointer select-none items-center gap-x-2 pl-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
                 )}
               >
                 <ChatBubbleLeftRightIcon className="h-5 w-5" />
