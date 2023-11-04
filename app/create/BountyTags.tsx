@@ -21,6 +21,7 @@ export default function BountyTags({ tags, setTags }: PropTypes) {
         return tag.toLowerCase().includes(query.toLowerCase());
       });
 
+
   const handleTagChange = (newTag: string) => {
     if (tags.includes(newTag)) {
       // Remove tag if it's already selected
@@ -44,6 +45,7 @@ export default function BountyTags({ tags, setTags }: PropTypes) {
             placeholder="Tags"
             className="w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
             onChange={(event) => setQuery(event.target.value)}
+            onBlur={() => setQuery("")}
           />
           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
             <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
