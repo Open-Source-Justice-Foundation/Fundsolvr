@@ -21,7 +21,7 @@ export const RELAYS = [
   // "wss://nostr.bitcoiner.social",
   // "wss://atlas.nostr.land",
   "wss://purplepag.es",
-  "wss://nostr.oxtr.dev",
+  // "wss://nostr.oxtr.dev",
   "wss://welcome.nostr.wine",
   // "wss://relay.nostr.bg",
   "wss://relayable.org",

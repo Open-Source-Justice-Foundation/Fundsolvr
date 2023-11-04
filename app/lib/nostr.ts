@@ -6,7 +6,8 @@ import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
 import { getTagValues } from "./utils";
 
-const { getApplicantEvent, setApplicantEvent, getZapReceiptEvent, setZapReceiptEvent } = useBountyEventStore.getState();
+const { getApplicantEvent, setApplicantEvent, getZapReceiptEvent, setZapReceiptEvent, taggedBountyEvents, setTaggedBountyEvents } =
+  useBountyEventStore.getState();
 const { setProfileEvent } = useProfileStore.getState();
 const { relayUrl, subscribe } = useRelayStore.getState();
 
@@ -131,4 +132,54 @@ export const filterBounties = (search: string, list: Event[]) => {
   const fuse = new Fuse(list, options);
   const result = fuse.search(search);
   return result.map((r) => r.item);
+};
+
+export const getTaggedBounties = async (tag: string,loading: any, setLoading: any) => {
+  if (taggedBountyEvents[relayUrl] && taggedBountyEvents[relayUrl][tag] && taggedBountyEvents[relayUrl][tag].length === 0) {
+    setLoading({ ...loading, all: true });
+  } else {
+    setLoading({ ...loading, all: false });
+  }
+
+  const taggedBountyFilter: Filter = {
+    kinds: [30050],
+    limit: 10,
+    until: undefined,
+    "#s": ["open"],
+    "#t": [tag],
+  };
+  const events: Event[] = [];
+  const pubkeys = new Set<string>();
+  const dValues = new Set<string>();
+
+  if (taggedBountyEvents[relayUrl] && taggedBountyEvents[relayUrl][tag]) {
+    const lastEvent = taggedBountyEvents[relayUrl][tag].slice(-1)[0];
+    if (lastEvent) {
+      taggedBountyFilter.until = lastEvent.created_at - 10;
+    }
+  }
+
+  const onEvent = (event: Event) => {
+    // TODO: check for zap recipt
+    const value = getTagValues("value", event.tags);
+    if (value && value.length > 0) {
+      events.push(event);
+      pubkeys.add(event.pubkey);
+      dValues.add(getTagValues("d", event.tags));
+    }
+  };
+
+  const onEOSE = () => {
+    if (taggedBountyEvents[relayUrl] && taggedBountyEvents[relayUrl][tag]) {
+      setTaggedBountyEvents(relayUrl, tag, [...taggedBountyEvents[relayUrl][tag], ...events]);
+    } else {
+      setTaggedBountyEvents(relayUrl, tag, events);
+    }
+
+    retrieveProfiles(Array.from(pubkeys));
+    getApplicants(dValues);
+    setLoading({ ...loading, all: false });
+  };
+
+  subscribe([relayUrl], taggedBountyFilter, onEvent, onEOSE);
 };

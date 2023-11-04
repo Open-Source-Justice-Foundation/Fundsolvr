@@ -8,9 +8,9 @@ export default function BountySearch() {
   return (
   <input
     type="text"
-    placeholder="Search bounties"
+    placeholder="Search bounties..."
     onChange={(e) => setSearch(e.target.value)}
-    className="w-56 rounded-lg border border-gray-300 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-700 p-2 text-sm"
+    className="w-56 rounded-lg border-0 bg-white pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-700 sm:text-sm sm:leading-6"
   />
   )
 }

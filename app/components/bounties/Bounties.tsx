@@ -14,6 +14,7 @@ import Login from "../header/Login";
 import AssignedBounties from "./AssignedBounties";
 import BountySearch from "./BountySearch";
 import BountyTabs from "./BountyTabs";
+import BountyTags from "./BountyTags";
 import OpenBounties from "./OpenBounties";
 import PostedBounties from "./PostedBounties";
 
@@ -36,7 +37,7 @@ export default function Bounties() {
   return (
     <div className="flex flex-col items-center justify-center rounded-lg py-6">
       <div className="flex w-full max-w-4xl flex-col gap-y-2">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between pb-8 md:pb-0">
           <h1 className="text-3xl font-medium leading-6 text-gray-800 dark:text-gray-100">Bounties</h1>
           <button
             onClick={navigateToCreate}
@@ -54,8 +55,9 @@ export default function Bounties() {
       {(!userPublicKey && BountyTab.assigned === bountyType) || (!userPublicKey && BountyTab.userPosted === bountyType) ? (
         <></>
       ) : (
-        <div className="flex w-full max-w-4xl flex-col items-start justify-center gap-y-4 rounded-lg pb-3 pt-8">
+        <div className="flex w-full max-w-4xl items-center justify-start gap-x-4 rounded-lg pb-3 pt-8">
           <BountySearch />
+          {BountyTab.all === bountyType && <BountyTags />}
         </div>
       )}
       {bountyTags && (

@@ -6,7 +6,7 @@ import BountyPlaceholder from "@/app/components/Skeleton/Bounty";
 import type { Event, Filter } from "nostr-tools";
 
 import { BountyTab } from "../../lib/constants";
-import { filterBounties, getApplicants, retrieveProfiles } from "../../lib/nostr";
+import { filterBounties, getApplicants, getTaggedBounties, retrieveProfiles } from "../../lib/nostr";
 import { getTagValues } from "../../lib/utils";
 import { useBountyEventStore } from "../../stores/eventStore";
 import { useRelayStore } from "../../stores/relayStore";
@@ -16,11 +16,13 @@ import NoBounties from "./NoBounties";
 
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
-  const { setBountyEvents, getBountyEvents, bountyEvents, bountyType, search } = useBountyEventStore();
+  const { setBountyEvents, getBountyEvents, bountyEvents, bountyType, search, tag, taggedBountyEvents, getTag, getTaggedBountyEvents } = useBountyEventStore();
   const [loading, setLoading] = useState({ all: false });
 
   const getBounties = async () => {
-    setLoading({ ...loading, all: true });
+    if (tag === "All") {
+      setLoading({ ...loading, all: true });
+    }
 
     const bountyFilter: Filter = {
       kinds: [30050],
@@ -64,21 +66,46 @@ export default function Bounties() {
     subscribe([relayUrl], bountyFilter, onEvent, onEOSE);
   };
 
+  const localGetTaggedBounties = async () => {
+    getTaggedBounties(tag, loading, setLoading);
+  };
+
   useEffect(() => {
-    if (getBountyEvents(relayUrl).length < 1) {
+    // do something with tags and do this else if
+    if (getTaggedBountyEvents(relayUrl, tag) && tag !== "All") {
+      localGetTaggedBounties();
+    }
+
+    if (getBountyEvents(relayUrl).length < 1 && tag === "All") {
       getBounties();
     }
-  }, [relayUrl]);
+  }, [relayUrl, tag]);
 
   // TODO: improve loading state, shouldn't change all entries to loading when loading more
   return (
     <>
-      {loading.all
+      {loading.all && tag === "All"
         ? Array.from(Array(5)).map((i) => <BountyPlaceholder key={i} />)
         : bountyType === BountyTab.all &&
+        tag === "All" &&
         bountyEvents[relayUrl] &&
-        (bountyEvents[relayUrl].length ? filterBounties(search, bountyEvents[relayUrl]).map((event) => <Bounty key={event.id} event={event} />) : <NoBounties />)}
-      <LoadBountiesButton action={getBounties} />
+        (bountyEvents[relayUrl].length ? (
+          filterBounties(search, bountyEvents[relayUrl]).map((event) => <Bounty key={event.id} event={event} />)
+        ) : (
+          <NoBounties />
+        ))}
+      {loading.all && tag !== "All"
+        ? Array.from(Array(5)).map((i) => <BountyPlaceholder key={i} />)
+        : bountyType === BountyTab.all &&
+        tag !== "All" &&
+        taggedBountyEvents[relayUrl] &&
+        taggedBountyEvents[relayUrl][tag] &&
+        (taggedBountyEvents[relayUrl][tag].length ? (
+          filterBounties(search, taggedBountyEvents[relayUrl][tag]).map((event) => <Bounty key={event.id} event={event} />)
+        ) : (
+          <NoBounties />
+        ))}
+      <LoadBountiesButton action={localGetTaggedBounties} />
     </>
   );
 }
