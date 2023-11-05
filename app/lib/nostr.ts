@@ -135,11 +135,7 @@ export const filterBounties = (search: string, list: Event[]) => {
 };
 
 export const filterReportedBounties = (bountyEvents: Event[], reportedBountyEvents: Event[]) => {
-  // Return the difference of bounty events and reportedBounties
-  // TODO: Establish rules like how many reports required before the bounty is filtered out
-  // TODO: In addition to bounties, also add system to report users
-  // TODO: System for reviewers to review reported events and unhide them if falsely reported (allowlist perhaps)
-
+  const REPORT_THRESHOLD = 1;
   type Count = {
     [key: string]: {
       count: number;
@@ -149,10 +145,10 @@ export const filterReportedBounties = (bountyEvents: Event[], reportedBountyEven
 
   const reportedByCount = reportedBountyEvents.reduce((obj, event) => {
     const reportedId = event.tags?.find((tag) => tag[0] === "e")![1];
-    const reporterPubkey = event.pubkey;
+
     if (reportedId) {
+      const reporterPubkey = event.pubkey;
       if (obj.reportedId) {
-        // Only count a report event by reporter pubkey once
         if (!obj.reportedId.reportedBy.has(reporterPubkey)) {
           return {
             ...obj,
@@ -176,13 +172,14 @@ export const filterReportedBounties = (bountyEvents: Event[], reportedBountyEven
     }
     return obj;
   }, {} as Count);
-  const difference = bountyEvents.filter(
-    (bounty) =>
-      !reportedBountyEvents.some((reported) => {
-        // TODO: Establish a rule. 3 or greater? reportedBy has specific addresses?
-        return reportedByCount[bounty.id]?.count > 0;
-      })
-  );
+
+  const difference = bountyEvents.filter((bounty) => {
+    if (reportedByCount[bounty.id]) {
+      return reportedByCount[bounty.id].count < REPORT_THRESHOLD;
+    }
+    return true;
+  });
+
   return difference;
 };
 
