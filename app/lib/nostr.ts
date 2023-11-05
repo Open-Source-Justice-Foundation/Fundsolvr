@@ -135,7 +135,7 @@ export const filterBounties = (search: string, list: Event[]) => {
 };
 
 export const filterReportedBounties = (bountyEvents: Event[], reportedBountyEvents: Event[]) => {
-  const REPORT_THRESHOLD = 1;
+  const REPORT_THRESHOLD = 0;
   type Count = {
     [key: string]: {
       count: number;
@@ -180,7 +180,7 @@ export const filterReportedBounties = (bountyEvents: Event[], reportedBountyEven
     return true;
   });
 
-  return difference;
+  return REPORT_THRESHOLD > 0 ? difference : bountyEvents;
 };
 
 export const getTaggedBounties = async (tag: string, loading: any, setLoading: any) => {
