@@ -109,7 +109,7 @@ export default function Applicant({ applicantEvent }: Props) {
             day: "numeric",
           })}
         </span>
-        <span className="text-gray-900 dark:text-gray-300">{getTagValues("message", applicantEvent.tags)}</span>
+        <span className="text-gray-900 dark:text-gray-300">{applicantEvent.content}</span>
 
         <div className="flex gap-x-4">
           {parseProfileContent(getProfileEvent(relayUrl, applicantEvent.pubkey)?.content).website && (
@@ -181,7 +181,7 @@ export default function Applicant({ applicantEvent }: Props) {
       {cachedBountyEvent &&
         getTagValues("p", applicantEvent.tags) === userPublicKey &&
         getTagValues("p", cachedBountyEvent.tags) !== applicantEvent.pubkey &&
-        !getTagValues("p", cachedBountyEvent.tags) && <AssignButton pubkey={applicantEvent.pubkey} />}
+        !getTagValues("p", cachedBountyEvent.tags) && <AssignButton applicantEvent={applicantEvent} />}
     </div>
   );
 }

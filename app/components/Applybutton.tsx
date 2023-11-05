@@ -33,19 +33,19 @@ export default function Applybutton({ bountyEvent }: PropTypes) {
     let event: Event = {
       id: "",
       sig: "",
-      kind: 7,
+      kind: 8050,
       created_at: Math.floor(Date.now() / 1000),
       tags: [
         ["d", getTagValues("d", bountyEvent.tags)],
-        ["message", message],
         ["p", bountyEvent.pubkey],
-        ["k", "30050"],
+        ["description", JSON.stringify(bountyEvent)],
       ],
-      content: "apply", // or complete
+      content: message,
       pubkey: userPublicKey,
     };
 
     event.id = getEventHash(event);
+
     if (userPrivateKey) {
       event.sig = getSignature(event, userPrivateKey);
     } else {
@@ -111,7 +111,7 @@ export default function Applybutton({ bountyEvent }: PropTypes) {
                         <div className="text-bitcoin">
                           <SatoshiV2Icon style={{ height: "1.2rem", width: "1.2rem" }} />
                         </div>
-                        <span className="text-bitcoin">{parseInt(getTagValues("value", bountyEvent.tags)).toLocaleString()}</span>
+                        <span className="text-bitcoin">{parseInt(getTagValues("reward", bountyEvent.tags)).toLocaleString()}</span>
                       </div>
                     </div>
 

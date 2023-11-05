@@ -136,7 +136,7 @@ export default function BountyPage() {
                 <div className="text-bitcoin">
                   <SatoshiV2Icon style={{ height: "2rem", width: "2rem" }} />
                 </div>
-                <span className="text-bitcoin">{parseInt(getTagValues("value", bountyEvent.tags)).toLocaleString()}</span>
+                <span className="text-bitcoin">{parseInt(getTagValues("reward", bountyEvent.tags)).toLocaleString()}</span>
               </div>
 
               <span className="inline-flex items-center gap-x-3 rounded-md bg-white px-3 py-2 text-sm font-medium text-gray-600 ring-2 ring-inset ring-gray-300 dark:bg-gray-900 dark:text-white dark:ring-gray-800">

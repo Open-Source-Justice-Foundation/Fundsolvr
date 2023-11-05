@@ -60,7 +60,7 @@ export default function Bounty({ event }: Props) {
         <div className="flex justify-between pl-1.5">
           <div className="flex text-2xl text-bitcoin">
             <SatoshiV2Icon style={{ height: "2rem", width: "2rem" }} />
-            {Number(getTagValues("value", event.tags)).toLocaleString()}
+            {Number(getTagValues("reward", event.tags)).toLocaleString()}
           </div>
 
           <div className="flex items-center justify-end gap-x-2 sm:justify-start">

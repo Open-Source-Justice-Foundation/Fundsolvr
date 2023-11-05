@@ -48,7 +48,7 @@ export default function Bounties() {
 
     const onEvent = (event: Event) => {
       // TODO: check for zap recipt
-      const value = getTagValues("value", event.tags);
+      const value = getTagValues("reward", event.tags);
       if (value && value.length > 0) {
         events.push(event);
         pubkeys.add(event.pubkey);

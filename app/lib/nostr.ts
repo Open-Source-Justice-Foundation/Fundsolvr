@@ -6,7 +6,7 @@ import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
 import { getTagValues } from "./utils";
 
-const { getApplicantEvent, setApplicantEvent, getZapReceiptEvent, setZapReceiptEvent, taggedBountyEvents, setTaggedBountyEvents } =
+const { getApplicantEvent, setApplicantEvent, setZapReceiptEvent, taggedBountyEvents, setTaggedBountyEvents } =
   useBountyEventStore.getState();
 const { setProfileEvent } = useProfileStore.getState();
 const { relayUrl, subscribe } = useRelayStore.getState();
@@ -28,9 +28,8 @@ export function retrieveProfiles(pubkey: string[]) {
 
 export function getApplicants(dValues: Set<string>) {
   const applicantFilter: Filter = {
-    kinds: [7],
+    kinds: [8050],
     "#d": Array.from(dValues),
-    "#k": ["30050"],
     limit: 1000,
   };
 
@@ -99,7 +98,7 @@ export const getZapRecieptFromRelay = async (cachedBountyEvent: Event) => {
 
     const onEvent = (event: Event) => {
       console.log("zap reciept event", event);
-      const bountyValue = getTagValues("value", cachedBountyEvent.tags);
+      const bountyValue = getTagValues("reward", cachedBountyEvent.tags);
       const zapEvent = JSON.parse(getTagValues("description", event.tags));
       const zapAmount = getTagValues("amount", zapEvent.tags);
       if (Number(bountyValue) === Number(zapAmount) / 1000) {
@@ -161,7 +160,7 @@ export const getTaggedBounties = async (tag: string,loading: any, setLoading: an
 
   const onEvent = (event: Event) => {
     // TODO: check for zap recipt
-    const value = getTagValues("value", event.tags);
+    const value = getTagValues("reward", event.tags);
     if (value && value.length > 0) {
       events.push(event);
       pubkeys.add(event.pubkey);

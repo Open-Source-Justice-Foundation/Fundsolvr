@@ -1,9 +1,9 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 
-import { LightningCircleIcon, LightningIcon } from "@bitcoin-design/bitcoin-icons-react/filled";
+import { LightningIcon } from "@bitcoin-design/bitcoin-icons-react/filled";
 import { Dialog, Transition } from "@headlessui/react";
 import { CheckCircleIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { type Event, EventTemplate, Filter, UnsignedEvent, getEventHash, nip57 } from "nostr-tools";
+import { type Event, EventTemplate, Filter, UnsignedEvent, getEventHash, getSignature, nip57 } from "nostr-tools";
 
 import { fetchInvoice, getZapEndpoint, getZapRecieptFromRelay } from "../lib/nostr";
 import { getTagValues, removeTag } from "../lib/utils";
@@ -37,8 +37,14 @@ export default function CompleteButton({ applicantProfile }: Props) {
   const connectHandler = async () => {
     try {
       // TODO: check if already enabled
-      const enabled = await window.webln.enable();
-      // TODO: maybe save this state later
+      if (typeof window.webln !== "undefined") {
+        const enabled = await window.webln.enable();
+        return true;
+        // TODO: maybe save this state later
+      } else {
+        alert("No WebLN provider detected");
+        return false;
+      }
     } catch (e) {
       console.log("Connect Error:", e);
     }
@@ -51,9 +57,9 @@ export default function CompleteButton({ applicantProfile }: Props) {
   const handleSendZap = async (e: any) => {
     e.preventDefault();
 
-    if (typeof window.webln !== "undefined") {
-      connectHandler();
+    const connected = await connectHandler();
 
+    if (typeof window.webln !== "undefined" && connected) {
       if (!cachedBountyEvent) {
         alert("No bounty event cached");
         return;
@@ -69,7 +75,7 @@ export default function CompleteButton({ applicantProfile }: Props) {
       const zapArgs = {
         profile: applicantProfile.pubkey,
         event: cachedBountyEvent.id,
-        amount: Number(getTagValues("value", cachedBountyEvent.tags)) * 1000, // it's in millisats
+        amount: Number(getTagValues("reward", cachedBountyEvent.tags)) * 1000, // it's in millisats
         relays: [relayUrl],
         comment: "bounty complete",
       };
@@ -105,7 +111,7 @@ export default function CompleteButton({ applicantProfile }: Props) {
         console.log("Zap Result:", result);
 
         // TODO: get this from th invoice in the future
-        setZappedAmount(getTagValues("value", cachedBountyEvent.tags));
+        setZappedAmount(getTagValues("reward", cachedBountyEvent.tags));
         // @ts-ignore
         setPaymentHash(result.paymentHash);
         setIsZapSuccess(true);
@@ -274,7 +280,4 @@ export default function CompleteButton({ applicantProfile }: Props) {
       </Transition.Root>
     </>
   );
-}
-function getSignature(unsignedZapEvent: UnsignedEvent, userPrivateKey: string): any {
-  throw new Error("Function not implemented.");
 }

@@ -7,7 +7,11 @@ import { useBountyEventStore } from "../stores/eventStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 
-export default function AssignButton(props: any) {
+interface PropTypes {
+  applicantEvent: Event;
+}
+
+export default function AssignButton({ applicantEvent }: PropTypes) {
   const { cachedBountyEvent, setCachedBountyEvent, updateBountyEvent, updateUserEvent } = useBountyEventStore();
   const { publish, relayUrl } = useRelayStore();
   const { userPublicKey, userPrivateKey } = useUserProfileStore();
@@ -20,11 +24,17 @@ export default function AssignButton(props: any) {
     }
 
     let tags = removeTag("p", cachedBountyEvent.tags);
-    const assignedTo = ["p", props.pubkey];
+    const assignedTo = ["p", applicantEvent.pubkey];
     tags.push(assignedTo);
     tags = removeTag("s", tags);
     const status = ["s", "assigned"];
     tags.push(status);
+    tags = removeTag("e", tags);
+    const eventId = ["e", applicantEvent.id];
+    tags.push(eventId);
+    tags = removeTag("application", tags);
+    const application = ["application", JSON.stringify(applicantEvent)];
+    tags.push(application);
 
     let event: Event = {
       id: "",

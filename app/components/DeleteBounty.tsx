@@ -3,7 +3,7 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 
 import { Dialog, Transition } from "@headlessui/react";
-import { getSignature, type Event } from "nostr-tools";
+import { getSignature, type Event, getEventHash } from "nostr-tools";
 
 import { useBountyEventStore } from "../stores/eventStore";
 import { useRelayStore } from "../stores/relayStore";
@@ -51,6 +51,8 @@ export default function DeleteBounty({ eventId, onDelete }: Props) {
       content: message || "",
       pubkey: getUserPublicKey(),
     };
+
+    event.id = getEventHash(event);
 
     if (userPrivateKey) {
       event.sig = getSignature(event, userPrivateKey);

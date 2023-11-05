@@ -176,7 +176,8 @@ export default function CreateBounty() {
       ["d", uniqueUrl],
       ["title", title],
       ["s", "open"],
-      ["value", reward],
+      ["reward", reward],
+      ["c", "sats"]
     ];
 
     tags.forEach((tag) => {
