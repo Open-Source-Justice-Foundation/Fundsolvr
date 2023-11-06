@@ -15,6 +15,7 @@ export interface RelaysState {
   setConnectedRelays: (relays: Set<Relay>) => void;
   publish: (relays: string[], event: Event, onSeen: () => void) => void;
   subscribe: (relays: string[], filter: any, onEvent: (event: Event) => void, onEOSE: () => void) => void;
+  subscribeKeepAlive: (relays: string[], filter: any, onEvent: (event: Event) => void, onEOSE: () => void) => void;
 }
 
 export const useRelayStore = create<RelaysState>((set) => ({
@@ -130,4 +131,23 @@ export const useRelayStore = create<RelaysState>((set) => ({
       });
     }
   },
+
+  subscribeKeepAlive: async (relays: string[], filter: any, onEvent: (event: Event) => void, onEOSE: () => void) => {
+    for (const url of relays) {
+      const relay = await useRelayStore.getState().connect(url);
+
+      if (!relay) return;
+
+      let sub = relay.sub([filter]);
+
+      sub.on("event", (event: any) => {
+        onEvent(event);
+      });
+
+      sub.on("eose", () => {
+        onEOSE();
+      });
+    }
+  },
+
 }));
