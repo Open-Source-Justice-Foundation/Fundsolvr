@@ -31,6 +31,7 @@ import { NoComment } from "react-nocomment";
 import colors, { indigo } from "tailwindcss/colors";
 
 import DeleteBounty from "../../components/DeleteBounty";
+import ZapPoll from "../../components/ZapPoll";
 import { useUserProfileStore } from "../../stores/userProfileStore";
 import { Theme } from "../../types";
 
@@ -74,7 +75,7 @@ export default function BountyPage() {
           setCachedBountyEvent(event);
         };
 
-        const onEOSE = () => { };
+        const onEOSE = () => {};
 
         const filter = {
           kinds: [naddrPointer.kind],
@@ -350,6 +351,9 @@ export default function BountyPage() {
                 `}
                 </style>
                 <NoComment owner={getUserPublicKey()} relays={[relayUrl]} customBase={naddrStr} />
+              </div>
+              <div className="ml-auto mt-4">
+                <ZapPoll event={bountyEvent} />
               </div>
             </div>
           )}
