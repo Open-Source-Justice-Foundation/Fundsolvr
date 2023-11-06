@@ -169,7 +169,9 @@ export default function Applicant({ applicantEvent }: Props) {
         getProfileEvent(relayUrl, applicantEvent.pubkey) && (
           <div className="flex flex-wrap justify-end gap-y-4">
             <UnassignButton />
-            <CompleteButton applicantProfile={getProfileEvent(relayUrl, applicantEvent.pubkey)} />
+            {parseProfileContent(getProfileEvent(relayUrl, applicantEvent.pubkey).content).lud16 && (
+              <CompleteButton applicantProfile={getProfileEvent(relayUrl, applicantEvent.pubkey)} />
+            )}
           </div>
         )}
       {cachedBountyEvent &&
