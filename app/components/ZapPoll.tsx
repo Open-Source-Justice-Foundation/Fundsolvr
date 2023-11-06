@@ -12,6 +12,7 @@ import type { Event } from "nostr-tools";
 import { EventPointer } from "nostr-tools/lib/nip19";
 
 import { useBountyEventStore } from "../stores/eventStore";
+import { usePostRelayStore } from "../stores/postRelayStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 
@@ -31,7 +32,7 @@ interface PollEvent extends Event {
 // Route to the poll nevent1 URL
 
 export default function ZapPoll({ Icon, event }: Props) {
-  console.log(event);
+  // console.log(event);
   const router = useRouter();
   const { getUserPublicKey } = useUserProfileStore();
   const [inputCount, setInputCount] = useState(2);
@@ -46,6 +47,7 @@ export default function ZapPoll({ Icon, event }: Props) {
   const [recipientAddresses, setRecipientAddresses] = useState<string[]>([getUserPublicKey()]);
   const [showDeleteButton, setShowDeleteButton] = useState(false);
   const [showRecipientDeleteButton, setShowRecipientDeleteButton] = useState(false);
+  const { getActivePostRelayURLs } = usePostRelayStore();
 
   const { deleteBountyEvent, deleteUserEvent } = useBountyEventStore();
   const { publish, subscribe, relayUrl } = useRelayStore();
@@ -116,7 +118,7 @@ export default function ZapPoll({ Icon, event }: Props) {
 
   async function handlePublish(e: any) {
     e.stopPropagation();
-    console.log(pollOptions);
+    // console.log(pollOptions);
     // setIsOpen(true);
     const tags = pollOptions.map((option, index) => {
       return ["poll_option", index.toString(), option];
@@ -142,7 +144,7 @@ export default function ZapPoll({ Icon, event }: Props) {
       });
       tags.push(...pTags);
     }
-    console.log("tags", tags);
+    // console.log("tags", tags);
 
     // TODO:
     // * implement OTS field
@@ -161,7 +163,7 @@ export default function ZapPoll({ Icon, event }: Props) {
     };
 
     event = await window.nostr.signEvent(event);
-    publish([relayUrl], event, onSeen);
+    publish(getActivePostRelayURLs(), event, onSeen);
     // closeModal(e);
   }
 
@@ -331,7 +333,7 @@ export default function ZapPoll({ Icon, event }: Props) {
                       value={closedAt}
                       onChange={(e) => {
                         const date = e.target.value;
-                        console.log(date);
+                        // console.log(date);
                         setClosedAt(date);
                       }}
                     />

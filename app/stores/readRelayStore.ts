@@ -38,16 +38,12 @@ export const useReadRelayStore = create<RelayState>()(
           })),
         updateReadRelayStatus: (url, isActive) =>
           set((state) => {
-            const updatedRelays = state.readRelays.map((relay) =>
-              relay.url === url ? { ...relay, isActive } : relay,
-            );
+            const updatedRelays = state.readRelays.map((relay) => (relay.url === url ? { ...relay, isActive } : relay));
             return { readRelays: updatedRelays };
           }),
         sortReadRelays: () =>
           set((state) => {
-            const sortedRelays = [...state.readRelays].sort((a, b) =>
-              a.isActive === b.isActive ? 0 : a.isActive ? -1 : 1,
-            );
+            const sortedRelays = [...state.readRelays].sort((a, b) => (a.isActive === b.isActive ? 0 : a.isActive ? -1 : 1));
             return { readRelays: sortedRelays };
           }),
         setAllReadRelaysInactive: () =>
@@ -61,8 +57,8 @@ export const useReadRelayStore = create<RelayState>()(
       }),
       {
         name: "resolvr-relay-store",
-        storage: createJSONStorage(() => sessionStorage),
-      },
-    ),
-  ),
+        storage: createJSONStorage(() => localStorage),
+      }
+    )
+  )
 );

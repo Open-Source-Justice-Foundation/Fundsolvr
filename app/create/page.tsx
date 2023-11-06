@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import MarkdownIt from "markdown-it";
 import { getEventHash, getSignature, nip19 } from "nostr-tools";
 import type { Event } from "nostr-tools";
@@ -17,7 +18,6 @@ import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 import BountyTags from "./BountyTags";
 import "./markdown-editor.css";
-import { XMarkIcon } from "@heroicons/react/24/outline";
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 
@@ -40,6 +40,7 @@ export default function CreateBounty() {
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<Array<string>>([]);
   const [isSocialNoteChecked, setIsSocialNoteChecked] = useState(false);
+  const { getActivePostRelayURLs } = usePostRelayStore();
 
   const [mounted, setMounted] = useState(false);
 
@@ -142,9 +143,9 @@ export default function CreateBounty() {
       event = await window.nostr.signEvent(event);
     }
 
-    function onSeen() { }
+    function onSeen() {}
 
-    publish([relayUrl], event, onSeen);
+    publish(getActivePostRelayURLs(), event, onSeen);
   };
 
   const handlePublish = async () => {
@@ -177,7 +178,7 @@ export default function CreateBounty() {
       ["title", title],
       ["s", "open"],
       ["reward", reward],
-      ["c", "sats"]
+      ["c", "sats"],
     ];
 
     tags.forEach((tag) => {
@@ -214,7 +215,7 @@ export default function CreateBounty() {
       routeBounty(event);
     }
 
-    publish([relayUrl], event, onSeen);
+    publish(getActivePostRelayURLs(), event, onSeen);
   };
 
   return (
@@ -255,24 +256,23 @@ export default function CreateBounty() {
             </div>
 
             <div className="mt-4 flex gap-x-4">
-              <span className="flex items-center gap-x-2 my-2 rounded-lg text-sm font-medium dark:text-gray-300">Selected:</span>
-              <div className="overflow-x-auto flex gap-x-4">
-              {tags.map((tag) => (
-                <div
-                  key={tag}
-                  className="flex items-center gap-x-2 border rounded-lg border-indigo-500 px-2 py-1 text-sm font-medium dark:text-white text-gray-700 dark:border-indigo-600"
-                >
-                  {tag}
-                  <button
-                    onClick={() => {
-                      setTags(tags.filter((t) => t !== tag));
-                    }}
+              <span className="my-2 flex items-center gap-x-2 rounded-lg text-sm font-medium dark:text-gray-300">Selected:</span>
+              <div className="flex gap-x-4 overflow-x-auto">
+                {tags.map((tag) => (
+                  <div
+                    key={tag}
+                    className="flex items-center gap-x-2 rounded-lg border border-indigo-500 px-2 py-1 text-sm font-medium text-gray-700 dark:border-indigo-600 dark:text-white"
                   >
-                    <XMarkIcon className="h-4 w-4 hover:bg-red-500 rounded-full" aria-hidden="true" />
-                  </button>
-                </div>
-              ))}
-
+                    {tag}
+                    <button
+                      onClick={() => {
+                        setTags(tags.filter((t) => t !== tag));
+                      }}
+                    >
+                      <XMarkIcon className="h-4 w-4 rounded-full hover:bg-red-500" aria-hidden="true" />
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
 

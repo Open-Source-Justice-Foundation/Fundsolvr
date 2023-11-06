@@ -99,7 +99,11 @@ export const useRelayStore = create<RelaysState>((set) => ({
 
       if (!relay) return;
 
-      relay.publish(event);
+      try {
+        await relay.publish(event);
+      } catch (e) {
+        console.error("Error publishing in relayStore: ", e);
+      }
 
       let publishedEvent = await relay.get({
         ids: [event.id],

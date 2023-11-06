@@ -13,6 +13,7 @@ import { getBountyTags, getTagValues, parseProfileContent, shortenHash } from "@
 import Avatar from "@/app/messages/components/Avatar";
 import { useBountyEventStore } from "@/app/stores/eventStore";
 import { useProfileStore } from "@/app/stores/profileStore";
+import { useReadRelayStore } from "@/app/stores/readRelayStore";
 import { useRelayStore } from "@/app/stores/relayStore";
 import { SatoshiV2Icon } from "@bitcoin-design/bitcoin-icons-react/filled";
 import {
@@ -40,6 +41,7 @@ export default function BountyPage() {
   const { getProfileEvent } = useProfileStore();
   const { cachedBountyEvent, setCachedBountyEvent, getBountyApplicants, getApplicantEvent, getZapReceiptEvent } = useBountyEventStore();
   const { getUserPublicKey, userPublicKey } = useUserProfileStore();
+  const { readRelays, updateReadRelayStatus, sortReadRelays, setAllReadRelaysInactive } = useReadRelayStore();
 
   const router = useRouter();
 
@@ -90,7 +92,7 @@ export default function BountyPage() {
         }
       }
     }
-  }, [naddr, cachedBountyEvent]);
+  }, [naddr, cachedBountyEvent, relayUrl]);
 
   useEffect(() => {
     if (!cachedBountyEvent) {

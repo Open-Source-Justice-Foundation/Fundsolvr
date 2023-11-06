@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { Event, Filter, generatePrivateKey, getEventHash, getPublicKey, getSignature, nip19 } from "nostr-tools";
 
+import { usePostRelayStore } from "../stores/postRelayStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 import type { Profile } from "../types";
@@ -19,6 +20,7 @@ export default function LoginPage() {
   const [pubKey, setPubKey] = useState("");
   const [userProvidedPrivateKey, setUserProvidedPrivateKey] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const { getActivePostRelayURLs } = usePostRelayStore();
 
   enum SignupStep {
     Start,
@@ -48,7 +50,7 @@ export default function LoginPage() {
     const profile: Profile = {
       relay: relayUrl || "",
       publicKey: pubKey,
-      name: name || nip19.npubEncode(pubKey),
+      name: name || "",
       about: "",
       picture: "",
       nip05: "",
@@ -77,7 +79,7 @@ export default function LoginPage() {
       router.push("/");
     };
 
-    publish([relayUrl], event, onSeen);
+    publish(getActivePostRelayURLs(), event, onSeen);
   };
 
   const handleCancel = (e: any) => {

@@ -3,11 +3,12 @@
 import { useEffect, useState } from "react";
 
 import { UserCircleIcon } from "@heroicons/react/24/solid";
-import { type Event, Filter, nip19, getSignature } from "nostr-tools";
+import { type Event, Filter, getEventHash, getSignature, nip19 } from "nostr-tools";
 import { Octokit } from "octokit";
 
 import { getITagValues, shortenHash, verifyGithub } from "../lib/utils";
 import Avatar from "../messages/components/Avatar";
+import { usePostRelayStore } from "../stores/postRelayStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 import { Profile } from "../types";
@@ -20,6 +21,7 @@ export default function Settings() {
   const [gistId, setGistId] = useState("");
   const [githubUser, setGithubUser] = useState("");
   const [githubVerified, setGithubVerified] = useState(false);
+  const { getActivePostRelayURLs } = usePostRelayStore();
 
   const [imageURL, setImageUrl] = useState("");
   const [username, setUsername] = useState("");
@@ -87,7 +89,7 @@ export default function Settings() {
     about: string;
   }
 
-  const onSeen = () => { };
+  const onSeen = () => {};
 
   const addGithubProfile = async (username: String) => {
     const userProfileEvent = getUserEvent(relayUrl);
@@ -132,6 +134,9 @@ export default function Settings() {
   }
 
   const getUserMetadata = async () => {
+    if (!getUserEvent(relayUrl)) {
+      return;
+    }
     let userProfileEvent: Event;
     const onEvent = (event: Event) => {
       userProfileEvent = event;
@@ -147,30 +152,23 @@ export default function Settings() {
 
   const setMetadata = (metadata: Metadata) => {
     const { name, picture, about } = metadata;
-    if (picture) {
-      setImageUrl(picture);
-    }
-    if (about) {
-      setAbout(about);
-    }
-    if (name) {
-      setUsername(name);
-    }
+    setImageUrl(picture || "");
+    setAbout(about || "");
+    setUsername(name || "");
   };
 
   const saveMetadata = async (e: React.MouseEvent) => {
     e.preventDefault();
-    const currentContent = JSON.parse(currentUserEvent.content);
-    const updatedUserProfile = JSON.stringify({ ...currentContent, name: username, picture: imageURL, about });
-
-    let identitiyTags: string[][] | null | undefined = [];
+    const currentContent = currentUserEvent?.content ? JSON.parse(currentUserEvent?.content) : {};
+    const updatedUserProfile = currentContent ? JSON.stringify({ ...currentContent, name: username, picture: imageURL, about }) : "";
+    let identityTags: string[][] | null | undefined = [];
 
     // check if gistId is set
     if (gistId) {
-      identitiyTags = await connectGithub();
+      identityTags = await connectGithub();
       // if it is, check if the public key in the gist matches the user public key
-      if (identitiyTags) {
-        currentUserEvent.tags = currentUserEvent.tags.concat(identitiyTags || []);
+      if (identityTags) {
+        currentUserEvent.tags = currentUserEvent.tags.concat(identityTags || []);
         // }
       }
       // if it doesn't, show an error
@@ -191,16 +189,17 @@ export default function Settings() {
     const profile: Profile = {
       relay: relayUrl || "",
       publicKey: getUserPublicKey() || "",
-      name: username || shortenHash(getUserPublicKey()) || "",
+      name: username || "",
       about: about || "",
       picture: imageURL || "",
-      nip05: currentContent.nip05 || "",
-      website: currentContent.website || "",
-      lud06: currentContent.lud06 || "",
-      lud16: currentContent.lud16 || "",
-      banner: currentContent.banner || "",
+      nip05: currentContent?.nip05 || "",
+      website: currentContent?.website || "",
+      lud06: currentContent?.lud06 || "",
+      lud16: currentContent?.lud16 || "",
+      banner: currentContent?.banner || "",
     };
 
+    event.id = getEventHash(event);
 
     if (userPrivateKey) {
       event.sig = getSignature(event, userPrivateKey);
@@ -208,7 +207,7 @@ export default function Settings() {
       event = await window.nostr.signEvent(event);
     }
 
-    publish([relayUrl], event, onSeen);
+    publish(getActivePostRelayURLs(), event, onSeen);
     setUserProfile(relayUrl, profile);
     setUserEvent(relayUrl, event);
   };
@@ -233,7 +232,7 @@ export default function Settings() {
     const profile: Profile = {
       relay: relayUrl || "",
       publicKey: getUserPublicKey() || "",
-      name: username || shortenHash(getUserPublicKey()) || "",
+      name: username || "",
       about: about || "",
       picture: imageURL || "",
       nip05: currentContent.nip05 || "",
@@ -242,7 +241,6 @@ export default function Settings() {
       lud16: currentContent.lud16 || "",
       banner: currentContent.banner || "",
     };
-
 
     // remove github tag from event
     event.tags = filterOutGithub(event.tags);
@@ -253,7 +251,7 @@ export default function Settings() {
       event = await window.nostr.signEvent(event);
     }
 
-    publish([relayUrl], event, onSeen);
+    publish(getActivePostRelayURLs(), event, onSeen);
     setUserProfile(relayUrl, profile);
     setGithubVerified(false);
     setGithubUser("");
@@ -265,13 +263,21 @@ export default function Settings() {
     const userProfile = getUserProfile(relayUrl);
     if (userProfile) {
       // setGithub(userProfile.github);
+      setCurrentUserEvent(getUserEvent(relayUrl)!);
       setMetadata({
         name: userProfile.name,
         picture: userProfile.picture,
         about: userProfile.about,
       });
+    } else {
+      setCurrentUserEvent({} as Event);
+      setMetadata({
+        name: "",
+        picture: "",
+        about: "",
+      });
     }
-    getUserMetadata();
+    // getUserMetadata();
     verifyGithubForUserOnLogin();
   }, [relayUrl, userPublicKey, userEvent]);
 
