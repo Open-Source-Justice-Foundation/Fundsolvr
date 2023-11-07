@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // TODO: retrieve profile
 import { retrieveProfiles, sortByCreatedAt } from "@/app/lib/nostr";
@@ -14,9 +14,32 @@ import { Event, Filter, Relay, nip04 } from "nostr-tools";
 
 export default function ChatWindow() {
   const { cachedBountyEvent, messageEvents, setMessageEvents, getMessageEvents } = useBountyEventStore();
-  const { relayUrl, subscribe } = useRelayStore();
+  const { relayUrl } = useRelayStore();
   const { userPublicKey, userPrivateKey } = useUserProfileStore();
   const { getProfileEvent } = useProfileStore();
+  const [participantPublicKey, setParticipantPublicKey] = useState("");
+
+  const getChatParticipantProfile = () => {
+    if (!cachedBountyEvent) {
+      return;
+    }
+
+    if (userPublicKey === cachedBountyEvent.pubkey) {
+      retrieveProfiles([getTagValues("p", cachedBountyEvent.tags)]);
+      setParticipantPublicKey(getTagValues("p", cachedBountyEvent.tags));
+    }
+
+    if (userPublicKey === getTagValues("p", cachedBountyEvent.tags)) {
+      retrieveProfiles([cachedBountyEvent.pubkey]);
+      setParticipantPublicKey(cachedBountyEvent.pubkey);
+    }
+  };
+
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+  };
 
   async function decryptMessage(event: Event) {
     let decryptPublicKey = "";
@@ -38,7 +61,7 @@ export default function ChatWindow() {
     }
   }
 
-  async function subscribeTest(relays: string[], filter: any, onEvent: (event: Event) => void, onEOSE: () => void) {
+  async function subscribeKeepAlive(relays: string[], filter: any, onEvent: (event: Event) => void, onEOSE: () => void) {
     for (const url of relays) {
       const relay = await useRelayStore.getState().connect(url);
 
@@ -92,7 +115,6 @@ export default function ChatWindow() {
     return unencryptedMessages;
   };
 
-
   function isIdPresent(events: Event[], idToCheck: string): boolean {
     return events.some((event) => event.id === idToCheck);
   }
@@ -145,7 +167,6 @@ export default function ChatWindow() {
           if (!isIdPresent(getMessageEvents(relayUrl, cachedBountyEvent.id), event.id) || !isIdPresent(events, event.id)) {
             setMessageEvents(relayUrl, cachedBountyEvent.id, sortByCreatedAt([...getMessageEvents(relayUrl, cachedBountyEvent.id), event]));
           }
-
         }
       } else {
         console.log("message already present");
@@ -158,59 +179,39 @@ export default function ChatWindow() {
 
     console.log("subscribinG");
 
-    subscribeTest([relayUrl], messageFilter, onEvent, onEOSE);
+    subscribeKeepAlive([relayUrl], messageFilter, onEvent, onEOSE);
   };
 
   useEffect(() => {
+    getChatParticipantProfile();
     listenForMessages();
   }, [relayUrl, userPublicKey]);
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [messageEvents]);
 
   return (
-    <div className="w-full rounded-lg border border-gray-700">
-      {cachedBountyEvent && userPublicKey === cachedBountyEvent.pubkey && (
-        <div className="mb-8 flex w-full gap-x-4 border-b border-gray-600 bg-gray-800 py-6 pl-4">
-          {cachedBountyEvent && cachedBountyEvent.tags && (
+    <div className="w-full rounded-lg border border-gray-400 dark:border-gray-700">
+        <div className="mb-8 flex w-full gap-x-4 border-b border-gray-400 rounded-t-lg dark:border-gray-700 bg-gray-200 dark:bg-gray-800 py-6 pl-4">
+          {cachedBountyEvent && participantPublicKey && (
             <>
               <Avatar
-                src={parseProfileContent(getProfileEvent(relayUrl, getTagValues("p", cachedBountyEvent.tags))?.content).picture}
+                src={parseProfileContent(getProfileEvent(relayUrl, participantPublicKey)?.content).picture}
                 className="h-12 w-12 ring-1 ring-white dark:ring-gray-700"
                 seed={getTagValues("p", cachedBountyEvent.tags)}
               />
               <div className="flex flex-col">
-                <span className="text-gray-200">
-                  {parseProfileContent(getProfileEvent(relayUrl, getTagValues("p", cachedBountyEvent.tags))?.content).name}
+                <span className="text-gray-800 dark:text-gray-200">
+                  {parseProfileContent(getProfileEvent(relayUrl, participantPublicKey)?.content).name}
                 </span>
-                <span className="text-gray-200">
-                  {parseProfileContent(getProfileEvent(relayUrl, getTagValues("p", cachedBountyEvent.tags))?.content).about}
+                <span className="text-gray-800 dark:text-gray-200">
+                  {parseProfileContent(getProfileEvent(relayUrl, participantPublicKey)?.content).about}
                 </span>
               </div>
             </>
           )}
         </div>
-      )}
-      {cachedBountyEvent && userPublicKey !== cachedBountyEvent.pubkey && (
-        <div className="mb-4 flex w-full gap-x-4 border-b border-gray-600 bg-gray-800 py-6 pl-4">
-          {cachedBountyEvent && cachedBountyEvent.tags && (
-            <>
-              <Avatar
-                src={parseProfileContent(getProfileEvent(relayUrl, cachedBountyEvent.pubkey).content).picture}
-                className="h-12 w-12 ring-1 ring-white dark:ring-gray-700"
-                seed={getTagValues("p", cachedBountyEvent.tags)}
-              />
-              <div className="flex flex-col">
-                <span className="text-gray-200">
-                  {parseProfileContent(getProfileEvent(relayUrl, cachedBountyEvent.pubkey).content).name}
-                </span>
-                <span className="text-gray-200">
-                  {parseProfileContent(getProfileEvent(relayUrl, cachedBountyEvent.pubkey).content).about}
-                </span>
-              </div>
-            </>
-          )}
-        </div>
-      )}
-
       <div className="flex max-h-96 min-h-[16rem] flex-col overflow-y-auto  px-4 py-4">
         {cachedBountyEvent &&
           messageEvents[relayUrl] &&
@@ -220,13 +221,13 @@ export default function ChatWindow() {
             if (userPublicKey === message.pubkey) {
               return (
                 <div key={message.id} className="mb-4 flex w-full flex-col items-end justify-center">
-                  <div className="flex items-center justify-center rounded-bl-3xl rounded-br-sm rounded-tl-3xl rounded-tr-3xl bg-indigo-600 px-3 py-2">
+                  <div className="flex items-center justify-center rounded-bl-3xl rounded-br-sm rounded-tl-3xl rounded-tr-3xl bg-indigo-500 dark:bg-indigo-600 px-3 py-2">
                     <div className="flex flex-col">
                       <span className="text-sm font-medium text-white">{message.content}</span>
                     </div>
                   </div>
                   {/* <span className="text-gray-100">{message.id}</span> */}
-                  <span className="text-xs text-gray-500">
+                  <span className="mt-1.5 text-xs text-gray-500">
                     {new Date(message.created_at * 1000).toLocaleDateString("en-Us", {
                       year: "numeric",
                       month: "short",
@@ -240,13 +241,13 @@ export default function ChatWindow() {
             } else {
               return (
                 <div key={message.id} className="mb-4 flex w-full flex-col items-start justify-center">
-                  <div className="flex items-center justify-center rounded-bl-sm rounded-br-3xl rounded-tl-3xl rounded-tr-3xl bg-gray-600 px-3 py-2">
+                  <div className="flex items-center justify-center rounded-bl-sm rounded-br-3xl rounded-tl-3xl rounded-tr-3xl bg-gray-200 dark:bg-gray-600 px-3 py-2">
                     <div className="flex flex-col">
-                      <span className="text-sm font-medium text-white">{message.content}</span>
+                      <span className="text-sm font-medium text-gray-800 dark:text-white">{message.content}</span>
                     </div>
                   </div>
                   {/* <span className="text-gray-100">{message.id || "no id"}</span> */}
-                  <span className="text-xs text-gray-500">
+                  <span className="mt-1.5 text-xs text-gray-500">
                     {new Date(message.created_at * 1000).toLocaleDateString("en-Us", {
                       year: "numeric",
                       month: "short",
@@ -264,6 +265,7 @@ export default function ChatWindow() {
             <span className="rounded-lg bg-gray-700/30 p-2">This is the beginning of your discussion</span>
           </div>
         )}
+        <div ref={messagesEndRef} />
       </div>
     </div>
   );
