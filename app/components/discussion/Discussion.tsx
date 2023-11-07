@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { useProfileStore } from "@/app/stores/profileStore";
+import { cacheMessageEvents } from "@/app/lib/nostr";
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { type Event, getEventHash, getSignature, nip04 } from "nostr-tools";
 
@@ -18,12 +18,11 @@ export default function Discussion() {
   const { userPublicKey, userPrivateKey } = useUserProfileStore();
   const [message, setMessage] = useState("");
 
-
   const handleMessageChange = (e: any) => {
     setMessage(e.target.value);
   };
 
-  const handleApply = async (e: any) => {
+  const handleSend = async (e: any) => {
     if (!cachedBountyEvent) {
       alert("No bounty event cached");
       return;
@@ -68,7 +67,7 @@ export default function Discussion() {
       created_at: Math.floor(Date.now() / 1000),
       tags: [
         ["p", recipientPublicKey],
-        ["e", cachedBountyEvent.id],
+        ["a", `30050:${cachedBountyEvent.pubkey}:${getTagValues("d", cachedBountyEvent.tags)}`],
       ],
       content: encryptedMessage,
       pubkey: userPublicKey,
@@ -82,10 +81,8 @@ export default function Discussion() {
       event = await window.nostr.signEvent(event);
     }
 
-    console.log("message event", event);
-
     function onSeen() {
-      // add message to cache
+      setMessage("");
     }
 
     publish([relayUrl], event, onSeen);
@@ -93,7 +90,7 @@ export default function Discussion() {
 
   return (
     <div className="w-full">
-      <div className="flex w-full flex-col items-center overflow-y-auto">
+      <div className="flex w-full flex-col items-center">
         <ChatWindow />
         <div className="mt-4 flex w-full gap-x-4">
           <input
@@ -107,7 +104,7 @@ export default function Discussion() {
             <button
               type="button"
               className="justify-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              onClick={handleApply}
+              onClick={handleSend}
             >
               <PaperAirplaneIcon className="h-5 w-5" />
             </button>

@@ -77,9 +77,9 @@ function createUrlSlug(title: string): string {
     .replace(/\s+/g, "-");
 }
 
-export function createUniqueUrl(title: string): string {
+export function createUniqueUrl(title: string, pubkey: string): string {
   const titleSlug = createUrlSlug(title);
-  const uniqueHash = generateUniqueHash(title, 12);
+  const uniqueHash = generateUniqueHash(title + pubkey, 12);
   return `${titleSlug}-${uniqueHash}`;
 }
 
