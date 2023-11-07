@@ -13,7 +13,7 @@ export interface RelaysState {
   connect: (newRelayUrl: string) => Promise<any>;
   connectedRelays: Set<Relay>;
   setConnectedRelays: (relays: Set<Relay>) => void;
-  publish: (relays: string[], event: Event, onSeen: () => void) => void;
+  publish: (relays: string[], event: Event, onSeen: (event: Event) => void) => void;
   subscribe: (relays: string[], filter: any, onEvent: (event: Event) => void, onEOSE: () => void) => void;
   subscribeKeepAlive: (relays: string[], filter: any, onEvent: (event: Event) => void, onEOSE: () => void) => void;
 }
@@ -93,7 +93,7 @@ export const useRelayStore = create<RelaysState>((set) => ({
 
   setConnectedRelays: (relays) => set({ connectedRelays: relays }),
 
-  publish: async (relays: string[], event: any, onSeen: () => void) => {
+  publish: async (relays: string[], event: any, onSeen: (event: Event) => void) => {
     console.log("publishing to relays:", relays);
     for (const url of relays) {
       const relay = await useRelayStore.getState().connect(url);
@@ -107,7 +107,7 @@ export const useRelayStore = create<RelaysState>((set) => ({
       });
 
       if (publishedEvent) {
-        onSeen();
+        onSeen(publishedEvent);
         console.log("info", `✅ nostr (${url}): Published event!`);
       }
     }
