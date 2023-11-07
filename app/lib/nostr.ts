@@ -1,5 +1,6 @@
 import Fuse from "fuse.js";
-import { Event, Filter, Kind, nip04 } from "nostr-tools";
+
+import { Event, Filter, Kind, nip04, EventTemplate } from "nostr-tools";
 
 import { useBountyEventStore } from "../stores/eventStore";
 import { useProfileStore } from "../stores/profileStore";
@@ -27,7 +28,7 @@ export function retrieveProfiles(pubkey: string[]) {
     setProfileEvent(relayUrl, event.pubkey, event);
   };
 
-  const onEOSE = () => { };
+  const onEOSE = () => {};
 
   const userFilter: Filter = {
     kinds: [0],
@@ -53,7 +54,7 @@ export function getApplicants(dValues: Set<string>) {
     }
   };
 
-  const onApplicantEOSE = () => { };
+  const onApplicantEOSE = () => {};
 
   subscribe([relayUrl], applicantFilter, onApplicantEvent, onApplicantEOSE);
 }
@@ -80,6 +81,45 @@ export async function getZapEndpoint(metadata: Event<Kind.Metadata>): Promise<nu
   }
 
   return null;
+}
+
+export function makeZapRequest({
+  profile,
+  event,
+  amount,
+  relays,
+  comment = "",
+  tags,
+}: {
+  profile: string;
+  event: string | null;
+  amount: number;
+  comment: string;
+  relays: string[];
+  tags?: string[][];
+}): EventTemplate<Kind.ZapRequest> {
+  if (!amount) throw new Error("amount not given");
+  if (!profile) throw new Error("profile not given");
+
+  let zr: EventTemplate<Kind.ZapRequest> = {
+    kind: 9734,
+    created_at: Math.round(Date.now() / 1000),
+    content: comment,
+    tags:
+      Array.isArray(tags) && tags.length > 0
+        ? tags
+        : [
+            ["p", profile],
+            ["amount", amount.toString()],
+            ["relays", ...relays],
+          ],
+  };
+
+  if (event && (!Array.isArray(tags) || !tags.length)) {
+    zr.tags.push(["e", event]);
+  }
+
+  return zr;
 }
 
 export const fetchInvoice = async (zapEndpoint: any, zapEvent: any) => {
@@ -118,7 +158,7 @@ export const getZapRecieptFromRelay = async (cachedBountyEvent: Event) => {
       }
     };
 
-    const onEOSE = () => { };
+    const onEOSE = () => {};
 
     subscribe([relayUrl], postedBountyFilter, onEvent, onEOSE);
   }
