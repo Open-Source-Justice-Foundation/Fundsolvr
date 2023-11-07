@@ -1,15 +1,27 @@
 import Fuse from "fuse.js";
-import { Event, EventTemplate, Filter, Kind } from "nostr-tools";
+
+import { Event, Filter, Kind, nip04, EventTemplate } from "nostr-tools";
 
 import { useBountyEventStore } from "../stores/eventStore";
 import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
+import { useUserProfileStore } from "../stores/userProfileStore";
 import { getTagValues } from "./utils";
 
-const { getApplicantEvent, setApplicantEvent, setZapReceiptEvent, taggedBountyEvents, setTaggedBountyEvents } =
-  useBountyEventStore.getState();
+const {
+  getApplicantEvent,
+  setApplicantEvent,
+  setZapReceiptEvent,
+  taggedBountyEvents,
+  setTaggedBountyEvents,
+  cachedBountyEvent,
+  messageEvents,
+  setMessageEvents,
+  getMessageEvents,
+} = useBountyEventStore.getState();
 const { setProfileEvent } = useProfileStore.getState();
 const { relayUrl, subscribe } = useRelayStore.getState();
+const { userPublicKey, userPrivateKey } = useUserProfileStore.getState();
 
 export function retrieveProfiles(pubkey: string[]) {
   const onEvent = (event: Event) => {
@@ -221,3 +233,7 @@ export const getTaggedBounties = async (tag: string, loading: any, setLoading: a
 
   subscribe([relayUrl], taggedBountyFilter, onEvent, onEOSE);
 };
+
+export function sortByCreatedAt(events: Event[]): Event[] {
+  return events.sort((a, b) => a.created_at - b.created_at);
+}

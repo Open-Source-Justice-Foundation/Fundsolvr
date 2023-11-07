@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { UserCircleIcon } from "@heroicons/react/24/solid";
-import { type Event, Filter, nip19, getSignature } from "nostr-tools";
+import { type Event, Filter, getSignature, nip19, getEventHash } from "nostr-tools";
 import { Octokit } from "octokit";
 
 import { getITagValues, shortenHash, verifyGithub } from "../lib/utils";
@@ -160,8 +160,29 @@ export default function Settings() {
 
   const saveMetadata = async (e: React.MouseEvent) => {
     e.preventDefault();
-    const currentContent = JSON.parse(currentUserEvent.content);
-    const updatedUserProfile = JSON.stringify({ ...currentContent, name: username, picture: imageURL, about });
+
+    // let currentContent = {};
+    let updatedUserProfile = "";
+
+    if (currentUserEvent.content === "") {
+      updatedUserProfile = JSON.stringify({ name: username, picture: imageURL, about });
+    } else {
+      const currentContent = JSON.parse(currentUserEvent.content);
+      updatedUserProfile = JSON.stringify({ ...currentContent, name: username, picture: imageURL, about });
+
+      // const profile: Profile = {
+      //   relay: relayUrl || "",
+      //   publicKey: getUserPublicKey() || "",
+      //   name: username || shortenHash(getUserPublicKey()) || "",
+      //   about: about || "",
+      //   picture: imageURL || "",
+      //   nip05: currentContent.nip05 || "",
+      //   website: currentContent.website || "",
+      //   lud06: currentContent.lud06 || "",
+      //   lud16: currentContent.lud16 || "",
+      //   banner: currentContent.banner || "",
+      // };
+    }
 
     let identitiyTags: string[][] | null | undefined = [];
 
@@ -188,19 +209,7 @@ export default function Settings() {
       pubkey: getUserPublicKey(),
     };
 
-    const profile: Profile = {
-      relay: relayUrl || "",
-      publicKey: getUserPublicKey() || "",
-      name: username || shortenHash(getUserPublicKey()) || "",
-      about: about || "",
-      picture: imageURL || "",
-      nip05: currentContent.nip05 || "",
-      website: currentContent.website || "",
-      lud06: currentContent.lud06 || "",
-      lud16: currentContent.lud16 || "",
-      banner: currentContent.banner || "",
-    };
-
+    event.id = getEventHash(event);
 
     if (userPrivateKey) {
       event.sig = getSignature(event, userPrivateKey);
@@ -208,8 +217,10 @@ export default function Settings() {
       event = await window.nostr.signEvent(event);
     }
 
+    console.log("event", event);
+
     publish([relayUrl], event, onSeen);
-    setUserProfile(relayUrl, profile);
+    // setUserProfile(relayUrl, profile);
     setUserEvent(relayUrl, event);
   };
 
@@ -242,7 +253,6 @@ export default function Settings() {
       lud16: currentContent.lud16 || "",
       banner: currentContent.banner || "",
     };
-
 
     // remove github tag from event
     event.tags = filterOutGithub(event.tags);

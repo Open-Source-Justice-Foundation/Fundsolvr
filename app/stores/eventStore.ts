@@ -31,6 +31,11 @@ interface BountyEventState {
   deleteTaggedBountyEvent: (key: string, tag: string, id: string) => void;
   updateTaggedBountyEvent: (key: string, tag: string, id: string, bountyEvent: Event) => void;
 
+  messageEvents: Record<string, Record<string, Array<Event>>>;
+  setMessageEvents: (relayUrl: string, contact: string, messageEvents: Array<Event>) => void;
+  getMessageEvents: (relayUrl: string, contact: string) => Array<Event>;
+  deleteMessageEvent: (relayUrl: string, contact: string, id: string) => void;
+
   tag: string;
   setTag: (tag: string) => void;
   getTag: () => string;
@@ -134,6 +139,26 @@ export const useBountyEventStore = create<BountyEventState>()(
         tag: "All",
         setTag: (tag) => set({ tag }),
         getTag: () => get().tag,
+
+        messageEvents: {},
+        setMessageEvents: (relayUrl, contact, messageEvents) =>
+          set((prev) => ({
+            messageEvents: {
+              ...prev.messageEvents,
+              [relayUrl]: { ...(prev.messageEvents[relayUrl] || {}), [contact]: messageEvents },
+            },
+          })),
+        getMessageEvents: (relayUrl: string, contact: string) => get().messageEvents[relayUrl]?.[contact] ?? [],
+        deleteMessageEvent: (relayUrl: string, contact: string, id: string) =>
+          set((prev) => ({
+            messageEvents: {
+              ...prev.messageEvents,
+              [relayUrl]: {
+                ...prev.messageEvents[relayUrl],
+                [contact]: prev.messageEvents[relayUrl]?.[contact]?.filter((messageEvent) => messageEvent.id !== id) || [],
+              },
+            },
+          })),
 
         search: "",
         setSearch: (search) => set({ search }),
