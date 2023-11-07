@@ -198,7 +198,6 @@ export default function Settings() {
       lud16: currentContent?.lud16 || "",
       banner: currentContent?.banner || "",
     };
-
     event.id = getEventHash(event);
 
     if (userPrivateKey) {

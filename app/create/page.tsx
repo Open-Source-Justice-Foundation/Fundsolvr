@@ -169,7 +169,7 @@ export default function CreateBounty() {
       return;
     }
 
-    const uniqueUrl = createUniqueUrl(`${title}${userPublicKey}`);
+    const uniqueUrl = createUniqueUrl(title, userPublicKey);
 
     const initialTags: Array<any> = [];
 

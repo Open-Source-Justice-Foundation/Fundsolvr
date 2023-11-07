@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 
 import Applicant from "@/app/components/Applicant";
 import Applybutton from "@/app/components/Applybutton";
+import Discussion from "@/app/components/discussion/Discussion";
 import { getApplicants, getZapRecieptFromRelay, retrieveProfiles } from "@/app/lib/nostr";
 import { getBountyTags, getTagValues, parseProfileContent, shortenHash } from "@/app/lib/utils";
 import Avatar from "@/app/messages/components/Avatar";
@@ -20,6 +21,7 @@ import {
   ArrowLeftIcon,
   BookOpenIcon,
   ChatBubbleLeftRightIcon,
+  LockClosedIcon,
   PaperAirplaneIcon,
   PencilSquareIcon,
   UsersIcon,
@@ -197,7 +199,7 @@ export default function BountyPage() {
                       <Avatar
                         src={
                           parseProfileContent(
-                            getProfileEvent(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.content
+                            getProfileEvent(relayUrl, bountyEvent.pubkey)?.content
                           )?.picture
                         }
                         seed={bountyEvent.pubkey}
@@ -205,7 +207,7 @@ export default function BountyPage() {
                       />
                       <div className="truncate text-sm font-medium leading-6 text-gray-800 dark:text-white">
                         {parseProfileContent(
-                          getProfileEvent(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.content
+                          getProfileEvent(relayUrl, bountyEvent.pubkey)?.content
                         )?.name || shortenHash(nip19.npubEncode(bountyEvent.pubkey))}
                       </div>
                     </Link>
@@ -276,18 +278,27 @@ export default function BountyPage() {
                 <UsersIcon className="h-5 w-5" />
                 <h3>Applications ({Object.values(getBountyApplicants(relayUrl, getTagValues("d", bountyEvent.tags))).length})</h3>
               </div>
-              <div
-                onClick={() => setTab("discussion")}
-                className={classNames(
-                  tab === "discussion"
-                    ? "text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
-                    : "hover:text-gray-700 dark:hover:text-gray-200",
-                  "flex cursor-pointer select-none items-center gap-x-2 pl-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
-                )}
-              >
-                <ChatBubbleLeftRightIcon className="h-5 w-5" />
-                <h3 className="">Discussion</h3>
-              </div>
+              {cachedBountyEvent &&
+                getTagValues("s", cachedBountyEvent.tags) === "assigned" &&
+                ((userPublicKey && bountyEvent.pubkey === userPublicKey) || getTagValues("p", cachedBountyEvent.tags) === userPublicKey) ? (
+                <div
+                  onClick={() => setTab("discussion")}
+                  className={classNames(
+                    tab === "discussion"
+                      ? "text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
+                      : "hover:text-gray-700 dark:hover:text-gray-200",
+                    "flex cursor-pointer select-none items-center gap-x-2 pl-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
+                  )}
+                >
+                  <ChatBubbleLeftRightIcon className="h-5 w-5" />
+                  <h3 className="">Discussion</h3>
+                </div>
+              ) : (
+                <div className={"flex cursor-not-allowed select-none items-center gap-x-2 pl-2 dark:border-gray-700"}>
+                  <LockClosedIcon className="h-5 w-5" />
+                  <h3 className="">Discussion</h3>
+                </div>
+              )}
             </div>
           </div>
 
@@ -335,24 +346,10 @@ export default function BountyPage() {
             <div className="mt-6 flex flex-col">
               <h3 className="text-xl font-bold text-gray-800 dark:text-white">Discussion</h3>
               <div className="mt-4">
-                <style>
-                  {`
-                  :root {
-                    --nc-primary-color: ${colors.indigo[500]};
-                  }
-                  :root.${Theme.light} {
-                    --nc-text-color: ${colors.gray[900]};
-                  }
-                  :root.${Theme.dark} {
-                    --nc-background: ${colors.gray[800]};
-                    --nc-text-background: ${colors.gray[800]};
-                    --nc-text-color: ${colors.gray[100]};
-                    --nc-text-color: ${colors.gray[100]};
-                    --nc-text-color-dark: ${colors.white};
-                  }
-                `}
-                </style>
-                <NoComment owner={getUserPublicKey()} relays={[relayUrl]} customBase={naddrStr} />
+                {cachedBountyEvent &&
+                  getTagValues("s", cachedBountyEvent.tags) === "assigned" &&
+                  ((userPublicKey && bountyEvent.pubkey === userPublicKey) ||
+                    getTagValues("p", cachedBountyEvent.tags) === userPublicKey) && <Discussion />}
               </div>
               <div className="ml-auto mt-4">
                 <ZapPoll event={bountyEvent} />
