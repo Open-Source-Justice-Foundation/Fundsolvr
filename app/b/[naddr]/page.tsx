@@ -197,7 +197,7 @@ export default function BountyPage() {
                       <Avatar
                         src={
                           parseProfileContent(
-                            getProfileEvent(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.content
+                            getProfileEvent(relayUrl, bountyEvent.pubkey)?.content
                           )?.picture
                         }
                         seed={bountyEvent.pubkey}
@@ -205,7 +205,7 @@ export default function BountyPage() {
                       />
                       <div className="truncate text-sm font-medium leading-6 text-gray-800 dark:text-white">
                         {parseProfileContent(
-                          getProfileEvent(naddrPointer.relays ? naddrPointer?.relays[0] : relayUrl, bountyEvent.pubkey)?.content
+                          getProfileEvent(relayUrl, bountyEvent.pubkey)?.content
                         )?.name || shortenHash(nip19.npubEncode(bountyEvent.pubkey))}
                       </div>
                     </Link>
