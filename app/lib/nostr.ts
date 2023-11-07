@@ -237,15 +237,3 @@ export const getTaggedBounties = async (tag: string, loading: any, setLoading: a
 export function sortByCreatedAt(events: Event[]): Event[] {
   return events.sort((a, b) => a.created_at - b.created_at);
 }
-
-export function cacheMessageEvents(events: Event[], cachedMessageEvents: Event[]) {
-  if (cachedMessageEvents && cachedMessageEvents.length > 0) {
-    return sortByCreatedAt([...cachedMessageEvents, ...events]);
-  }
-
-  if (events && events.length > 0) {
-    return sortByCreatedAt(events);
-  }
-
-  return [];
-}

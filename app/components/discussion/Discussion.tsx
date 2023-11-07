@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 
-import { cacheMessageEvents } from "@/app/lib/nostr";
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { type Event, getEventHash, getSignature, nip04 } from "nostr-tools";
 

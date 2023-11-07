@@ -9,8 +9,8 @@ export enum BountyTab {
   }
 
 export const RELAYS = [
-  "wss://nos.lol",
   "wss://relay.damus.io",
+  "wss://nos.lol",
   "wss://relay.snort.social",
   "wss://nostr-pub.wellorder.net",
   "wss://nostr.wine/",
