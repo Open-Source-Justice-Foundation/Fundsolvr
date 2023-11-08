@@ -16,7 +16,7 @@ import NoBounties from "./NoBounties";
 
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
-  const { setBountyEvents, getBountyEvents, bountyEvents, bountyType, search, tag, taggedBountyEvents, getTag, getTaggedBountyEvents } = useBountyEventStore();
+  const { setBountyEvents, getBountyEvents, bountyEvents, bountyType, search, tag, taggedBountyEvents, getTaggedBountyEvents } = useBountyEventStore();
   const [loading, setLoading] = useState({ all: false });
 
   const getBounties = async () => {

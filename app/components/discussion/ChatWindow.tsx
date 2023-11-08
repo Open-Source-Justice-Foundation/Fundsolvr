@@ -60,7 +60,7 @@ export default function ChatWindow() {
     }
   }
 
-  async function subscribeKeepAlive(relays: string[], filter: any, onEvent: (event: Event) => void, onEOSE: () => void) {
+  async function subscribeKeepAlive(relays: string[], filter: Filter, onEvent: (event: Event) => void, onEOSE: () => void) {
     for (const url of relays) {
       const relay: Relay = await useRelayStore.getState().connect(url);
 
@@ -68,7 +68,7 @@ export default function ChatWindow() {
 
       let sub = relay.sub([filter]);
 
-      sub.on("event", (event: any) => {
+      sub.on("event", (event: Event) => {
         onEvent(event);
       });
 
@@ -151,7 +151,6 @@ export default function ChatWindow() {
     const onEvent = async (event: Event) => {
       if (!isIdPresent(getMessageEvents(relayUrl, cachedBountyEvent.id), event.id) || !isIdPresent(events, event.id)) {
         events.push(event);
-        console.log("NEW event", event);
         const decryptedMessage = await decryptMessage(event);
         if (decryptedMessage) {
           event.content = decryptedMessage;

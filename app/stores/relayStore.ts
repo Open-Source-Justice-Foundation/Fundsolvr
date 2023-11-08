@@ -13,9 +13,8 @@ export interface RelaysState {
   connect: (newRelayUrl: string) => Promise<any>;
   connectedRelays: Set<Relay>;
   setConnectedRelays: (relays: Set<Relay>) => void;
-  publish: (relays: string[], event: Event, onSeen: (event: Event) => void) => void;
-  subscribe: (relays: string[], filter: any, onEvent: (event: Event) => void, onEOSE: () => void) => void;
-  subscribeKeepAlive: (relays: string[], filter: any, onEvent: (event: Event) => void, onEOSE: () => void) => void;
+  publish: (relays: string[], event: Event<number>, onSeen: (event: Event<number>) => void) => void;
+  subscribe: (relays: string[], filter: Filter, onEvent: (event: Event<number>) => void, onEOSE: () => void) => void;
 }
 
 export const useRelayStore = create<RelaysState>((set) => ({
@@ -59,7 +58,7 @@ export const useRelayStore = create<RelaysState>((set) => ({
 
       relay.on("connect", () => {
         console.log("info", `✅ nostr (${newRelayUrl}): Connected!`);
-        const relayUrl = useRelayStore.getState().relayUrl;
+        const relayUrl: string = useRelayStore.getState().relayUrl;
         if (relayUrl === relay.url) {
           useRelayStore.setState({ activeRelay: relay });
           const connectedRelays = useRelayStore.getState().connectedRelays;
@@ -93,10 +92,10 @@ export const useRelayStore = create<RelaysState>((set) => ({
 
   setConnectedRelays: (relays) => set({ connectedRelays: relays }),
 
-  publish: async (relays: string[], event: any, onSeen: (event: Event) => void) => {
+  publish: async (relays: string[], event: Event<number>, onSeen: (event: Event<number>) => void) => {
     console.log("publishing to relays:", relays);
     for (const url of relays) {
-      const relay = await useRelayStore.getState().connect(url);
+      const relay: Relay = await useRelayStore.getState().connect(url);
 
       if (!relay) return;
 
@@ -106,7 +105,7 @@ export const useRelayStore = create<RelaysState>((set) => ({
         console.error("Error publishing in relayStore: ", e);
       }
 
-      let publishedEvent = await relay.get({
+      let publishedEvent: Event<number> | null = await relay.get({
         ids: [event.id],
       });
 
@@ -117,15 +116,15 @@ export const useRelayStore = create<RelaysState>((set) => ({
     }
   },
 
-  subscribe: async (relays: string[], filter: any, onEvent: (event: Event) => void, onEOSE: () => void) => {
+  subscribe: async (relays: string[], filter: Filter, onEvent: (event: Event<number>) => void, onEOSE: () => void) => {
     for (const url of relays) {
-      const relay = await useRelayStore.getState().connect(url);
+      const relay: Relay = await useRelayStore.getState().connect(url);
 
       if (!relay) return;
 
       let sub = relay.sub([filter]);
 
-      sub.on("event", (event: any) => {
+      sub.on("event", (event: Event<number>) => {
         onEvent(event);
       });
 
@@ -135,23 +134,4 @@ export const useRelayStore = create<RelaysState>((set) => ({
       });
     }
   },
-
-  subscribeKeepAlive: async (relays: string[], filter: any, onEvent: (event: Event) => void, onEOSE: () => void) => {
-    for (const url of relays) {
-      const relay = await useRelayStore.getState().connect(url);
-
-      if (!relay) return;
-
-      let sub = relay.sub([filter]);
-
-      sub.on("event", (event: any) => {
-        onEvent(event);
-      });
-
-      sub.on("eose", () => {
-        onEOSE();
-      });
-    }
-  },
-
 }));

@@ -3,23 +3,23 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { LightningIcon } from "@bitcoin-design/bitcoin-icons-react/filled";
 import { Dialog, Transition } from "@headlessui/react";
 import { CheckCircleIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { type Event, EventTemplate, Filter, UnsignedEvent, getEventHash, getSignature, nip57 } from "nostr-tools";
+import { type Event, EventTemplate, UnsignedEvent, getEventHash, getSignature, nip57 } from "nostr-tools";
 
 import { fetchInvoice, getZapEndpoint, getZapRecieptFromRelay } from "../lib/nostr";
-import { getTagValues, removeTag } from "../lib/utils";
+import { getTagValues } from "../lib/utils";
 import { useBountyEventStore } from "../stores/eventStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 
 interface Props {
-  applicantProfile: Event;
+  applicantProfile: Event<0>;
 }
 
 export default function CompleteButton({ applicantProfile }: Props) {
   let [isOpen, setIsOpen] = useState(false);
   const [isZapConfirmationOpen, setIsZapConfirmationOpen] = useState(false);
   const [isZapSuccess, setIsZapSuccess] = useState(true);
-  const [tipMessage, setZapMessage] = useState<string>();
+  const [zapMessage, setZapMessage] = useState<string>();
   const [paymentHash, setPaymentHash] = useState();
   const [tippedAmount, setZappedAmount] = useState<any>();
 
@@ -36,17 +36,16 @@ export default function CompleteButton({ applicantProfile }: Props) {
 
   const connectHandler = async () => {
     try {
-      // TODO: check if already enabled
       if (typeof window.webln !== "undefined") {
-        const enabled = await window.webln.enable();
+        await window.webln.enable();
         return true;
-        // TODO: maybe save this state later
       } else {
         alert("No WebLN provider detected");
         return false;
       }
     } catch (e) {
       console.log("Connect Error:", e);
+      return false;
     }
   };
 
@@ -57,7 +56,7 @@ export default function CompleteButton({ applicantProfile }: Props) {
   const handleSendZap = async (e: any) => {
     e.preventDefault();
 
-    const connected = await connectHandler();
+    const connected: boolean = await connectHandler();
 
     if (typeof window.webln !== "undefined" && connected) {
       if (!cachedBountyEvent) {
@@ -65,7 +64,7 @@ export default function CompleteButton({ applicantProfile }: Props) {
         return;
       }
 
-      const zapEndpoint = await getZapEndpoint(applicantProfile);
+      const zapEndpoint: string | null = await getZapEndpoint(applicantProfile);
 
       if (!zapEndpoint) {
         alert("No zap endpoint found");
@@ -80,15 +79,15 @@ export default function CompleteButton({ applicantProfile }: Props) {
         comment: "bounty complete",
       };
 
-      const zapEventTemplate: EventTemplate = nip57.makeZapRequest(zapArgs);
-      const unsignedZapEvent: UnsignedEvent = {
+      const zapEventTemplate: EventTemplate<9734> = nip57.makeZapRequest(zapArgs);
+      const unsignedZapEvent: UnsignedEvent<9734> = {
         ...zapEventTemplate,
         pubkey: userPublicKey,
       };
 
       const zapId = getEventHash(unsignedZapEvent);
 
-      let zapEvent: Event = {
+      let zapEvent: Event<9734> = {
         ...unsignedZapEvent,
         id: zapId,
         sig: "",
@@ -100,17 +99,11 @@ export default function CompleteButton({ applicantProfile }: Props) {
         zapEvent = await window.nostr.signEvent({ ...unsignedZapEvent, id: zapId });
       }
 
-      console.log("zapEvent", zapEvent);
-
-      const invoice = await fetchInvoice(zapEndpoint, zapEvent);
-
-      console.log("invoice", invoice);
+      const invoice: string = await fetchInvoice(zapEndpoint, zapEvent);
 
       try {
-        const result = await webln.sendPayment(invoice);
-        console.log("Zap Result:", result);
-
-        // TODO: get this from th invoice in the future
+        const result: SendPaymentResponse = await webln.sendPayment(invoice);
+        // TODO: get this from the invoice in the future
         setZappedAmount(getTagValues("reward", cachedBountyEvent.tags));
         // @ts-ignore
         setPaymentHash(result.paymentHash);

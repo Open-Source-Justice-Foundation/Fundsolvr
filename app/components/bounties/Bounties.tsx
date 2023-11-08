@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { useReadRelayStore } from "@/app/stores/readRelayStore";
 import PlusIcon from "@heroicons/react/20/solid/PlusIcon";
 
 import { BountyTab } from "../../lib/constants";

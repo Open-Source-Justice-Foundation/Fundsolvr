@@ -1,11 +1,10 @@
 import Fuse from "fuse.js";
 
-import { Event, Filter, Kind, nip04, EventTemplate } from "nostr-tools";
+import { Event, Filter, EventTemplate } from "nostr-tools";
 
 import { useBountyEventStore } from "../stores/eventStore";
 import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
-import { useUserProfileStore } from "../stores/userProfileStore";
 import { getTagValues } from "./utils";
 
 const {
@@ -14,14 +13,9 @@ const {
   setZapReceiptEvent,
   taggedBountyEvents,
   setTaggedBountyEvents,
-  cachedBountyEvent,
-  messageEvents,
-  setMessageEvents,
-  getMessageEvents,
 } = useBountyEventStore.getState();
 const { setProfileEvent } = useProfileStore.getState();
 const { relayUrl, subscribe } = useRelayStore.getState();
-const { userPublicKey, userPrivateKey } = useUserProfileStore.getState();
 
 export function retrieveProfiles(pubkey: string[]) {
   const onEvent = (event: Event) => {
@@ -45,7 +39,7 @@ export function getApplicants(dValues: Set<string>) {
     limit: 1000,
   };
 
-  const onApplicantEvent = (event: Event) => {
+  const onApplicantEvent = (event: Event<8050>) => {
     const dValue = getTagValues("d", event.tags);
 
     const cachedApplicationEvent = getApplicantEvent(relayUrl, dValue, event.pubkey);
@@ -59,7 +53,7 @@ export function getApplicants(dValues: Set<string>) {
   subscribe([relayUrl], applicantFilter, onApplicantEvent, onApplicantEOSE);
 }
 
-export async function getZapEndpoint(metadata: Event<Kind.Metadata>): Promise<null | string> {
+export async function getZapEndpoint(metadata: Event<0>): Promise<null | string> {
   try {
     let lnurl: string = "";
     let { lud16 } = JSON.parse(metadata.content);
@@ -97,11 +91,11 @@ export function makeZapRequest({
   comment: string;
   relays: string[];
   tags?: string[][];
-}): EventTemplate<Kind.ZapRequest> {
+}): EventTemplate<9734> {
   if (!amount) throw new Error("amount not given");
   if (!profile) throw new Error("profile not given");
 
-  let zr: EventTemplate<Kind.ZapRequest> = {
+  let zr: EventTemplate<9734> = {
     kind: 9734,
     created_at: Math.round(Date.now() / 1000),
     content: comment,
@@ -122,24 +116,23 @@ export function makeZapRequest({
   return zr;
 }
 
-export const fetchInvoice = async (zapEndpoint: any, zapEvent: any) => {
-  const comment = zapEvent.content;
-  const amount = getTagValues("amount", zapEvent.tags);
+export const fetchInvoice = async (zapEndpoint: string, zapRequestEvent: Event<9734>): Promise<string> => {
+  const comment: string = zapRequestEvent.content;
+  const amount: string = getTagValues("amount", zapRequestEvent.tags);
 
-  let url = `${zapEndpoint}?amount=${amount}&nostr=${encodeURIComponent(JSON.stringify(zapEvent))}`;
+  let url: string = `${zapEndpoint}?amount=${amount}&nostr=${encodeURIComponent(JSON.stringify(zapRequestEvent))}`;
 
   if (comment) {
     url = `${url}&comment=${encodeURIComponent(comment)}`;
   }
 
-  const res = await fetch(url);
+  const res: Response = await fetch(url);
   const { pr: invoice } = await res.json();
 
   return invoice;
 };
 
 export const getZapRecieptFromRelay = async (cachedBountyEvent: Event) => {
-  console.log("CALLING GET ZAP RECIEPT FROM RELAY");
   if (cachedBountyEvent) {
     const postedBountyFilter: Filter = {
       kinds: [9735],

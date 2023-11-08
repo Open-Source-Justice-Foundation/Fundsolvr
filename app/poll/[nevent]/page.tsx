@@ -11,14 +11,11 @@ import { getBountyTags, getTagValues, parseProfileContent, shortenHash } from "@
 import { useBountyEventStore } from "@/app/stores/eventStore";
 import { useProfileStore } from "@/app/stores/profileStore";
 import { useRelayStore } from "@/app/stores/relayStore";
-import { SatoshiV2Icon } from "@bitcoin-design/bitcoin-icons-react/filled";
-import { ArrowLeftIcon, PaperAirplaneIcon, UserPlusIcon } from "@heroicons/react/24/outline";
 import { bech32 } from "bech32";
-import { Event, EventTemplate, Filter, UnsignedEvent, getEventHash, nip19, nip57 } from "nostr-tools";
+import { Event, EventTemplate, UnsignedEvent, getEventHash, nip19, nip57 } from "nostr-tools";
 
 import { fetchInvoice, getZapEndpoint, makeZapRequest } from "../../lib/nostr";
 import { useUserProfileStore } from "../../stores/userProfileStore";
-import type { Profile } from "../../types";
 
 export default function PollPage() {
   const { subscribe, relayUrl } = useRelayStore();
@@ -26,11 +23,10 @@ export default function PollPage() {
   const nevent = pathname.split("/poll/")[1];
   const decodedNevent: any = nip19.decode(nevent).data;
   const [pollEvent, setPollEvent] = useState<Event>();
-  const { getUserProfile, getUserPublicKey } = useUserProfileStore();
-  const { getProfileEvent } = useProfileStore();
+  const { getUserPublicKey } = useUserProfileStore();
   const [authorProfile, setAuthorProfile] = useState<Event>();
   const [pollAuthorProfile, setPollAuthorProfile] = useState<PollAuthorProfile>();
-  const [recipientProfile, setRecipientProfile] = useState<Event>();
+  const [recipientProfile, setRecipientProfile] = useState<Event<0>>();
   const [structuredPollData, setStructuredPollData] = useState<StructuredPollData>();
   const [voteChoice, setVoteChoice] = useState("");
   const [zapPollResults, setZapPollResults] = useState<Event[]>([]);
@@ -170,7 +166,7 @@ export default function PollPage() {
       authors: [structuredPollData?.zapRecipients![0]],
     };
 
-    const onEvent = (event: Event) => {
+    const onEvent = (event: Event<0>) => {
       // const recipient = JSON.parse(event);
       console.log("r", event);
       setRecipientProfile(event);
