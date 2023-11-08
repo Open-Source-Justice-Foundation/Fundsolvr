@@ -6,6 +6,10 @@ const config: Config = {
   darkMode: "class",
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-geist-sans)"],
+        mono: ["var(--font-geist-mono)"],
+      },
       colors: {
         bitcoin: "#F6911D",
       },

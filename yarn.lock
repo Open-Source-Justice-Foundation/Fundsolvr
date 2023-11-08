@@ -2154,6 +2154,11 @@ fuse.js@^6.6.2:
   resolved "https://registry.npmjs.org/fuse.js/-/fuse.js-6.6.2.tgz"
   integrity sha512-cJaJkxCCxC8qIIcPBF9yGxY0W/tVZS3uEISDxhYIdtk8OL93pe+6Zj7LjCqVV4dzbqcriOZ+kQ/NE4RXZHsIGA==
 
+geist@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/geist/-/geist-1.0.1.tgz"
+  integrity sha512-OrEqHRZKXCzB5ezrlOayJvZhDnwyQUXHo+3diSQ1pqroQqfdHlRYSjeHbQDtg2BvuTmCsdku3L0zFOkspXUrcw==
+
 gensync@^1.0.0-beta.2:
   version "1.0.0-beta.2"
   resolved "https://registry.npmjs.org/gensync/-/gensync-1.0.0-beta.2.tgz"
@@ -2989,7 +2994,7 @@ next-client-cookies@^1.0.6:
   dependencies:
     js-cookie "^3.0.5"
 
-"next@>= 13.0.0", next@13.5.4:
+"next@^13.2 || ^14", "next@>= 13.0.0", next@13.5.4:
   version "13.5.4"
   resolved "https://registry.npmjs.org/next/-/next-13.5.4.tgz"
   integrity sha512-+93un5S779gho8y9ASQhb/bTkQF17FNQOtXLKAj3lsNgltEcF0C5PMLLncDmH+8X1EnJH1kbqAERa29nRXqhjA==

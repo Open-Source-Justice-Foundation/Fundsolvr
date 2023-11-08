@@ -17,6 +17,7 @@
     "@tailwindcss/forms": "^0.5.6",
     "crypto-js": "^4.2.0",
     "fuse.js": "^6.6.2",
+    "geist": "^1.0.1",
     "lnurl-pay": "^3.0.1",
     "markdown-it": "^13.0.2",
     "next": "13.5.4",

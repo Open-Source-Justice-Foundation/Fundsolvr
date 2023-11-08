@@ -8,6 +8,8 @@ import RelayMenu from "./components/menus/RelayMenu";
 import "./globals.css";
 import { ClientCookiesProvider } from "./provider";
 import { Theme } from "./types";
+import { GeistMono, GeistSans } from "geist/font";
+
 
 export const metadata: Metadata = {
   title: "resolvr",
@@ -17,7 +19,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const theme = cookies().get("theme");
   return (
-    <html className={theme?.value || Theme.light}>
+    <html className={`${GeistSans.variable} ${GeistMono.variable} ${theme?.value || Theme.light}`}>
       <head />
       <ClientCookiesProvider value={cookies().getAll()}>
         <body className="h-full bg-gray-100 dark:bg-gray-900">
