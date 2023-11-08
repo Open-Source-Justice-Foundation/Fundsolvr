@@ -4,6 +4,7 @@ import { type Event, getEventHash, getSignature } from "nostr-tools";
 
 import { removeTag } from "../lib/utils";
 import { useBountyEventStore } from "../stores/eventStore";
+import { usePostRelayStore } from "../stores/postRelayStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 
@@ -15,6 +16,7 @@ export default function AssignButton({ applicantEvent }: PropTypes) {
   const { cachedBountyEvent, setCachedBountyEvent, updateBountyEvent, updateUserEvent } = useBountyEventStore();
   const { publish, relayUrl } = useRelayStore();
   const { userPublicKey, userPrivateKey } = useUserProfileStore();
+  const { getActivePostRelayURLs } = usePostRelayStore();
 
   const handleAssign = async (e: any) => {
     e.preventDefault();
@@ -64,7 +66,7 @@ export default function AssignButton({ applicantEvent }: PropTypes) {
       setCachedBountyEvent(event);
     }
 
-    publish([relayUrl], event, onSeen);
+    publish(getActivePostRelayURLs(), event, onSeen);
   };
 
   return (

@@ -2,6 +2,7 @@
 
 import { Fragment, useState } from "react";
 
+import { usePostRelayStore } from "@/app/stores/postRelayStore";
 import { SatoshiV2Icon } from "@bitcoin-design/bitcoin-icons-react/filled";
 import { Dialog, Transition } from "@headlessui/react";
 import { UserPlusIcon } from "@heroicons/react/24/outline";
@@ -22,6 +23,7 @@ export default function Applybutton({ bountyEvent }: PropTypes) {
   const { userPublicKey, userPrivateKey } = useUserProfileStore();
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
+  const { getActivePostRelayURLs } = usePostRelayStore();
 
   const handleMessageChange = (e: any) => {
     setMessage(e.target.value);
@@ -57,7 +59,7 @@ export default function Applybutton({ bountyEvent }: PropTypes) {
       setApplicantEvent(relayUrl, getTagValues("d", bountyEvent.tags), userPublicKey, event);
     }
 
-    publish([relayUrl], event, onSeen);
+    publish(getActivePostRelayURLs(), event, onSeen);
   };
 
   return (

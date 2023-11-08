@@ -7,15 +7,9 @@ import RelayIcon from "./RelayIcon";
 export default function ReadRelayCards() {
   const { getRelayInfo } = useRelayInfoStore();
   const { setRelayUrl } = useRelayStore();
-  const {
-    readRelays,
-    updateReadRelayStatus,
-    sortReadRelays,
-    setAllReadRelaysInactive,
-  } = useReadRelayStore();
+  const { readRelays, updateReadRelayStatus, sortReadRelays, setAllReadRelaysInactive } = useReadRelayStore();
 
   const handleSetReadActive = (readRelay: any) => {
-    console.log("Setting read active");
     setRelayUrl(readRelay.url);
     setAllReadRelaysInactive();
     updateReadRelayStatus(readRelay.url, true);
@@ -25,13 +19,8 @@ export default function ReadRelayCards() {
 
   return (
     <>
-      <p className="px-4 py-2 bg-gray-50 text-gray-500 dark:bg-gray-700/50 dark:text-gray-300">
-        Choose a relay to read content from
-      </p>
-      <ul
-        role="list"
-        className="flex-1 divide-y divide-gray-200 overflow-y-auto dark:divide-gray-700"
-      >
+      <p className="bg-gray-50 px-4 py-2 text-gray-500 dark:bg-gray-700/50 dark:text-gray-300">Choose a relay to read content from</p>
+      <ul role="list" className="flex-1 divide-y divide-gray-200 overflow-y-auto dark:divide-gray-700">
         {readRelays.map((readRelay) => (
           <li key={readRelay.url}>
             <div className="group relative flex items-center px-5 py-6">
@@ -40,11 +29,7 @@ export default function ReadRelayCards() {
                 <div className="relative flex min-w-0 flex-1 items-center">
                   <span className="relative inline-block flex-shrink-0">
                     <RelayIcon
-                      src={
-                        readRelay.url
-                          .replace("wss://", "https://")
-                          .replace("relay.", "") + "/favicon.ico"
-                      }
+                      src={readRelay.url.replace("wss://", "https://").replace("relay.", "") + "/favicon.ico"}
                       fallback="https://user-images.githubusercontent.com/29136904/244441447-d6f64435-6155-4ffa-8574-fb221a3ad412.png"
                       alt=""
                     />
@@ -62,18 +47,14 @@ export default function ReadRelayCards() {
                               Active
                             </span>
                           </p>
-                          <p className="truncate text-sm text-gray-500">
-                            {getRelayInfo(readRelay.url).contact}
-                          </p>
+                          <p className="truncate text-sm text-gray-500">{getRelayInfo(readRelay.url).contact}</p>
                         </>
                       ) : (
                         <>
                           <p className="truncate text-sm font-medium text-gray-900 dark:text-gray-100">
                             {getRelayInfo(readRelay.url).name}
                           </p>
-                          <p className="truncate text-sm text-gray-500">
-                            {getRelayInfo(readRelay.url).contact}
-                          </p>
+                          <p className="truncate text-sm text-gray-500">{getRelayInfo(readRelay.url).contact}</p>
                         </>
                       ))}
                   </div>
