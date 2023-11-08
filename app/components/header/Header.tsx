@@ -45,11 +45,11 @@ export default function Header() {
             </Link>
             <div className="flex items-center gap-x-6">
               <ThemeToggle theme={theme} setTheme={setTheme} />
-              <div className="cursor-pointer rounded-full p-2 shadow-lg shadow-gray-800/10 ring-1 ring-gray-900/10 backdrop-blur hover:bg-gray-50 dark:ring-white/10 dark:hover:bg-gray-800/90">
-                <Link href="/messages">
-                  <BellIcon className="h-6 w-6 stroke-gray-600 dark:stroke-gray-300" />
-                </Link>
-              </div>
+              {/* <div className="cursor-pointer rounded-full p-2 shadow-lg shadow-gray-800/10 ring-1 ring-gray-900/10 backdrop-blur hover:bg-gray-50 dark:ring-white/10 dark:hover:bg-gray-800/90"> */}
+              {/*   <Link href="/messages"> */}
+              {/*     <BellIcon className="h-6 w-6 stroke-gray-600 dark:stroke-gray-300" /> */}
+              {/*   </Link> */}
+              {/* </div> */}
               <Login>
                 <div className="flex flex-1 justify-end">
                   <span className="dark:text-smoke-100 text-sm font-semibold leading-6 text-gray-700 dark:text-gray-200">
