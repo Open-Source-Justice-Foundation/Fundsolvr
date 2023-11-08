@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 
-// TODO: retrieve profile
 import { retrieveProfiles, sortByCreatedAt } from "@/app/lib/nostr";
 import { getTagValues, parseProfileContent } from "@/app/lib/utils";
 import Avatar from "@/app/messages/components/Avatar";
@@ -63,7 +62,7 @@ export default function ChatWindow() {
 
   async function subscribeKeepAlive(relays: string[], filter: any, onEvent: (event: Event) => void, onEOSE: () => void) {
     for (const url of relays) {
-      const relay = await useRelayStore.getState().connect(url);
+      const relay: Relay = await useRelayStore.getState().connect(url);
 
       if (!relay) return;
 
@@ -168,16 +167,12 @@ export default function ChatWindow() {
             setMessageEvents(relayUrl, cachedBountyEvent.id, sortByCreatedAt([...getMessageEvents(relayUrl, cachedBountyEvent.id), event]));
           }
         }
-      } else {
-        console.log("message already present");
-      }
+      } 
     };
 
     const onEOSE = () => {
       console.log("eose");
     };
-
-    console.log("subscribinG");
 
     subscribeKeepAlive([relayUrl], messageFilter, onEvent, onEOSE);
   };
