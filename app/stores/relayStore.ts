@@ -13,8 +13,8 @@ export interface RelaysState {
   connect: (newRelayUrl: string) => Promise<any>;
   connectedRelays: Set<Relay>;
   setConnectedRelays: (relays: Set<Relay>) => void;
-  publish: (relays: string[], event: Event<number>, onSeen: (event: Event<number>) => void) => void;
-  subscribe: (relays: string[], filter: Filter, onEvent: (event: Event<number>) => void, onEOSE: () => void) => void;
+  publish: (relays: string[], event: Event<any>, onSeen: (event: Event<any>) => void) => void;
+  subscribe: (relays: string[], filter: Filter, onEvent: (event: Event<any>) => void, onEOSE: () => void) => void;
 }
 
 export const useRelayStore = create<RelaysState>((set) => ({
@@ -92,7 +92,7 @@ export const useRelayStore = create<RelaysState>((set) => ({
 
   setConnectedRelays: (relays) => set({ connectedRelays: relays }),
 
-  publish: async (relays: string[], event: Event<number>, onSeen: (event: Event<number>) => void) => {
+  publish: async (relays: string[], event: Event<any>, onSeen: (event: Event<any>) => void) => {
     console.log("publishing to relays:", relays);
     for (const url of relays) {
       const relay: Relay = await useRelayStore.getState().connect(url);
@@ -105,7 +105,7 @@ export const useRelayStore = create<RelaysState>((set) => ({
         console.error("Error publishing in relayStore: ", e);
       }
 
-      let publishedEvent: Event<number> | null = await relay.get({
+      let publishedEvent: Event<any> | null = await relay.get({
         ids: [event.id],
       });
 
@@ -116,7 +116,7 @@ export const useRelayStore = create<RelaysState>((set) => ({
     }
   },
 
-  subscribe: async (relays: string[], filter: Filter, onEvent: (event: Event<number>) => void, onEOSE: () => void) => {
+  subscribe: async (relays: string[], filter: Filter, onEvent: (event: Event<any>) => void, onEOSE: () => void) => {
     for (const url of relays) {
       const relay: Relay = await useRelayStore.getState().connect(url);
 
@@ -124,7 +124,7 @@ export const useRelayStore = create<RelaysState>((set) => ({
 
       let sub = relay.sub([filter]);
 
-      sub.on("event", (event: Event<number>) => {
+      sub.on("event", (event: Event<any>) => {
         onEvent(event);
       });
 
