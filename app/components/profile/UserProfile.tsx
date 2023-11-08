@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 
 import { RELAYS } from "@/app/lib/constants";
 import Avatar from "@/app/messages/components/Avatar";
+import { usePostRelayStore } from "@/app/stores/postRelayStore";
+import { useReadRelayStore } from "@/app/stores/readRelayStore";
 import { useRelayStore } from "@/app/stores/relayStore";
 import { useUserProfileStore } from "@/app/stores/userProfileStore";
 import type { Event } from "nostr-tools";
@@ -14,10 +16,15 @@ export default function UserProfile() {
   const { subscribe, activeRelay, connect, relayUrl, setRelayUrl } = useRelayStore();
   const { getUserPublicKey, getUserProfile, setUserProfile, setUserEvent } = useUserProfileStore();
   const [currentProfile, setCurrentProfile] = useState<Profile>();
+  const { getActivePostRelayURLs } = usePostRelayStore();
+  const { readRelays } = useReadRelayStore();
 
   useEffect(() => {
-    if (activeRelay === undefined) {
+    const activeReadRelay = readRelays.find((relay) => relay.isActive);
+    if (activeReadRelay === undefined) {
       connect(RELAYS[0]);
+    } else {
+      setRelayUrl(activeReadRelay?.url!);
     }
   }, []);
 
@@ -50,7 +57,7 @@ export default function UserProfile() {
       const profile: Profile = {
         relay: relayUrl || "",
         publicKey: getUserPublicKey() || "",
-        name: eventContent.name || shortenHash(getUserPublicKey()) || "",
+        name: eventContent.name || "",
         about: eventContent.about || "",
         picture: eventContent.picture || "",
         nip05: eventContent.nip05 || "",
@@ -64,7 +71,7 @@ export default function UserProfile() {
       setCurrentProfile(profile);
     };
 
-    const onEOSE = () => { };
+    const onEOSE = () => {};
 
     subscribe([relayUrl], filter, onEvent, onEOSE);
   };
@@ -76,11 +83,16 @@ export default function UserProfile() {
   return (
     <>
       <UserMenu>
-        {currentProfile && (
+        {currentProfile ? (
           <Avatar
             className="mt-2 inline-block h-10 w-10 shadow-lg shadow-gray-800/10 ring-1 ring-gray-900/10 backdrop-blur hover:bg-gray-50 dark:ring-white/10 dark:hover:bg-gray-800/90"
             src={currentProfile.picture}
             seed={currentProfile.publicKey}
+          />
+        ) : (
+          <Avatar
+            className="mt-2 inline-block h-10 w-10 shadow-lg shadow-gray-800/10 ring-1 ring-gray-900/10 backdrop-blur hover:bg-gray-50 dark:ring-white/10 dark:hover:bg-gray-800/90"
+            seed={getUserPublicKey()}
           />
         )}
       </UserMenu>

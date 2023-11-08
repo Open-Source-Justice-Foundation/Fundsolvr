@@ -18,13 +18,7 @@ function classNames(...classes: any) {
 }
 
 export default function RelayMenu() {
-  const {
-    RelayMenuTabs,
-    relayMenuActiveTab,
-    relayMenuIsOpen,
-    setRelayMenuActiveTab,
-    setRelayMenuIsOpen,
-  } = useRelayMenuStore();
+  const { RelayMenuTabs, relayMenuActiveTab, relayMenuIsOpen, setRelayMenuActiveTab, setRelayMenuIsOpen } = useRelayMenuStore();
 
   const { allRelays } = useRelayStore();
 
@@ -83,14 +77,9 @@ export default function RelayMenu() {
                   <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl dark:bg-gray-800">
                     <div className="p-6">
                       <div className="flex items-start justify-between">
-                        <div className="flex gap-2 items-center">
-                          <Dialog.Title className="text-base font-semibold leading-6 text-gray-900 dark:text-gray-100">
-                            Relays
-                          </Dialog.Title>
-                          <InformationCircleIcon
-                            className="cursor-pointer text-gray-400 h-5 w-5"
-                            aria-hidden="true"
-                          />
+                        <div className="flex items-center gap-2">
+                          <Dialog.Title className="text-base font-semibold leading-6 text-gray-900 dark:text-gray-100">Relays</Dialog.Title>
+                          <InformationCircleIcon className="h-5 w-5 cursor-pointer text-gray-400" aria-hidden="true" />
                         </div>
 
                         <div className="ml-3 flex h-7 items-center">
@@ -107,10 +96,7 @@ export default function RelayMenu() {
                     </div>
                     <div className="border-b border-gray-200 dark:border-gray-700">
                       <div className="px-6">
-                        <nav
-                          className="-mb-px flex space-x-6"
-                          x-descriptions="Tab component"
-                        >
+                        <nav className="-mb-px flex space-x-6" x-descriptions="Tab component">
                           {RelayMenuTabs.map((tab) => (
                             <button
                               key={tab}
@@ -118,7 +104,7 @@ export default function RelayMenu() {
                                 relayMenuActiveTab === tab
                                   ? "border-indigo-300 text-indigo-400 dark:border-indigo-500 dark:text-indigo-400"
                                   : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-gray-300 dark:hover:text-gray-200",
-                                "whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium",
+                                "whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium"
                               )}
                               onClick={(e) => {
                                 e.preventDefault();

@@ -3,9 +3,10 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 
 import { Dialog, Transition } from "@headlessui/react";
-import { getSignature, type Event, getEventHash } from "nostr-tools";
+import { type Event, getEventHash, getSignature } from "nostr-tools";
 
 import { useBountyEventStore } from "../stores/eventStore";
+import { usePostRelayStore } from "../stores/postRelayStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
 
@@ -20,6 +21,7 @@ export default function DeleteBounty({ eventId, onDelete }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const inputRef = useRef(null);
+  const { getActivePostRelayURLs } = usePostRelayStore();
   const onSeen = () => {
     deleteBountyEvent(relayUrl, eventId);
     deleteUserEvent(relayUrl, eventId);
@@ -60,12 +62,15 @@ export default function DeleteBounty({ eventId, onDelete }: Props) {
       event = await window.nostr.signEvent(event);
     }
 
-    publish([relayUrl], event, onSeen);
+    publish(getActivePostRelayURLs(), event, onSeen);
     closeModal(e);
   }
   return (
     <>
-      <div onClick={openModal} className="flex cursor-pointer text-sm items-center justify-center rounded-lg bg-red-300/10 hover:bg-red-400/20 p-2 text-red-500">
+      <div
+        onClick={openModal}
+        className="flex cursor-pointer items-center justify-center rounded-lg bg-red-300/10 p-2 text-sm text-red-500 hover:bg-red-400/20"
+      >
         Remove
       </div>
 
@@ -80,7 +85,7 @@ export default function DeleteBounty({ eventId, onDelete }: Props) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-black dark:bg-gray-800 dark:bg-opacity-75 bg-opacity-25" />
+            <div className="fixed inset-0 bg-black bg-opacity-25 dark:bg-gray-800 dark:bg-opacity-75" />
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
@@ -94,7 +99,7 @@ export default function DeleteBounty({ eventId, onDelete }: Props) {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-gray-900 p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all dark:bg-gray-900">
                   <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900 dark:text-white">
                     Remove Bounty
                   </Dialog.Title>
@@ -124,7 +129,7 @@ export default function DeleteBounty({ eventId, onDelete }: Props) {
                   <div className="mt-4 flex justify-end">
                     <button
                       type="button"
-                      className="flex cursor-pointer items-center justify-center p-2 text-red-400 hover:bg-red-300/10 rounded-lg"
+                      className="flex cursor-pointer items-center justify-center rounded-lg p-2 text-red-400 hover:bg-red-300/10"
                       onClick={handleDelete}
                     >
                       Remove Bounty

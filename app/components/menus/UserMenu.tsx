@@ -2,32 +2,31 @@ import { Fragment, useEffect, useState } from "react";
 
 import Link from "next/link";
 
+import { shortenHash } from "@/app/lib/utils";
 import { useRelayInfoStore } from "@/app/stores/relayInfoStore";
 import { useRelayMenuStore } from "@/app/stores/relayMenuStore";
 import { useRelayStore } from "@/app/stores/relayStore";
 import { useUserProfileStore } from "@/app/stores/userProfileStore";
 import { Profile } from "@/app/types";
 import { Popover, Transition } from "@headlessui/react";
-import { nip19 } from "nostr-tools";
+import { getPublicKey, nip19 } from "nostr-tools";
 
 export default function Example({ children }: any) {
-  const { activeRelay, relayUrl } = useRelayStore();
-  const { getUserProfile, setUserProfile, userProfile, userPublicKey, clearUserProfile, setUserPublicKey } = useUserProfileStore();
+  const { relayUrl } = useRelayStore();
+  const { getUserProfile, setUserProfile, userProfile, userPublicKey, clearUserProfile, setUserPublicKey, setUserPrivateKey } =
+    useUserProfileStore();
   const [currentProfile, setCurrentProfile] = useState<Profile>();
   const { getRelayInfo } = useRelayInfoStore();
   const { setRelayMenuActiveTab, setRelayMenuIsOpen } = useRelayMenuStore();
 
   useEffect(() => {
-    if (currentProfile && currentProfile.relay === relayUrl) {
-      return;
-    }
     const cachedProfile = getUserProfile(relayUrl);
 
     if (cachedProfile) {
       setCurrentProfile(cachedProfile);
       return;
     }
-  }, [relayUrl, activeRelay, userProfile]);
+  }, [relayUrl, userProfile]);
 
   const handleRelayMenuSettingsClick = () => {
     setRelayMenuActiveTab("Settings");
@@ -43,6 +42,7 @@ export default function Example({ children }: any) {
   const signOut = async () => {
     clearUserProfile();
     setUserPublicKey("");
+    setUserPrivateKey("");
   };
 
   return (
@@ -66,8 +66,8 @@ export default function Example({ children }: any) {
               onClick={handleRelayMenuReadFromClick}
               className="mb-2 block cursor-pointer border-b border-gray-200  px-4 pb-2 pt-1 dark:border-gray-700/40"
             >
-              {currentProfile && currentProfile.name && <p>{currentProfile.name}</p>}
-              {currentProfile && currentProfile.name && (
+              {currentProfile && currentProfile.name ? <p>{currentProfile.name}</p> : <p>{shortenHash(nip19.npubEncode(userPublicKey))}</p>}
+              {currentProfile && (
                 <p className="mb-1 mt-2 flex items-center gap-x-2">
                   <img
                     className="h-5 w-5 rounded-full"
