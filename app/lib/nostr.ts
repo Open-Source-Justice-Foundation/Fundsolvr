@@ -18,7 +18,7 @@ const { setProfileEvent } = useProfileStore.getState();
 const { relayUrl, subscribe } = useRelayStore.getState();
 
 export function retrieveProfiles(pubkey: string[]) {
-  const onEvent = (event: Event) => {
+  const onEvent = (event: Event<0>) => {
     setProfileEvent(relayUrl, event.pubkey, event);
   };
 

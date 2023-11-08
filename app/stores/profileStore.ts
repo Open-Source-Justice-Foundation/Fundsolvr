@@ -3,9 +3,9 @@ import { create } from "zustand";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
 
 interface ProfileState {
-  profileEvents: Record<string, Event>;
-  setProfileEvent: (relay: string, publicKey: string, event: Event) => void;
-  getProfileEvent: (relay: string, publicKey: string) => Event;
+  profileEvents: Record<string, Event<0>>;
+  setProfileEvent: (relay: string, publicKey: string, event: Event<0>) => void;
+  getProfileEvent: (relay: string, publicKey: string) => Event<0>;
 }
 
 export const useProfileStore = create<ProfileState>()(
@@ -13,7 +13,7 @@ export const useProfileStore = create<ProfileState>()(
     persist(
       (set, get) => ({
         profileEvents: {},
-        setProfileEvent: (relay: string, publicKey: string, event: Event) => {
+        setProfileEvent: (relay: string, publicKey: string, event: Event<0>) => {
           const newProfileEvent = { [`${relay}_${publicKey}`]: event };
           set((state) => ({ profileEvents: { ...state.profileEvents, ...newProfileEvent } }));
         },

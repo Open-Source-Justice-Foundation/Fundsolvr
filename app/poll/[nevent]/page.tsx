@@ -2,17 +2,12 @@
 
 import { useEffect, useState } from "react";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
 
-import UserProfile from "@/app/components/profile/UserProfile";
-import { getBountyTags, getTagValues, parseProfileContent, shortenHash } from "@/app/lib/utils";
-import { useBountyEventStore } from "@/app/stores/eventStore";
-import { useProfileStore } from "@/app/stores/profileStore";
+import { getTagValues, shortenHash } from "@/app/lib/utils";
 import { useRelayStore } from "@/app/stores/relayStore";
 import { bech32 } from "bech32";
-import { Event, EventTemplate, UnsignedEvent, getEventHash, nip19, nip57 } from "nostr-tools";
+import { Event, EventTemplate, Filter, UnsignedEvent, getEventHash, nip19, nip57 } from "nostr-tools";
 
 import { fetchInvoice, getZapEndpoint, makeZapRequest } from "../../lib/nostr";
 import { useUserProfileStore } from "../../stores/userProfileStore";
@@ -161,9 +156,16 @@ export default function PollPage() {
   }
 
   function getRecipientProfileEvent() {
-    const recipientFilter = {
+
+    const authors = structuredPollData?.zapRecipients![0]
+
+    if (!authors) {
+      return
+    }
+
+    const recipientFilter: Filter = {
       kinds: [0],
-      authors: [structuredPollData?.zapRecipients![0]],
+      authors: [authors],
     };
 
     const onEvent = (event: Event<0>) => {

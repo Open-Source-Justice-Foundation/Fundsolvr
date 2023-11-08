@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 
 import { UserCircleIcon } from "@heroicons/react/24/solid";
-import { type Event, Filter, getEventHash, getSignature, nip19 } from "nostr-tools";
+import { type Event, getEventHash, getSignature, nip19 } from "nostr-tools";
 import { Octokit } from "octokit";
 
-import { getITagValues, shortenHash, verifyGithub } from "../lib/utils";
+import { getITagValues, verifyGithub } from "../lib/utils";
 import Avatar from "../messages/components/Avatar";
 import { usePostRelayStore } from "../stores/postRelayStore";
 import { useRelayStore } from "../stores/relayStore";
@@ -16,7 +16,7 @@ import { Profile } from "../types";
 export default function Settings() {
   const { getUserPublicKey, getUserEvent, getUserProfile, setUserProfile, setUserEvent, userPrivateKey } = useUserProfileStore();
   const { userPublicKey, userEvent } = useUserProfileStore();
-  const { publish, subscribe, relayUrl } = useRelayStore();
+  const { publish, relayUrl } = useRelayStore();
 
   const [gistId, setGistId] = useState("");
   const [githubUser, setGithubUser] = useState("");
@@ -35,11 +35,6 @@ export default function Settings() {
     id: "",
     sig: "",
   });
-
-  // on first load check if the user has a github linked
-  // on login make sure fields are populated
-  // if user has github linked don't show the github field
-  // after save clear cache
 
   async function verifyGithubForUser(tag: any) {
     const githubUserVerified = await verifyGithub(nip19.npubEncode(getUserPublicKey()), tag[2]);
@@ -77,11 +72,6 @@ export default function Settings() {
   useEffect(() => {
     verifyGithubForUserOnLogin();
   }, [relayUrl]);
-
-  const userFilter: Filter = {
-    kinds: [0],
-    authors: [getUserPublicKey()],
-  };
 
   interface Metadata {
     name: string;
@@ -132,23 +122,6 @@ export default function Settings() {
       }
     }
   }
-
-  const getUserMetadata = async () => {
-    if (!getUserEvent(relayUrl)) {
-      return;
-    }
-    let userProfileEvent: Event;
-    const onEvent = (event: Event) => {
-      userProfileEvent = event;
-    };
-
-    const onEOSE = () => {
-      const parsedUserProfile: Metadata = JSON.parse(userProfileEvent.content);
-      setCurrentUserEvent(userProfileEvent);
-      setMetadata(parsedUserProfile);
-    };
-    subscribe([relayUrl], userFilter, onEvent, onEOSE);
-  };
 
   const setMetadata = (metadata: Metadata) => {
     const { name, picture, about } = metadata;
