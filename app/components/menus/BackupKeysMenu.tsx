@@ -17,7 +17,7 @@ export default function BackupKeysMenu({ onClick }: Props) {
     <div className="container mx-auto w-full max-w-4xl px-4 lg:px-0">
       {userPrivateKey ? (
         <div>
-          <h2 className="text-2xl dark:text-white">Backup Private Key</h2>
+          <h2 className="text-2xl dark:text-white">Backup Your Keys</h2>
           <div className="mt-4">
             <BackupKeysButtons></BackupKeysButtons>
           </div>

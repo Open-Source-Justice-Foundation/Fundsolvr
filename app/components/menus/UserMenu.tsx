@@ -56,6 +56,10 @@ export default function Example({ children }: any) {
     setUserPrivateKey("");
   };
 
+  const handleStoredKeys = () => {
+    setShowBackupKeys(false);
+  };
+
   return (
     <>
       <Popover className="relative">
