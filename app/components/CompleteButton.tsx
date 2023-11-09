@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 
-import { LightningIcon } from "@bitcoin-design/bitcoin-icons-react/filled";
+import { LightningIcon, SatoshiV2Icon } from "@bitcoin-design/bitcoin-icons-react/filled";
 import { Dialog, Transition } from "@headlessui/react";
 import { CheckCircleIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { type Event, EventTemplate, UnsignedEvent, getEventHash, getSignature, nip57 } from "nostr-tools";
@@ -192,7 +192,17 @@ export default function CompleteButton({ applicantProfile }: Props) {
                 </div>
 
                 <form onSubmit={handleSendZap}>
-                  <div className="mt-8">Amount:</div>
+                  {cachedBountyEvent && (
+                    <div className="mt-8 flex gap-x-2">
+                      <span>Amount:</span>
+                      <span>
+                        <div className="flex text-bitcoin items-center">
+                          <SatoshiV2Icon style={{ height: "1.2rem", width: "1.2rem" }} />
+                          {`${getTagValues("reward", cachedBountyEvent.tags)}`}
+                        </div>
+                      </span>
+                    </div>
+                  )}
                   <div className="mt-8">
                     <label htmlFor="message" className="block text-sm font-semibold">
                       Message
