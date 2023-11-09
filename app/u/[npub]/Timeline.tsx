@@ -40,7 +40,7 @@ export default function Timeline() {
       <h2 className="text-lg font-medium pb-8 pt-8 text-gray-500 dark:text-gray-400">Recent Activity</h2>
       <ul role="list" className="-mb-8">
         {recentEvents.slice(0, 10).map((event, eventIdx) => (
-          <TimelineItem event={event} eventIdx={eventIdx} timelineLength={10}  />
+          <TimelineItem key={event.id} event={event} eventIdx={eventIdx} timelineLength={10}  />
         ))}
       </ul>
     </div>
