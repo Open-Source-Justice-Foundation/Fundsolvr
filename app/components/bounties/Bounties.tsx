@@ -51,22 +51,16 @@ export default function Bounties() {
         </p>
       </div>
       <BountyTabs />
-      {(!userPublicKey && BountyTab.assigned === bountyType) || (!userPublicKey && BountyTab.userPosted === bountyType) ? (
-        <></>
+      {BountyTab.assigned === bountyType || BountyTab.userPosted === bountyType ? (
+        <div className="flex w-full max-w-4xl items-center justify-start gap-x-4 rounded-lg pb-3 pt-8">
+          <BountySearch />
+        </div>
       ) : (
         <div className="flex w-full max-w-4xl items-center justify-start gap-x-4 rounded-lg pb-3 pt-8">
           <BountySearch />
           {BountyTab.all === bountyType && <BountyTags />}
         </div>
       )}
-      {bountyTags && (
-        <div className="flex w-full max-w-4xl justify-start gap-x-2 overflow-auto">
-          {Array.from(bountyTags).map((tag: any) => (
-            <Tag key={tag} tag={tag} />
-          ))}
-        </div>
-      )}
-
       <>
         <div className="flex w-full max-w-4xl flex-col items-center justify-center gap-y-4 rounded-lg py-6">
           {BountyTab.all === bountyType && <OpenBounties />}

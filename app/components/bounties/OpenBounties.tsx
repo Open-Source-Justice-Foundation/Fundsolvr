@@ -66,12 +66,13 @@ export default function Bounties() {
     subscribe([relayUrl], bountyFilter, onEvent, onEOSE);
   };
 
-  const localGetTaggedBounties = async () => {
+  const localGetTaggedBounties = () => {
     getTaggedBounties(tag, loading, setLoading);
   };
 
   useEffect(() => {
     // do something with tags and do this else if
+    setLoading({ ...loading, all: false });
     if (getTaggedBountyEvents(relayUrl, tag) && tag !== "All") {
       localGetTaggedBounties();
     }
