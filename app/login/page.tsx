@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { Event, Filter, generatePrivateKey, getEventHash, getPublicKey, getSignature, nip19 } from "nostr-tools";
 
+import BackupKeysButtons from "../components/BackupKeysButtons";
 import { usePostRelayStore } from "../stores/postRelayStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
@@ -305,63 +306,7 @@ export default function LoginPage() {
                   <h2 className="opacity-90 dark:text-white">
                     Copy and Save your private key - without it, you will lose access to your account!
                   </h2>
-                  <div className="flex  flex-col gap-4">
-                    <label htmlFor="publickey" className="font-medium text-gray-900 dark:text-gray-100">
-                      Public Key
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        name="publickey"
-                        id="publickey"
-                        spellCheck="false"
-                        value={nip19.npubEncode(pubKey)}
-                        onChange={(e) => e.preventDefault()}
-                        onClick={async () => {
-                          await copyTextToClipboard(nip19.npubEncode(pubKey));
-                        }}
-                        className="w-full cursor-pointer rounded border border-gray-300 p-2 caret-transparent dark:border-gray-600 dark:bg-gray-600 dark:text-gray-100"
-                      />
-
-                      <div className="right-0 top-0 flex h-full items-center justify-center lg:absolute ">
-                        <button
-                          onClick={async () => {
-                            await copyTextToClipboard(nip19.npubEncode(pubKey));
-                          }}
-                          className="h-full px-4 py-2 active:translate-y-1 dark:text-white hover:dark:text-gray-300"
-                        >
-                          Copy
-                        </button>
-                      </div>
-                    </div>
-                    <label htmlFor="privatekey" className="font-medium text-gray-900 dark:text-gray-100">
-                      Private Key
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        name="privatekey"
-                        id="privatekey"
-                        spellCheck="false"
-                        value={nip19.nsecEncode(privKey)}
-                        onClick={async () => {
-                          await copyTextToClipboard(nip19.nsecEncode(privKey));
-                        }}
-                        onChange={(e) => e.preventDefault()}
-                        className="w-full cursor-pointer rounded border border-gray-300 p-2 caret-transparent dark:border-gray-600 dark:bg-gray-600 dark:text-gray-100"
-                      />
-                      <div className="right-0 top-0 flex h-full items-center justify-center lg:absolute">
-                        <button
-                          onClick={async () => {
-                            await copyTextToClipboard(nip19.nsecEncode(privKey));
-                          }}
-                          className="h-full px-4 py-2 active:translate-y-1 dark:text-white hover:dark:text-gray-300"
-                        >
-                          Copy
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                  <BackupKeysButtons publicKey={pubKey} privateKey={privKey}></BackupKeysButtons>
                   <div className="flex w-full flex-col items-center justify-center gap-4">
                     <button
                       className="w-full max-w-sm rounded-3xl bg-indigo-500 px-2 py-4 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
