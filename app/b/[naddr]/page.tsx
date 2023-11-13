@@ -26,7 +26,7 @@ import {
   PencilSquareIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
-import { nip19 } from "nostr-tools";
+import { Filter, nip19 } from "nostr-tools";
 import { Event } from "nostr-tools";
 import { AddressPointer } from "nostr-tools/lib/nip19";
 // @ts-ignore
@@ -81,13 +81,13 @@ export default function BountyPage() {
 
         const onEOSE = () => {};
 
-        const filter = {
+        const filter: Filter = {
           kinds: [naddrPointer.kind],
           authors: [naddrPointer.pubkey],
           "#d": [naddrPointer.identifier],
         };
 
-        if (naddrPointer.relays) {
+        if (naddrPointer.relays && naddrPointer.relays.length > 0) {
           subscribe([naddrPointer.relays[0]], filter, onEvent, onEOSE);
         } else {
           subscribe([relayUrl], filter, onEvent, onEOSE);

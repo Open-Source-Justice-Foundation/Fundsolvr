@@ -1,105 +1,49 @@
+import { useEffect, useState } from "react";
+
+import { sortByCreatedAt } from "@/app/lib/nostr";
+import { useRelayStore } from "@/app/stores/relayStore";
+import { useUserProfileStore } from "@/app/stores/userProfileStore";
 import { CheckIcon, PencilSquareIcon, UserIcon } from "@heroicons/react/24/outline";
+import { Event, Filter, Relay } from "nostr-tools";
 
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(" ");
-}
-
-// const timeline = [
-//   {
-//     id: 1,
-//     content: "Applied to:",
-//     target: "Rewrite the documentation for the Nostr API",
-//     href: "#",
-//     date: "Sep 20",
-//     datetime: "2020-09-20",
-//     icon: UserIcon,
-//     iconBackground: "bg-orange-500",
-//   },
-//   {
-//     id: 2,
-//     content: "Blog post:",
-//     target: "Boost your conversion rate",
-//     href: "#",
-//     date: "Sep 22",
-//     datetime: "2020-09-22",
-//     icon: PencilSquareIcon,
-//     iconBackground: "bg-blue-500",
-//   },
-//   {
-//     id: 3,
-//     content: "Completed bounty:",
-//     target: "Rewrite TempleOS in Rust",
-//     href: "#",
-//     date: "Sep 28",
-//     datetime: "2020-09-28",
-//     icon: CheckIcon,
-//     iconBackground: "bg-green-500",
-//   },
-//   {
-//     id: 4,
-//     content: "Blog post:",
-//     target: "Exploring BitVM",
-//     href: "#",
-//     date: "Sep 30",
-//     datetime: "2020-09-30",
-//     icon: PencilSquareIcon,
-//     iconBackground: "bg-blue-500",
-//   },
-//   {
-//     id: 5,
-//     content: "Completed bounty:",
-//     target: "Finish Resolvr.io",
-//     href: "#",
-//     date: "Oct 4",
-//     datetime: "2020-10-04",
-//     icon: CheckIcon,
-//     iconBackground: "bg-green-500",
-//   },
-// ];
-
-
+import TimelineItem from "./TimelineItem";
 
 export default function Timeline() {
+  const { relayUrl } = useRelayStore();
+  const { userPublicKey } = useUserProfileStore();
+  const [recentEvents, setRecentEvents] = useState<Event[]>([]);
+
+  const getRecentEvents = async () => {
+    const relay: Relay = await useRelayStore.getState().connect(relayUrl);
+
+    if (!relay) return;
+
+    const recentEventFilter: Filter = {
+      kinds: [8050, 30023, 30050],
+      limit: 100,
+      until: undefined,
+      authors: [userPublicKey],
+    };
+
+    let events: Event[] = await relay.list([recentEventFilter]);
+
+    events = events.sort((a, b) => b.created_at - a.created_at);
+    setRecentEvents(events);
+  };
+
+  useEffect(() => {
+    getRecentEvents();
+  }, []);
+
   return (
-    <div className="text-green-500">HI</div>
+    <div className="mt-4 flow-root border-t border-gray-300 px-4 dark:border-gray-600">
+      <h2 className="text-lg font-medium pb-8 pt-8 text-gray-500 dark:text-gray-400">Recent Activity</h2>
+      <ul role="list" className="-mb-8">
+        {recentEvents.slice(0, 10).map((event, eventIdx) => (
+          <TimelineItem key={event.id} event={event} eventIdx={eventIdx} timelineLength={10}  />
+        ))}
+      </ul>
+    </div>
   );
 }
 
-    {/* <div className="flow-root border-t border-gray-300 dark:border-gray-600 px-4 pb-8 pt-16 mt-4"> */}
-    {/*   <ul role="list" className="-mb-8"> */}
-    {/*     {timeline.map((event, eventIdx) => ( */}
-    {/*       <li key={event.id}> */}
-    {/*         <div className="relative pb-8"> */}
-    {/*           {eventIdx !== timeline.length - 1 ? ( */}
-    {/*             <span className="absolute left-4 top-4 -ml-px h-full w-0.5 bg-gray-300 dark:bg-gray-700" aria-hidden="true" /> */}
-    {/*           ) : null} */}
-    {/*           <div className="relative flex space-x-5"> */}
-    {/*             <div> */}
-    {/*               <span */}
-    {/*                 // className={classNames( */}
-    {/*                 //   event.iconBackground, */}
-    {/*                 //   "flex h-8 w-8 items-center justify-center rounded-full ring-8 ring-gray-300 dark:ring-gray-700" */}
-    {/*                 // )} */}
-    {/*               > */}
-    {/*                 <event.icon className="h-5 w-5 text-white" aria-hidden="true" /> */}
-    {/*               </span> */}
-    {/*             </div> */}
-    {/*             <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5"> */}
-    {/*               <div> */}
-    {/*                 <p className="text-sm text-gray-600 dark:text-gray-300"> */}
-    {/*                   {event.content}{" "} */}
-    {/*                   <a href={event.href} className="font-medium text-gray-800 dark:text-gray-100"> */}
-    {/*                     {event.target} */}
-    {/*                   </a> */}
-    {/*                 </p> */}
-    {/*               </div> */}
-    {/*               <div className="whitespace-nowrap text-right text-sm text-gray-600 dark:text-gray-300"> */}
-    {/*                 <time dateTime={event.datetime}>{event.date}</time> */}
-    {/*               </div> */}
-    {/*             </div> */}
-    {/*           </div> */}
-    {/*         </div> */}
-    {/*       </li> */}
-    {/*     ))} */}
-    {/*   </ul> */}
-    {/* </div> */}

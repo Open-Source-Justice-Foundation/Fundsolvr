@@ -129,6 +129,7 @@ export const useRelayStore = create<RelaysState>((set) => ({
       });
 
       sub.on("eose", () => {
+        console.log("info", `✅ nostr (${url}): End of stream!`);
         sub.unsub();
         onEOSE();
       });

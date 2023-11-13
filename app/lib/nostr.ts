@@ -1,19 +1,13 @@
 import Fuse from "fuse.js";
-
-import { Event, Filter, EventTemplate } from "nostr-tools";
+import { Event, EventTemplate, Filter } from "nostr-tools";
 
 import { useBountyEventStore } from "../stores/eventStore";
 import { useProfileStore } from "../stores/profileStore";
 import { useRelayStore } from "../stores/relayStore";
 import { getTagValues } from "./utils";
 
-const {
-  getApplicantEvent,
-  setApplicantEvent,
-  setZapReceiptEvent,
-  taggedBountyEvents,
-  setTaggedBountyEvents,
-} = useBountyEventStore.getState();
+const { getApplicantEvent, setApplicantEvent, setZapReceiptEvent, taggedBountyEvents, setTaggedBountyEvents } =
+  useBountyEventStore.getState();
 const { setProfileEvent } = useProfileStore.getState();
 const { relayUrl, subscribe } = useRelayStore.getState();
 
@@ -22,7 +16,7 @@ export function retrieveProfiles(pubkey: string[]) {
     setProfileEvent(relayUrl, event.pubkey, event);
   };
 
-  const onEOSE = () => {};
+  const onEOSE = () => { };
 
   const userFilter: Filter = {
     kinds: [0],
@@ -48,7 +42,7 @@ export function getApplicants(dValues: Set<string>) {
     }
   };
 
-  const onApplicantEOSE = () => {};
+  const onApplicantEOSE = () => { };
 
   subscribe([relayUrl], applicantFilter, onApplicantEvent, onApplicantEOSE);
 }
@@ -103,10 +97,10 @@ export function makeZapRequest({
       Array.isArray(tags) && tags.length > 0
         ? tags
         : [
-            ["p", profile],
-            ["amount", amount.toString()],
-            ["relays", ...relays],
-          ],
+          ["p", profile],
+          ["amount", amount.toString()],
+          ["relays", ...relays],
+        ],
   };
 
   if (event && (!Array.isArray(tags) || !tags.length)) {
@@ -151,7 +145,7 @@ export const getZapRecieptFromRelay = async (cachedBountyEvent: Event) => {
       }
     };
 
-    const onEOSE = () => {};
+    const onEOSE = () => { };
 
     subscribe([relayUrl], postedBountyFilter, onEvent, onEOSE);
   }
@@ -178,10 +172,11 @@ export const filterBounties = (search: string, list: Event[]) => {
 };
 
 export const getTaggedBounties = async (tag: string, loading: any, setLoading: any) => {
-  if (taggedBountyEvents[relayUrl] && taggedBountyEvents[relayUrl][tag] && taggedBountyEvents[relayUrl][tag].length === 0) {
-    setLoading({ ...loading, all: true });
-  } else {
+  setLoading({ ...loading, all: false });
+  if (taggedBountyEvents[relayUrl] && taggedBountyEvents[relayUrl][tag]) {
     setLoading({ ...loading, all: false });
+  } else {
+    setLoading({ ...loading, all: true });
   }
 
   const taggedBountyFilter: Filter = {
@@ -202,27 +197,35 @@ export const getTaggedBounties = async (tag: string, loading: any, setLoading: a
     }
   }
 
+  // short circuit if we already have the events
+  // if (taggedBountyEvents[relayUrl] && taggedBountyEvents[relayUrl][tag]) {
+  //   return;
+  // }
+
   const onEvent = (event: Event) => {
+    console.log("TAGGED event", event);
     // TODO: check for zap recipt
     const value = getTagValues("reward", event.tags);
     if (value && value.length > 0) {
       events.push(event);
       pubkeys.add(event.pubkey);
       dValues.add(getTagValues("d", event.tags));
+
+      if (taggedBountyEvents[relayUrl] && taggedBountyEvents[relayUrl][tag]) {
+        setTaggedBountyEvents(relayUrl, tag, [...taggedBountyEvents[relayUrl][tag], event]);
+        setLoading({ ...loading, all: false });
+        retrieveProfiles(Array.from(pubkeys));
+        getApplicants(dValues);
+      } else {
+        setTaggedBountyEvents(relayUrl, tag, events);
+        setLoading({ ...loading, all: false });
+        retrieveProfiles(Array.from(pubkeys));
+        getApplicants(dValues);
+      }
     }
   };
 
-  const onEOSE = () => {
-    if (taggedBountyEvents[relayUrl] && taggedBountyEvents[relayUrl][tag]) {
-      setTaggedBountyEvents(relayUrl, tag, [...taggedBountyEvents[relayUrl][tag], ...events]);
-    } else {
-      setTaggedBountyEvents(relayUrl, tag, events);
-    }
-
-    retrieveProfiles(Array.from(pubkeys));
-    getApplicants(dValues);
-    setLoading({ ...loading, all: false });
-  };
+  const onEOSE = () => { };
 
   subscribe([relayUrl], taggedBountyFilter, onEvent, onEOSE);
 };
