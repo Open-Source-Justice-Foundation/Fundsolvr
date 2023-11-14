@@ -54,6 +54,9 @@ export default function Example({ children }: any) {
     clearUserProfile();
     setUserPublicKey("");
     setUserPrivateKey("");
+    // TODO: Remove this when NoComment is replaced with something else
+    // https://github.com/Resolvr-io/resolvr.io/issues/66
+    localStorage.removeItem("nostrkey");
   };
 
   const handleStoredKeys = () => {

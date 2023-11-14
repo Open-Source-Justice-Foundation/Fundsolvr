@@ -480,12 +480,24 @@
   resolved "https://registry.npmjs.org/@noble/ciphers/-/ciphers-0.2.0.tgz"
   integrity sha512-6YBxJDAapHSdd3bLDv6x2wRPwq4QFMUaB3HvljNBUTThDd12eSm7/3F+2lnfzx2jvM+S6Nsy0jEt9QbPqSwqRw==
 
+"@noble/curves@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@noble/curves/-/curves-1.0.0.tgz#e40be8c7daf088aaf291887cbc73f43464a92932"
+  integrity sha512-2upgEu0iLiDVDZkNLeFV2+ht0BAVgQnEmCk6JsOch9Rp8xfkMCbvbAZlA2pBHQc73dbl+vFOXfqkf4uemdn0bw==
+  dependencies:
+    "@noble/hashes" "1.3.0"
+
 "@noble/curves@1.1.0", "@noble/curves@~1.1.0":
   version "1.1.0"
   resolved "https://registry.npmjs.org/@noble/curves/-/curves-1.1.0.tgz"
   integrity sha512-091oBExgENk/kGj3AZmtBDMpxQPDtxQABR2B9lb1JbVTs6ytdzZNwvhxQ4MWasRNEzlbEH8jCWFCwhF/Obj5AA==
   dependencies:
     "@noble/hashes" "1.3.1"
+
+"@noble/hashes@1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.3.0.tgz#085fd70f6d7d9d109671090ccae1d3bec62554a1"
+  integrity sha512-ilHEACi9DwqJB0pw7kv+Apvh50jiiSyR/cQ3y4W7lOR5mhvn/50FLUfsnfJz0BDZtl/RR16kXvptiv6q1msYZg==
 
 "@noble/hashes@1.3.1", "@noble/hashes@^1.2.0", "@noble/hashes@~1.3.0", "@noble/hashes@~1.3.1":
   version "1.3.1"
@@ -811,6 +823,54 @@
   dependencies:
     "@smithy/util-buffer-from" "^2.0.0"
     tslib "^2.5.0"
+
+"@solid-primitives/autofocus@^0.0.107":
+  version "0.0.107"
+  resolved "https://registry.yarnpkg.com/@solid-primitives/autofocus/-/autofocus-0.0.107.tgz#24c369aaf472dd0f26a4a848f0a7b4db4ebc75fd"
+  integrity sha512-CWa87WQA5McII2uOb74aMYdQq9oNVtKDEdzFKXHHwUY1yXQKXzoXE+yBu4jtqG81IVkJCDpEdaal7PvdSOMhag==
+  dependencies:
+    "@solid-primitives/utils" "^6.2.0"
+
+"@solid-primitives/event-listener@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@solid-primitives/event-listener/-/event-listener-2.3.0.tgz#2e962e7e39ab47a8aed138b73f75f6d8dc9a558b"
+  integrity sha512-0DS7DQZvCExWSpurVZC9/wjI8RmkhuOtWOy6Pp1Woq9ElMT9/bfjNpkwXsOwisLpcTqh9eUs17kp7jtpWcC20w==
+  dependencies:
+    "@solid-primitives/utils" "^6.2.1"
+
+"@solid-primitives/resize-observer@^2.0.21":
+  version "2.0.22"
+  resolved "https://registry.yarnpkg.com/@solid-primitives/resize-observer/-/resize-observer-2.0.22.tgz#55e8b4f87b7d6f72fabb689b91049c125cfba27d"
+  integrity sha512-ps8UIFiGsNxZaWBKSH0Py0Nx5PDd7NtUGHkN/04SNRYgtTvlPF768rk0ksPlDgpIwYmBLIoC9qvQmQPaHF4F5w==
+  dependencies:
+    "@solid-primitives/event-listener" "^2.3.0"
+    "@solid-primitives/rootless" "^1.4.2"
+    "@solid-primitives/static-store" "^0.0.5"
+    "@solid-primitives/utils" "^6.2.1"
+
+"@solid-primitives/rootless@^1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@solid-primitives/rootless/-/rootless-1.4.2.tgz#00eb3970e1015b884f9dc95e21807ba2b58a39f9"
+  integrity sha512-ynI/2aEOPyc14IKCX6yDBqnsAYCoLbaP9V/jejEWMVKOT2ZdV2ZxdftaLimOpWPpvjyti5DUJIGTOfLaNb7jlg==
+  dependencies:
+    "@solid-primitives/utils" "^6.2.1"
+
+"@solid-primitives/scheduled@^1.3.2":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@solid-primitives/scheduled/-/scheduled-1.4.1.tgz#9633fc2065a41cf7d16fb8547c4eae239b256463"
+  integrity sha512-OLcNXwYpX7HUOEqNPcmR31dkyI1E2imkMDBRlqsGT0ZhJV1L2g0TEREpo4nm/kUhh8LVQzkfnxS+GONx9kh90A==
+
+"@solid-primitives/static-store@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@solid-primitives/static-store/-/static-store-0.0.5.tgz#ed3e5be8e72121f92fac54e7cfd4ed81aa2e29cd"
+  integrity sha512-ssQ+s/wrlFAEE4Zw8GV499yBfvWx7SMm+ZVc11wvao4T5xg9VfXCL9Oa+x4h+vPMvSV/Knv5LrsLiUa+wlJUXQ==
+  dependencies:
+    "@solid-primitives/utils" "^6.2.1"
+
+"@solid-primitives/utils@^6.2.0", "@solid-primitives/utils@^6.2.1":
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/@solid-primitives/utils/-/utils-6.2.1.tgz#320fb2180743031622b40fc43b0e63bf55686cfb"
+  integrity sha512-TsecNzxiO5bLfzqb4OOuzfUmdOROcssuGqgh5rXMMaasoFZ3GoveUgdY1wcf17frMJM7kCNGNuK34EjErneZkg==
 
 "@swc/helpers@0.5.2":
   version "0.5.2"
@@ -1510,6 +1570,11 @@ commander@^4.0.0:
   resolved "https://registry.npmjs.org/commander/-/commander-4.1.1.tgz"
   integrity sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==
 
+component-register@~0.8.2:
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/component-register/-/component-register-0.8.3.tgz#d94513e72c85934f5abb22f131d6c3ca7e366085"
+  integrity sha512-/0u8ov0WPWi2FL78rgB9aFOcfY8pJT4jP/l9NTOukGNLVQ6hk35sEJE1RkEnNQU3yk48Qr7HlDQjRQKEVfgeWg==
+
 concat-map@0.0.1:
   version "0.0.1"
   resolved "https://registry.npmjs.org/concat-map/-/concat-map-0.0.1.tgz"
@@ -1559,7 +1624,7 @@ cssesc@^3.0.0:
   resolved "https://registry.npmjs.org/cssesc/-/cssesc-3.0.0.tgz"
   integrity sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==
 
-csstype@^3.0.2:
+csstype@^3.0.2, csstype@^3.1.0:
   version "3.1.2"
   resolved "https://registry.npmjs.org/csstype/-/csstype-3.1.2.tgz"
   integrity sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==
@@ -2376,6 +2441,11 @@ https-browserify@^1.0.0:
   resolved "https://registry.npmjs.org/https-browserify/-/https-browserify-1.0.0.tgz"
   integrity sha512-J+FkSdyD+0mA0N+81tMotaRMfSL9SGi+xpD3T6YApKsc3bGSXJlfXri3VyFOeYkfLRQisDk1W+jIFFKBeUBbBg==
 
+idb@^7.1.1:
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/idb/-/idb-7.1.1.tgz#d910ded866d32c7ced9befc5bfdf36f572ced72b"
+  integrity sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==
+
 ieee754@^1.2.1:
   version "1.2.1"
   resolved "https://registry.npmjs.org/ieee754/-/ieee754-1.2.1.tgz"
@@ -2768,6 +2838,13 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
+light-bolt11-decoder@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/light-bolt11-decoder/-/light-bolt11-decoder-3.0.0.tgz#f644576120426c9ef65621bde254f11016055044"
+  integrity sha512-AKvOigD2pmC8ktnn2TIqdJu0K0qk6ukUmTvHwF3JNkm8uWCqt18Ijn33A/a7gaRZ4PghJ59X+8+MXrzLKdBTmQ==
+  dependencies:
+    "@scure/base" "1.1.1"
+
 lilconfig@^2.0.5, lilconfig@^2.1.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/lilconfig/-/lilconfig-2.1.0.tgz"
@@ -2971,6 +3048,11 @@ mz@^2.7.0:
     any-promise "^1.0.0"
     object-assign "^4.0.1"
     thenify-all "^1.0.0"
+
+nano-markdown@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/nano-markdown/-/nano-markdown-1.2.2.tgz#61302829d67c7bb0531bfc7d7ffab44b476bbfb5"
+  integrity sha512-xp0zc42GsE0JVpcTxICpANgNbVfyhk2pUdRV3cDDxzqVZeXSZgrPGruwlj+umFQxo10BKD1qmWdEdxj1x+A0QQ==
 
 nanoid@^3.3.6:
   version "3.3.6"
@@ -3537,6 +3619,11 @@ semver@^7.5.4:
   dependencies:
     lru-cache "^6.0.0"
 
+seroval@^0.12.0:
+  version "0.12.3"
+  resolved "https://registry.yarnpkg.com/seroval/-/seroval-0.12.3.tgz#6dac3dacd603f28a5e6d3c4c6cb685af7bf2e885"
+  integrity sha512-5WDeMpv7rmEylsypRj1iwRVHE/QLsMLiZ+9savlNNQEVdgGia1iRMb7qyaAagY0wu/7+QTe6d2wldk/lgaLb6g==
+
 set-function-name@^2.0.0, set-function-name@^2.0.1:
   version "2.0.1"
   resolved "https://registry.npmjs.org/set-function-name/-/set-function-name-2.0.1.tgz"
@@ -3584,6 +3671,21 @@ slash@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/slash/-/slash-3.0.0.tgz"
   integrity sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
+
+solid-element@^1.7.1:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/solid-element/-/solid-element-1.8.0.tgz#89a3555964f55e3e800e8c0f744b4d4507c8c610"
+  integrity sha512-DG8HBCej5kNExUiFbVG8OFZojMGcLF8keXdGLEcHXBYtJ7zhm+a8HJnl5lfmBlTYGRk4ApgoBvlwH1ibg7quaQ==
+  dependencies:
+    component-register "~0.8.2"
+
+solid-js@^1.7.6:
+  version "1.8.5"
+  resolved "https://registry.yarnpkg.com/solid-js/-/solid-js-1.8.5.tgz#60c68cb67feafa84c2c3f38dd2050adeef31cde1"
+  integrity sha512-xvtJvzJzWbsn35oKFhW9kNwaxG1Z/YLMsDp4tLVcYZTMPzvzQ8vEZuyDQ6nt7xDArVgZJ7TUFrJUwrui/oq53A==
+  dependencies:
+    csstype "^3.1.0"
+    seroval "^0.12.0"
 
 source-map-js@^1.0.2:
   version "1.0.2"
@@ -4066,6 +4168,24 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.npmjs.org/yocto-queue/-/yocto-queue-0.1.0.tgz"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+zapthreads@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/zapthreads/-/zapthreads-0.3.2.tgz#ac2a48213fac92a4922e6b407b60597a39ba7b0d"
+  integrity sha512-O9oKiQ/OSHHLur7xwWo3SdZYw+PaHFjPKM5Ki7HCu+GPacd1K/AMTfdBuPgzATNtlI2XF4DPBFeO4p6W+1J9og==
+  dependencies:
+    "@noble/curves" "1.0.0"
+    "@noble/hashes" "1.3.0"
+    "@scure/base" "1.1.1"
+    "@solid-primitives/autofocus" "^0.0.107"
+    "@solid-primitives/resize-observer" "^2.0.21"
+    "@solid-primitives/scheduled" "^1.3.2"
+    fast-deep-equal "^3.1.3"
+    idb "^7.1.1"
+    light-bolt11-decoder "^3.0.0"
+    nano-markdown "^1.2.2"
+    solid-element "^1.7.1"
+    solid-js "^1.7.6"
 
 zustand@^4.4.2:
   version "4.4.3"

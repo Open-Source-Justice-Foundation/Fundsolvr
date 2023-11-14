@@ -47,6 +47,9 @@ export default function LoginPage() {
     e.preventDefault();
 
     setUserPrivateKey(privKey);
+    // TODO: Remove this when NoComment is replaced with something else
+    // https://github.com/Resolvr-io/resolvr.io/issues/66
+    localStorage.setItem("nostrkey", privKey);
     setUserPublicKey(pubKey);
     const profile: Profile = {
       relay: relayUrl || "",
@@ -126,6 +129,9 @@ export default function LoginPage() {
     const onEvent = (_: Event) => {
       setUserPublicKey(publicKey);
       setUserPrivateKey(decodedPrivateKey);
+      // TODO: Remove this when NoComment is replaced with something else
+      // https://github.com/Resolvr-io/resolvr.io/issues/66
+      localStorage.setItem("nostrkey", decodedPrivateKey);
     };
 
     const onEOSE = () => {
