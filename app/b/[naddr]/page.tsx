@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
+import Script from "next/script";
 
 import Applicant from "@/app/components/Applicant";
 import Applybutton from "@/app/components/Applybutton";
@@ -30,9 +31,12 @@ import { Filter, nip19 } from "nostr-tools";
 import { Event } from "nostr-tools";
 import { AddressPointer } from "nostr-tools/lib/nip19";
 // @ts-ignore
-import { NoComment } from "react-nocomment";
+// import { NoComment } from "react-nocomment";
 import colors, { indigo } from "tailwindcss/colors";
 
+import * as NoComment from "../../../public/NoComment";
+// import ZapThreads from "zapthreads";
+// import "zapthreads";
 import DeleteBounty from "../../components/DeleteBounty";
 import ZapPoll from "../../components/ZapPoll";
 import { useUserProfileStore } from "../../stores/userProfileStore";
@@ -42,8 +46,9 @@ export default function BountyPage() {
   const { subscribe, relayUrl } = useRelayStore();
   const { getProfileEvent } = useProfileStore();
   const { cachedBountyEvent, setCachedBountyEvent, getBountyApplicants, getApplicantEvent, getZapReceiptEvent } = useBountyEventStore();
-  const { getUserPublicKey, userPublicKey } = useUserProfileStore();
+  const { getUserPublicKey, userPublicKey, userPrivateKey } = useUserProfileStore();
   const { readRelays, updateReadRelayStatus, sortReadRelays, setAllReadRelaysInactive } = useReadRelayStore();
+  const NoCommentContainer = useRef<HTMLDivElement>(null);
 
   const router = useRouter();
 
@@ -63,6 +68,7 @@ export default function BountyPage() {
       const naddr_data: any = nip19.decode(naddrStr).data;
       setNaddr(naddrStr);
       setNaddrPointer(naddr_data);
+      console.log("naddry", naddr_data);
 
       if (naddrPointer) {
         if (cachedBountyEvent) {
@@ -111,6 +117,27 @@ export default function BountyPage() {
       setCachedBountyEvent(null);
     };
   }, []);
+
+  // TODO: Remove this when NoComment is replaced with something else
+  // https://github.com/Resolvr-io/resolvr.io/issues/66
+  useEffect(() => {
+    let current = NoCommentContainer.current;
+    const script = document.createElement("script");
+    const naddr_data: any = nip19.decode(naddrStr).data;
+    if (current) {
+      script.src = "/NoComment.js";
+      script.async = true;
+      script.id = "nocomment";
+      script.setAttribute("data-relays", JSON.stringify(naddr_data?.relays));
+      script.setAttribute("data-custom-base", naddrStr);
+      script.setAttribute("data-owner", nip19.npubEncode(userPublicKey));
+    }
+    current?.appendChild(script);
+
+    return () => {
+      current?.removeChild(script);
+    };
+  }, [bountyEvent, tab]);
 
   function setupMarkdown(content: string) {
     var md = require("markdown-it")();
@@ -197,18 +224,13 @@ export default function BountyPage() {
                   {bountyEvent?.pubkey && naddrPointer && (
                     <Link className="flex items-center gap-x-2" href={`/u/${nip19.npubEncode(bountyEvent.pubkey)}`}>
                       <Avatar
-                        src={
-                          parseProfileContent(
-                            getProfileEvent(relayUrl, bountyEvent.pubkey)?.content
-                          )?.picture
-                        }
+                        src={parseProfileContent(getProfileEvent(relayUrl, bountyEvent.pubkey)?.content)?.picture}
                         seed={bountyEvent.pubkey}
                         className="h-8 w-8 ring-1 ring-white dark:ring-gray-700"
                       />
                       <div className="truncate text-sm font-medium leading-6 text-gray-800 dark:text-white">
-                        {parseProfileContent(
-                          getProfileEvent(relayUrl, bountyEvent.pubkey)?.content
-                        )?.name || shortenHash(nip19.npubEncode(bountyEvent.pubkey))}
+                        {parseProfileContent(getProfileEvent(relayUrl, bountyEvent.pubkey)?.content)?.name ||
+                          shortenHash(nip19.npubEncode(bountyEvent.pubkey))}
                       </div>
                     </Link>
                   )}
@@ -279,8 +301,8 @@ export default function BountyPage() {
                 <h3>Applications ({Object.values(getBountyApplicants(relayUrl, getTagValues("d", bountyEvent.tags))).length})</h3>
               </div>
               {cachedBountyEvent &&
-                getTagValues("s", cachedBountyEvent.tags) === "assigned" &&
-                ((userPublicKey && bountyEvent.pubkey === userPublicKey) || getTagValues("p", cachedBountyEvent.tags) === userPublicKey) ? (
+              getTagValues("s", cachedBountyEvent.tags) === "assigned" &&
+              ((userPublicKey && bountyEvent.pubkey === userPublicKey) || getTagValues("p", cachedBountyEvent.tags) === userPublicKey) ? (
                 <div
                   onClick={() => setTab("discussion")}
                   className={classNames(
@@ -319,7 +341,6 @@ export default function BountyPage() {
               <div className="mt-6 rounded-lg bg-white p-6 dark:bg-gray-800">
                 <div className="prose dark:prose-invert" dangerouslySetInnerHTML={{ __html: markdown }} />
               </div>
-
               <div className="mt-4 flex justify-end gap-x-4">
                 {getBountyTags(bountyEvent.tags).map((tag) => (
                   <div
@@ -329,6 +350,41 @@ export default function BountyPage() {
                     {tag}
                   </div>
                 ))}
+              </div>
+              {
+                // TODO: Remove this div when NoComment is replaced with something else
+                // https://github.com/Resolvr-io/resolvr.io/issues/66
+              }
+              <div className="mt-20" ref={NoCommentContainer}>
+                <style>
+                  {`
+                  :root {
+                    --nc-primary-color: ${colors.indigo[500]}
+                    
+                    
+                  }
+                  :root.${Theme.dark} {
+                    --nc-background: ${colors.gray[800]};
+                    --nc-container-font-family: arial;
+                    --nc-container-font-size: 1.2em;
+                    --nc-comment-author-font-size: 1.2em;
+                    --nc-comment-author-font-family: monospace;
+                    --nc-comment-author-font-color: ${colors.white};
+                    --nc-comment-date-color: inherit;
+                    --nc-comment-date-font-family: sans-serif;
+                    --nc-comment-date-font-size: 0.7em;
+                    --nc-link-text-decor: none;
+                    --nc-link-text-decor-hover: underline;
+                    --nc-textarea-font-family: inherit;
+                    --nc-textarea-font-size: inherit;
+                    --nc-text-background: ${colors.gray[800]};
+                    --nc-text-color: white;
+                    --nc-text-color-dark: white;
+                    --nc-primary-color: ${colors.indigo[600]};
+                    --nc-primary-contrast: white;
+                  }
+              `}
+                </style>
               </div>
             </>
           )}
