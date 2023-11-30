@@ -16,6 +16,7 @@ import { useUserProfileStore } from "../stores/userProfileStore";
 import AssignButton from "./AssignButton";
 import CompleteButton from "./CompleteButton";
 import UnassignButton from "./UnassignButton";
+import { retrieveProfiles } from "../lib/nostr";
 
 interface Props {
   applicantEvent: Event;
@@ -54,6 +55,7 @@ export default function Applicant({ applicantEvent }: Props) {
   }
 
   useEffect(() => {
+    retrieveProfiles([applicantEvent.pubkey]);
     if (getProfileEvent(relayUrl, applicantEvent.pubkey)) {
       const github = getITagValue(getProfileEvent(relayUrl, applicantEvent.pubkey)?.tags, "github");
       if (github) {
@@ -109,7 +111,7 @@ export default function Applicant({ applicantEvent }: Props) {
             day: "numeric",
           })}
         </span>
-        <span className="text-gray-900 dark:text-gray-300">{applicantEvent.content}</span>
+        <span className="text-gray-900 dark:text-gray-300">{getTagValues("message", applicantEvent.tags)}</span>
 
         <div className="flex gap-x-4">
           {parseProfileContent(getProfileEvent(relayUrl, applicantEvent.pubkey)?.content).website && (
@@ -169,9 +171,7 @@ export default function Applicant({ applicantEvent }: Props) {
         getProfileEvent(relayUrl, applicantEvent.pubkey) && (
           <div className="flex flex-wrap justify-end gap-y-4">
             <UnassignButton />
-            {parseProfileContent(getProfileEvent(relayUrl, applicantEvent.pubkey).content).lud16 && (
-              <CompleteButton applicantProfile={getProfileEvent(relayUrl, applicantEvent.pubkey)} />
-            )}
+            <CompleteButton applicantProfile={getProfileEvent(relayUrl, applicantEvent.pubkey)} />
           </div>
         )}
       {cachedBountyEvent &&
@@ -183,7 +183,7 @@ export default function Applicant({ applicantEvent }: Props) {
       {cachedBountyEvent &&
         getTagValues("p", applicantEvent.tags) === userPublicKey &&
         getTagValues("p", cachedBountyEvent.tags) !== applicantEvent.pubkey &&
-        !getTagValues("p", cachedBountyEvent.tags) && <AssignButton applicantEvent={applicantEvent} />}
+        !getTagValues("p", cachedBountyEvent.tags) && <AssignButton pubkey={applicantEvent.pubkey} />}
     </div>
   );
 }
