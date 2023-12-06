@@ -35,25 +35,20 @@ export default function Bounties() {
 
   return (
     <div className="flex flex-col items-center justify-center rounded-lg py-6">
-      <div className="flex w-full max-w-4xl flex-col gap-y-2">
-        <div className="flex items-center justify-between pb-8 md:pb-0">
-          <h1 className="text-3xl font-medium leading-6 text-gray-800 dark:text-gray-100">Bounties</h1>
+      <div className="mb-8 flex w-full max-w-4xl flex-col gap-y-2">
+        <div className="flex flex-col items-start justify-between space-y-4 pb-8 sm:flex-row sm:items-center sm:space-y-0 md:pb-0">
+          <h1 className="text-4xl font-medium leading-6 text-gray-800 dark:text-gray-100">Bounties</h1>
           <BountySearch />
         </div>
-        <p className="hidden pb-8 text-lg text-gray-500 dark:text-gray-400 md:block">
-          Bounties are a way to incentivize work on a project.
-        </p>
       </div>
       <BountyTabs />
-      {BountyTab.assigned === bountyType || BountyTab.userPosted === bountyType ? (
-        <div className="flex w-full max-w-4xl items-center justify-start gap-x-4 rounded-lg pb-3 pt-8"></div>
-      ) : (
+      {bountyType === BountyTab.all && (
         <div className="flex w-full max-w-4xl items-center justify-start gap-x-4 rounded-lg pb-3 pt-8">
           {BountyTab.all === bountyType && <BountyTags />}
         </div>
       )}
       <>
-        <div className="flex w-full max-w-4xl flex-col items-center justify-center rounded-lg py-6">
+        <div className="mt-4 flex w-full max-w-4xl flex-col items-center justify-center rounded-lg py-6">
           {BountyTab.all === bountyType && <OpenBounties />}
           {BountyTab.userPosted === bountyType && <PostedBounties />}
           {mounted && bountyType === BountyTab.userPosted && !userPublicKey && (

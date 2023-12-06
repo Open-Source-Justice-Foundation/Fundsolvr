@@ -29,11 +29,11 @@ export default function Banner() {
           alt="banner image"
           style={{
             objectFit: "cover",
+            objectPosition: "top",
           }}
           src={hero}
           sizes="100vw"
-          layout="fill"
-          objectPosition="top"
+          fill={true}
         />
       </div>
     </div>
