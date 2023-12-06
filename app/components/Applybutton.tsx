@@ -66,7 +66,7 @@ export default function Applybutton({ bountyEvent }: PropTypes) {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-x-2 rounded-lg bg-indigo-500 px-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
+        className="flex items-center gap-x-2 rounded-lg bg-indigo-500 px-2 py-2 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
       >
         <UserPlusIcon className="h-5 w-5" />
         Apply

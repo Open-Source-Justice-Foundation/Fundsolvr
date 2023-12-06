@@ -1,8 +1,8 @@
 import { classNames } from "../../lib/utils";
 
 interface Props {
-  width?: number;
-  height?: number;
+  width?: string;
+  height?: string;
   className?: string;
 }
 
