@@ -9,9 +9,13 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-geist-sans)"],
         mono: ["var(--font-geist-mono)"],
+        lexend: ["Lexend", "sans-serif"],
       },
       lineHeight: {
         "11": "3rem",
+      },
+      fontSize: {
+        "1.25": "1.25rem",
       },
       colors: {
         bitcoin: "#FB923C",

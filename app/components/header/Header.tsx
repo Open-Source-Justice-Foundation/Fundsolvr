@@ -8,8 +8,8 @@ import { usePathname } from "next/navigation";
 import { Theme } from "@/app/types";
 import { useCookies } from "next-client-cookies";
 
-import DiscordIcon from "./DiscordIcon";
-import GithubIcon from "./GithubIcon";
+import DiscordIcon from "../icons/DiscordIcon";
+import GithubIcon from "../icons/GithubIcon";
 import Login from "./Login";
 import SidebarToggle from "./SidebarToggle";
 import ThemeToggle from "./ThemeToggle";

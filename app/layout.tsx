@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Lexend } from "next/font/google";
 import localFont from "next/font/local";
 import { cookies } from "next/headers";
 
@@ -13,6 +14,7 @@ import { ClientCookiesProvider } from "./provider";
 import { Theme } from "./types";
 
 const avenir = localFont({ src: "../public/avenir.ttf" });
+const lexend = Lexend({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "resolvr",
