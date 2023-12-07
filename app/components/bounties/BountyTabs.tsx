@@ -20,7 +20,7 @@ export default function BountyTabs() {
   }
 
   return (
-    <div className="flex w-full max-w-4xl justify-start gap-x-2 overflow-auto border-b border-gray-300 px-2 pb-3 text-gray-600 dark:border-gray-600 dark:text-gray-300 md:overflow-hidden">
+    <div className="flex w-full max-w-screen-xl justify-start gap-x-2 overflow-auto border-b border-gray-300 px-2 pb-3 text-gray-600 dark:border-gray-600 dark:text-gray-300 md:overflow-hidden">
       <div
         onClick={switchToAll}
         className={classNames(

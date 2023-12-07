@@ -14,7 +14,7 @@ export default function BackupKeysMenu({ onClick }: Props) {
   const [checked, setChecked] = useState(false);
 
   return (
-    <div className="container mx-auto w-full max-w-4xl px-4 lg:px-0">
+    <div className="container mx-auto w-full max-w-screen-xl px-4 lg:px-0">
       {userPrivateKey ? (
         <div>
           <h2 className="text-2xl dark:text-white">Backup Your Keys</h2>

@@ -152,106 +152,107 @@ export default function BountyPage() {
     <div className="px-4 pb-20 pt-4">
       {bountyEvent && (
         <>
-          <div className="mx-auto flex max-w-4xl flex-row justify-between">
-            <Link
-              href={`/`}
-              className="flex w-48 items-center gap-x-2 rounded-lg bg-gray-50 px-3 py-2 text-sm font-medium text-gray-800 shadow-lg shadow-gray-900/5 ring-1 ring-gray-300 hover:bg-white dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-800 dark:hover:bg-gray-700/50"
-            >
-              <ArrowLeftIcon className="h-4 w-4" />
-              Back to all Bounties
-            </Link>
-            {userPublicKey && bountyEvent.pubkey !== userPublicKey && (
-              <>
-                {
-                  // TODO: check if user has already applied
-                  getApplicantEvent(relayUrl, getTagValues("d", bountyEvent.tags), userPublicKey) ? (
-                    <span className="select-none text-green-500 dark:text-green-400">Applied</span>
-                  ) : (
-                    <ApplyButton bountyEvent={bountyEvent} />
-                  )
-                }
-              </>
-            )}
-          </div>
-          <div className="mx-auto flex max-w-4xl flex-col gap-x-16 md:flex-row">
-            <div className="flex w-full flex-col">
-              <div className="flex flex-col gap-6 border-b border-gray-600 pb-3">
-                <div className="mt-6 flex items-center justify-between">
-                  <div className="flex items-center text-3xl text-white"></div>
-                </div>
-
-                <div>
-                  <h2 className="mb-4 text-2xl text-gray-900 dark:text-white">{getTagValues("title", bountyEvent.tags)}</h2>
-
-                  <div className="flex justify-between">
-                    <div className="flex gap-x-2">
-                      {bountyEvent?.pubkey && naddrPointer && (
-                        <>
-                          {bountyEvent.pubkey === getUserPublicKey() && (
-                            <>
-                              <DeleteBounty
-                                eventId={bountyEvent.id}
-                                onDelete={() => {
-                                  router.back();
-                                }}
-                              ></DeleteBounty>
-                            </>
-                          )}
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex divide-x divide-gray-600 px-2 pt-4 dark:text-gray-400">
-                  <div
-                    onClick={() => setTab("details")}
-                    className={classNames(
-                      tab === "details"
-                        ? "text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
-                        : "hover:text-gray-700 dark:hover:text-gray-200",
-                      "flex cursor-pointer select-none items-center gap-x-2 pr-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
-                    )}
-                  >
-                    <BookOpenIcon className="h-5 w-5" />
-                    <h3 className="">Details</h3>
-                  </div>
-                  <div
-                    onClick={() => setTab("applications")}
-                    className={classNames(
-                      tab === "applications"
-                        ? "text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
-                        : "hover:text-gray-700 dark:hover:text-gray-200",
-                      "flex cursor-pointer select-none items-center gap-x-2 px-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
-                    )}
-                  >
-                    <UsersIcon className="h-5 w-5" />
-                    <h3>Applications ({Object.values(getBountyApplicants(relayUrl, getTagValues("d", bountyEvent.tags))).length})</h3>
-                  </div>
-                  {cachedBountyEvent &&
-                  getTagValues("s", cachedBountyEvent.tags) === "assigned" &&
-                  ((userPublicKey && bountyEvent.pubkey === userPublicKey) ||
-                    getTagValues("p", cachedBountyEvent.tags) === userPublicKey) ? (
-                    <div
-                      onClick={() => setTab("discussion")}
-                      className={classNames(
-                        tab === "discussion"
-                          ? "text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
-                          : "hover:text-gray-700 dark:hover:text-gray-200",
-                        "flex cursor-pointer select-none items-center gap-x-2 pl-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
-                      )}
-                    >
-                      <ChatBubbleLeftRightIcon className="h-5 w-5" />
-                      <h3 className="">Discussion</h3>
-                    </div>
-                  ) : (
-                    <div className={"flex cursor-not-allowed select-none items-center gap-x-2 pl-2 dark:border-gray-700"}>
-                      <LockClosedIcon className="h-5 w-5" />
-                      <h3 className="">Discussion</h3>
-                    </div>
-                  )}
-                </div>
+          <div className="mx-auto flex max-w-screen-xl flex-col">
+            <div className="mx-auto flex w-full flex-row justify-between">
+              <Link
+                href={`/`}
+                className="flex w-48 items-center gap-x-2 rounded-lg bg-gray-50 px-3 py-2 text-sm font-medium text-gray-800 shadow-lg shadow-gray-900/5 ring-1 ring-gray-300 hover:bg-white dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-800 dark:hover:bg-gray-700/50"
+              >
+                <ArrowLeftIcon className="h-4 w-4" />
+                Back to all Bounties
+              </Link>
+              {userPublicKey && bountyEvent.pubkey !== userPublicKey && (
+                <>
+                  {
+                    // TODO: check if user has already applied
+                    getApplicantEvent(relayUrl, getTagValues("d", bountyEvent.tags), userPublicKey) ? (
+                      <span className="select-none text-green-500 dark:text-green-400">Applied</span>
+                    ) : (
+                      <ApplyButton bountyEvent={bountyEvent} />
+                    )
+                  }
+                </>
+              )}
+            </div>
+            <div className="flex flex-col gap-6 pb-3">
+              <div className="mt-6 flex items-center justify-between">
+                <div className="flex items-center text-3xl text-white"></div>
               </div>
 
+              <div>
+                <h2 className="mb-4 text-2xl text-gray-900 dark:text-white">{getTagValues("title", bountyEvent.tags)}</h2>
+
+                <div className="flex justify-between">
+                  <div className="flex gap-x-2">
+                    {bountyEvent?.pubkey && naddrPointer && (
+                      <>
+                        {bountyEvent.pubkey === getUserPublicKey() && (
+                          <>
+                            <DeleteBounty
+                              eventId={bountyEvent.id}
+                              onDelete={() => {
+                                router.back();
+                              }}
+                            ></DeleteBounty>
+                          </>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mx-auto flex max-w-screen-xl flex-col gap-x-16 md:flex-row">
+            <div className="flex w-full flex-col">
+              <div className="flex divide-x divide-gray-600 border-b border-gray-600 px-2 pb-6 pt-4 dark:text-gray-400">
+                <div
+                  onClick={() => setTab("details")}
+                  className={classNames(
+                    tab === "details"
+                      ? "text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
+                      : "hover:text-gray-700 dark:hover:text-gray-200",
+                    "flex cursor-pointer select-none items-center gap-x-2 pr-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
+                  )}
+                >
+                  <BookOpenIcon className="h-5 w-5" />
+                  <h3 className="">Details</h3>
+                </div>
+                <div
+                  onClick={() => setTab("applications")}
+                  className={classNames(
+                    tab === "applications"
+                      ? "text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
+                      : "hover:text-gray-700 dark:hover:text-gray-200",
+                    "flex cursor-pointer select-none items-center gap-x-2 px-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
+                  )}
+                >
+                  <UsersIcon className="h-5 w-5" />
+                  <h3>Applications ({Object.values(getBountyApplicants(relayUrl, getTagValues("d", bountyEvent.tags))).length})</h3>
+                </div>
+                {cachedBountyEvent &&
+                getTagValues("s", cachedBountyEvent.tags) === "assigned" &&
+                ((userPublicKey && bountyEvent.pubkey === userPublicKey) || getTagValues("p", cachedBountyEvent.tags) === userPublicKey) ? (
+                  <div
+                    onClick={() => setTab("discussion")}
+                    className={classNames(
+                      tab === "discussion"
+                        ? "text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
+                        : "hover:text-gray-700 dark:hover:text-gray-200",
+                      "flex cursor-pointer select-none items-center gap-x-2 pl-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
+                    )}
+                  >
+                    <ChatBubbleLeftRightIcon className="h-5 w-5" />
+                    <h3 className="">Discussion</h3>
+                  </div>
+                ) : (
+                  <div className={"flex cursor-not-allowed select-none items-center gap-x-2 pl-2 dark:border-gray-700"}>
+                    <LockClosedIcon className="h-5 w-5" />
+                    <h3 className="">Discussion</h3>
+                  </div>
+                )}
+              </div>
               {tab === "details" && (
                 <>
                   {/* <div className="mt-6 flex items-center justify-between"></div> */}
@@ -266,7 +267,7 @@ export default function BountyPage() {
                       </Link>
                     </div>
                     <div className="flex flex-col gap-y-4">
-                      <div className="flex items-center gap-1.5 rounded-lg px-2 py-1 text-gray-700 dark:bg-gray-800 dark:text-gray-500">
+                      <div className="flex items-center gap-1.5 self-start rounded-lg px-2 py-1 text-gray-700 dark:bg-gray-800 dark:text-gray-500">
                         <Link className="" href={`/u/${nip19.npubEncode(bountyEvent.pubkey)}`}>
                           {" "}
                           <div className=" truncate font-medium leading-6 text-gray-800 dark:text-white">
@@ -286,16 +287,7 @@ export default function BountyPage() {
                       <div className="prose dark:prose-invert" dangerouslySetInnerHTML={{ __html: markdown }} />
                     </div>
                   </div>
-                  <div className="mt-4 flex justify-end gap-x-4">
-                    {getBountyTags(bountyEvent.tags).map((tag) => (
-                      <div
-                        key={tag}
-                        className="flex cursor-pointer select-none items-center gap-x-2 rounded-lg bg-gray-200 px-3 py-2 text-sm font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-100"
-                      >
-                        {tag}
-                      </div>
-                    ))}
-                  </div>
+
                   {
                     // TODO: Remove this div when NoComment is replaced with something else
                     // https://github.com/Resolvr-io/resolvr.io/issues/66
@@ -359,8 +351,8 @@ export default function BountyPage() {
               )}
             </div>
 
-            <div className="order-first mt-20 flex w-60 flex-col text-black dark:text-gray-400 md:order-1">
-              <div className="flex gap-4 border-b border-gray-700 px-2 py-6 sm:flex-col">
+            <div className="flex flex-col text-black dark:text-gray-400">
+              <div className="flex gap-4 border-b border-gray-700 px-2 sm:flex-col">
                 <span>Value</span>
                 <div className="flex flex-row items-center justify-start">
                   <div className="text-bitcoin">
@@ -422,6 +414,16 @@ export default function BountyPage() {
               </div>
               <div className="flex gap-4 px-2 py-6 sm:flex-col">
                 <span>Tags</span>
+                <div className="mt-4 flex justify-end gap-x-4">
+                  {getBountyTags(bountyEvent.tags).map((tag) => (
+                    <div
+                      key={tag}
+                      className="flex cursor-pointer select-none items-center gap-x-2 rounded-lg bg-gray-200 px-3 py-2 text-sm font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-100"
+                    >
+                      {tag}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

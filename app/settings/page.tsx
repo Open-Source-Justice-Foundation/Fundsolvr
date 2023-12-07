@@ -255,7 +255,7 @@ export default function Settings() {
 
   return (
     <div className="flex w-full flex-col items-center justify-center px-4 pb-24 pt-10">
-      <form className="w-full max-w-4xl">
+      <form className="w-full max-w-screen-xl">
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12 dark:border-gray-700">
             <div className="flex items-center gap-x-2">

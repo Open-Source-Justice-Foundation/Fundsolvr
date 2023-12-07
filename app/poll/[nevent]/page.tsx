@@ -156,11 +156,10 @@ export default function PollPage() {
   }
 
   function getRecipientProfileEvent() {
-
-    const authors = structuredPollData?.zapRecipients![0]
+    const authors = structuredPollData?.zapRecipients![0];
 
     if (!authors) {
-      return
+      return;
     }
 
     const recipientFilter: Filter = {
@@ -384,7 +383,7 @@ export default function PollPage() {
   }, [zapPollResults]);
 
   return (
-    <div className="m-auto max-w-4xl dark:text-white">
+    <div className="m-auto max-w-screen-xl dark:text-white">
       {pollEvent && (
         <div className="dark:hover:border-gray-500/60z relative flex flex-col gap-y-4 rounded-lg border border-gray-200 bg-white p-6 py-4 pr-4 shadow-lg shadow-black/10 transition duration-150 ease-in-out hover:border-gray-400/70 dark:border-gray-500/30 dark:bg-gray-800/80">
           {pollAuthorProfile && (

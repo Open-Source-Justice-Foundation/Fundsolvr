@@ -13,7 +13,7 @@ export default function Banner() {
 
   return (
     <div className="relative flex h-80 max-h-80 items-center justify-center overflow-hidden px-4">
-      <div className="flex w-full max-w-4xl flex-col items-start justify-center space-y-5 text-white">
+      <div className="flex w-full max-w-screen-xl flex-col items-start justify-center space-y-5 text-white">
         <div className="mr-auto flex max-w-2xl flex-col items-start space-y-5 ">
           <h2 className="text-2xl text-white md:text-4xl md:leading-11">Bitcoin native escrow and dispute resolution for FOSS bounties</h2>
           <button

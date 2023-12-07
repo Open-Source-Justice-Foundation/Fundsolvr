@@ -5,8 +5,10 @@ export default function Example() {
   return (
     <>
       <Banner />
-      <main className="container mx-auto flex max-w-7xl flex-col px-4">
-        <Bounties />
+      <main className="w-full px-4">
+        <div className="container mx-auto max-w-7xl flex-col">
+          <Bounties />
+        </div>
       </main>
     </>
   );
