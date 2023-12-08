@@ -15,6 +15,7 @@ import AssignedBounties from "./AssignedBounties";
 import BountySearch from "./BountySearch";
 import BountyTabs from "./BountyTabs";
 import BountyTags from "./BountyTags";
+import DisputedBounties from "./DisputedBounties";
 import OpenBounties from "./OpenBounties";
 import PostedBounties from "./PostedBounties";
 
@@ -76,6 +77,7 @@ export default function Bounties() {
               </Login>
             </div>
           )}
+          {BountyTab.disputed === bountyType && <DisputedBounties />}
         </div>
       </>
     </div>

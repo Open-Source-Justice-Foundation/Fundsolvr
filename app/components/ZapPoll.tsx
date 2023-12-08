@@ -171,7 +171,7 @@ export default function ZapPoll({ Icon, event }: Props) {
     <>
       <button
         onClick={openModal}
-        className="flex cursor-pointer items-center justify-center rounded-lg bg-indigo-500 px-3 py-2 text-sm text-white hover:bg-indigo-400"
+        className="flex cursor-pointer items-center justify-center rounded-lg bg-indigo-500 px-3 py-2 text-sm text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
       >
         {Icon ? <Icon className="h-5 w-5"></Icon> : <ListBulletIcon className="mr-2 h-5 w-5" />}
         Poll

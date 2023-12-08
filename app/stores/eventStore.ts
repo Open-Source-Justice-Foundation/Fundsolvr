@@ -2,6 +2,8 @@ import type { Event } from "nostr-tools";
 import { create } from "zustand";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
 
+import { BountyTab } from "../lib/constants";
+
 interface BountyEventState {
   bountyEvents: Record<string, Array<Event>>;
   setBountyEvents: (key: string, bountyEvents: Array<Event>) => void;
@@ -54,8 +56,8 @@ interface BountyEventState {
   getZapReceiptEvent: (relayUrl: string, bountyId: string) => Event | null;
   getZapReceiptEvents: (relayUrl: string) => Record<string, Event>;
 
-  bountyType: "all" | "userPosted" | "assigned";
-  setBountyType: (bountyType: "all" | "userPosted" | "assigned") => void;
+  bountyType: BountyTab;
+  setBountyType: (bountyType: BountyTab) => void;
 }
 
 export const useBountyEventStore = create<BountyEventState>()(

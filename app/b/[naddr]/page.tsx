@@ -173,6 +173,7 @@ export default function BountyPage() {
                   }
                 </>
               )}
+              {userPublicKey && bountyEvent.pubkey === userPublicKey && <ZapPoll event={bountyEvent} />}
             </div>
             <div className="flex flex-col gap-6 pb-3">
               <div className="mt-6 flex items-center justify-between">
@@ -344,15 +345,12 @@ export default function BountyPage() {
                       ((userPublicKey && bountyEvent.pubkey === userPublicKey) ||
                         getTagValues("p", cachedBountyEvent.tags) === userPublicKey) && <Discussion />}
                   </div>
-                  <div className="ml-auto mt-4">
-                    <ZapPoll event={bountyEvent} />
-                  </div>
                 </div>
               )}
             </div>
 
-            <div className="order-first flex flex-col text-black dark:text-gray-400 md:order-2">
-              <div className="flex items-center gap-4 border-b border-gray-700 px-2 sm:flex-col sm:items-start">
+            <div className="order-first flex w-full flex-col dark:text-gray-400 md:order-2 md:max-w-xs">
+              <div className="flex items-center gap-4 border-b border-gray-700 px-2 py-6 sm:items-start md:flex-col">
                 <span>Value</span>
                 <div className="flex flex-row items-center justify-start">
                   <div className="text-bitcoin">
@@ -363,7 +361,7 @@ export default function BountyPage() {
                   </span>
                 </div>
               </div>
-              <div className="flex items-center gap-4 border-b border-gray-700 px-2 py-6 sm:flex-col sm:items-start">
+              <div className="flex items-center gap-4 border-b border-gray-700 px-2 py-6 sm:items-start md:flex-col">
                 <span>Status</span>
                 <div>
                   {" "}
@@ -412,7 +410,7 @@ export default function BountyPage() {
                   </span>
                 </div>
               </div>
-              <div className="flex items-center gap-4 px-2 py-6 sm:flex-col sm:items-start">
+              <div className="flex items-center gap-4 px-2 py-6 sm:items-start md:flex-col">
                 <span>Tags</span>
                 <div className="flex gap-x-4 md:justify-end">
                   {getBountyTags(bountyEvent.tags).map((tag) => (

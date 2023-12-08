@@ -1,4 +1,4 @@
-import { ArrowUpTrayIcon, NewspaperIcon, UserIcon } from "@heroicons/react/24/outline";
+import { ArrowUpTrayIcon, ChatBubbleBottomCenterIcon, NewspaperIcon, UserIcon } from "@heroicons/react/24/outline";
 
 import { BountyTab } from "../../lib/constants";
 import { classNames } from "../../lib/utils";
@@ -13,6 +13,10 @@ export default function BountyTabs() {
 
   function switchToPosted() {
     setBountyType(BountyTab.userPosted);
+  }
+
+  function switchToDisputed() {
+    setBountyType(BountyTab.disputed);
   }
 
   function switchToAssigned() {
@@ -51,11 +55,23 @@ export default function BountyTabs() {
           bountyType === BountyTab.assigned
             ? "text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
             : "hover:text-gray-700 dark:hover:text-gray-200",
-          "flex cursor-pointer select-none items-center gap-x-2 pr-2 hover:text-indigo-600 dark:hover:text-gray-100"
+          "flex cursor-pointer select-none items-center gap-x-2 border-r border-gray-400 pr-2 hover:text-indigo-600 dark:hover:text-gray-100"
         )}
       >
         <UserIcon className="h-5 w-5" aria-hidden="true" />
         <span className="whitespace-nowrap">Assigned Bounties</span>
+      </div>
+      <div
+        onClick={switchToDisputed}
+        className={classNames(
+          bountyType === BountyTab.disputed
+            ? "text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
+            : "hover:text-gray-700 dark:hover:text-gray-200",
+          "flex cursor-pointer select-none items-center gap-x-2 pr-2 hover:text-indigo-600 dark:hover:text-gray-100"
+        )}
+      >
+        <ChatBubbleBottomCenterIcon className="h-5 w-5" aria-hidden="true" />
+        <span className="whitespace-nowrap">Disputed Bounties</span>
       </div>
     </div>
   );
