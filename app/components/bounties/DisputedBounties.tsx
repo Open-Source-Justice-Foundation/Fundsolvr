@@ -2,8 +2,13 @@
 
 import { useEffect, useState } from "react";
 
+import Link from "next/link";
+
 import BountyPlaceholder from "@/app/components/Skeleton/Bounty";
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import type { Event, Filter } from "nostr-tools";
+import { nip19 } from "nostr-tools";
+import { EventPointer } from "nostr-tools/lib/nip19";
 
 import { BountyTab } from "../../lib/constants";
 import { filterBounties, getApplicants, retrieveProfiles } from "../../lib/nostr";
@@ -18,7 +23,7 @@ import NoBounties from "./NoBounties";
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
   const { setAssignedEvents, assignedEvents, bountyType, search } = useBountyEventStore();
-  const [disputedBounties, setDisputedBounties] = useState<Event[]>([]);
+  const [disputedBounties, setDisputedBounties] = useState<{ bounty: Event; poll: Event }[]>([]);
   const { userPublicKey } = useUserProfileStore();
   const [loading, setLoading] = useState({ disputed: false });
 
@@ -52,7 +57,7 @@ export default function Bounties() {
     };
 
     const onEOSE = () => {
-      const disputedBounties: Event[] = [];
+      const pollToBountyMap: { bounty: Event; poll: Event }[] = [];
 
       events.forEach((event) => {
         const bountyId = event.tags.find((t) => {
@@ -71,17 +76,21 @@ export default function Bounties() {
             [relayUrl],
             disputedBountyFilter,
             (e) => {
+              pollToBountyMap.push({
+                bounty: e,
+                poll: event,
+              });
               console.log("disputed bounty event!", e);
-              setDisputedBounties(disputedBounties.concat(e));
             },
             () => {
               console.log("disputed bounties", disputedBounties);
+              setDisputedBounties(pollToBountyMap);
             }
           );
         }
       });
 
-      setDisputedBounties(events);
+      // setDisputedBounties(events);
       retrieveProfiles(Array.from(pubkeys));
       // getApplicants(dValues);
       setLoading({ ...loading, disputed: false });
@@ -104,7 +113,33 @@ export default function Bounties() {
           disputedBounties &&
           userPublicKey &&
           (disputedBounties.length ? (
-            filterBounties(search, disputedBounties).map((event) => <Bounty key={event.id} event={event} />)
+            disputedBounties.map((e) => {
+              const pollEvent = e.poll.tags.find((t) => {
+                if (t[0] === "e") {
+                  return t[2];
+                }
+              });
+              const poll: EventPointer = {
+                id: pollEvent![1],
+                author: e.poll.pubkey,
+                kind: 6969,
+                relays: [pollEvent![2]],
+              };
+              return (
+                <>
+                  <Bounty key={e.bounty.id} event={e.bounty} />
+                  <div className="bottom-1 mb-2 mt-4 flex w-full items-center  border-b border-gray-500 py-4">
+                    <Link
+                      href={`/poll/${nip19.neventEncode(poll)}`}
+                      className="align-start ml-auto flex items-center gap-x-2 self-start hover:text-gray-700 dark:text-white hover:dark:text-gray-400"
+                    >
+                      <span>Go to Poll</span>
+                      <ArrowRightIcon className="h-4 w-4" />
+                    </Link>
+                  </div>
+                </>
+              );
+            })
           ) : (
             <NoBounties />
           ))}

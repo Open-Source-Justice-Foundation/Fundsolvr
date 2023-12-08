@@ -383,88 +383,91 @@ export default function PollPage() {
   }, [zapPollResults]);
 
   return (
-    <div className="m-auto max-w-screen-xl dark:text-white">
-      {pollEvent && (
-        <div className="dark:hover:border-gray-500/60z relative flex flex-col gap-y-4 rounded-lg border border-gray-200 bg-white p-6 py-4 pr-4 shadow-lg shadow-black/10 transition duration-150 ease-in-out hover:border-gray-400/70 dark:border-gray-500/30 dark:bg-gray-800/80">
-          {pollAuthorProfile && (
-            <div>
-              <div className="flex items-center gap-x-2">
-                <div>
-                  <img
-                    src={pollAuthorProfile.picture}
-                    alt={`profile picture of ${pollAuthorProfile.name}`}
-                    className="inline-block aspect-square h-10 w-10 select-none rounded-full object-cover shadow-lg shadow-gray-800/10 ring-1 ring-gray-900/10 backdrop-blur hover:bg-gray-50 dark:ring-white/10 dark:hover:bg-gray-800/90"
-                  ></img>
+    <div className="p-4">
+      <div className="m-auto max-w-screen-xl dark:text-white">
+        {pollEvent && (
+          <div className="dark:hover:border-gray-500/60z relative flex flex-col gap-y-4 rounded-lg border border-gray-200 bg-white p-6 py-4 pr-4 shadow-lg shadow-black/10 transition duration-150 ease-in-out hover:border-gray-400/70 dark:border-gray-500/30 dark:bg-gray-800/80">
+            {pollAuthorProfile && (
+              <div>
+                <div className="flex items-center gap-x-2">
+                  <div>
+                    <img
+                      src={pollAuthorProfile.picture}
+                      alt={`profile picture of ${pollAuthorProfile.name}`}
+                      className="inline-block aspect-square h-10 w-10 select-none rounded-full object-cover shadow-lg shadow-gray-800/10 ring-1 ring-gray-900/10 backdrop-blur hover:bg-gray-50 dark:ring-white/10 dark:hover:bg-gray-800/90"
+                    ></img>
+                  </div>
+                  <div>{pollAuthorProfile.name}</div>
+                  <span>|</span>
+                  <div>{shortenHash(nip19.npubEncode(pollAuthorProfile.pubkey))}</div>
+                  <div className="ml-auto text-sm leading-6">Created on {new Date(pollEvent.created_at * 1000).toLocaleString()}</div>
                 </div>
-                <div>{pollAuthorProfile.name}</div>
-                <span>|</span>
-                <div>{shortenHash(nip19.npubEncode(pollAuthorProfile.pubkey))}</div>
-                <div className="ml-auto text-sm leading-6">Created on {new Date(pollEvent.created_at * 1000).toLocaleString()}</div>
               </div>
-            </div>
-          )}
+            )}
 
-          {structuredPollData && (
-            <div>
-              <div>{structuredPollData.content}</div>
-              <div className="my-4 flex flex-col justify-start gap-y-2">
-                {structuredPollData.pollOptions.map((option, i) => {
-                  return (
-                    <div className="relative flex flex-col" key={i}>
-                      <button
-                        onClick={(e) => {
-                          handleVoteClick(e, option[1]);
-                        }}
-                        className="flex cursor-pointer rounded-lg border-2 border-gray-500 p-2 text-sm leading-6 hover:border-indigo-500"
-                      >
-                        {totalVotes > 0 && <span className="mr-2">{`${Math.round((pollOptionCount[i].count / totalVotes) * 100)}%`}</span>}
-                        <span>{option[2]}</span>
-                      </button>
-                      <div
-                        style={{ width: `${(totalVotes > 0 ? pollOptionCount[i].count / totalVotes : 0) * 100}%` }}
-                        className="pointer-events-none absolute h-full w-full max-w-full rounded-lg bg-indigo-500 opacity-10 transition-all duration-500"
-                      ></div>
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="mb-2 flex flex-row justify-between text-sm leading-6 text-gray-500">
-                <div>
-                  {totalVotes} votes • {structuredPollData.consensus}% needed to pass
+            {structuredPollData && (
+              <div>
+                <div>{structuredPollData.content}</div>
+                <div className="my-4 flex flex-col justify-start gap-y-2">
+                  {structuredPollData.pollOptions.map((option, i) => {
+                    return (
+                      <div className="relative flex flex-col" key={i}>
+                        <button
+                          onClick={(e) => {
+                            handleVoteClick(e, option[1]);
+                          }}
+                          className="flex cursor-pointer rounded-lg border-2 border-gray-500 p-2 text-sm leading-6 hover:border-indigo-500"
+                        >
+                          {totalVotes > 0 && (
+                            <span className="mr-2">{`${Math.round((pollOptionCount[i].count / totalVotes) * 100)}%`}</span>
+                          )}
+                          <span>{option[2]}</span>
+                        </button>
+                        <div
+                          style={{ width: `${(totalVotes > 0 ? pollOptionCount[i].count / totalVotes : 0) * 100}%` }}
+                          className="pointer-events-none absolute h-full w-full max-w-full rounded-lg bg-indigo-500 opacity-10 transition-all duration-500"
+                        ></div>
+                      </div>
+                    );
+                  })}
                 </div>
-                {(() => {
-                  if (structuredPollData.valueMin && structuredPollData.valueMax) {
-                    if (structuredPollData.valueMin === structuredPollData.valueMax) {
-                      return <div>{structuredPollData.valueMin} satoshis</div>;
-                    } else {
-                      return (
-                        <div>
-                          <div>Minimum to vote: {structuredPollData.valueMin} satoshis</div>;
-                          <div>Maximum to vote: {structuredPollData.valueMin} satoshis</div>;
-                        </div>
-                      );
+                <div className="mb-2 flex flex-row justify-between text-sm leading-6 text-gray-500">
+                  <div>
+                    {totalVotes} votes • {structuredPollData.consensus}% needed to pass
+                  </div>
+                  {(() => {
+                    if (structuredPollData.valueMin && structuredPollData.valueMax) {
+                      if (structuredPollData.valueMin === structuredPollData.valueMax) {
+                        return <div>{structuredPollData.valueMin} satoshis</div>;
+                      } else {
+                        return (
+                          <div>
+                            <div>Minimum to vote: {structuredPollData.valueMin} satoshis</div>;
+                            <div>Maximum to vote: {structuredPollData.valueMin} satoshis</div>;
+                          </div>
+                        );
+                      }
                     }
-                  }
-                })()}
-              </div>
-              <div className="flex flex-col gap-y-2">
-                {/* {structuredPollData.eventIdReference &&
+                  })()}
+                </div>
+                <div className="flex flex-col gap-y-2">
+                  {/* {structuredPollData.eventIdReference &&
                   structuredPollData.eventIdReference.map((event, i) => {
                     return <div key={i}>For event: {event[1]}</div>;
                   })} */}
-                {/* {structuredPollData.zapRecipients &&
+                  {/* {structuredPollData.zapRecipients &&
                   structuredPollData.zapRecipients.map((recipient, i) => {
                     return <div key={i}>Send Zap to: {recipient[1]}</div>;
                   })} */}
 
-                {/* {structuredPollData.consensus && <div>Minimum threshold to pass vote: {structuredPollData.consensus}%</div>} */}
-                {/* <div>Poll ID: {structuredPollData.id}</div> */}
+                  {/* {structuredPollData.consensus && <div>Minimum threshold to pass vote: {structuredPollData.consensus}%</div>} */}
+                  {/* <div>Poll ID: {structuredPollData.id}</div> */}
 
-                {/* <div>Poll author: {pollEvent.pubkey}</div> */}
-              </div>
-              <div>
-                {/* <span>Results:</span> */}
-                {/* {pollOptionCount &&
+                  {/* <div>Poll author: {pollEvent.pubkey}</div> */}
+                </div>
+                <div>
+                  {/* <span>Results:</span> */}
+                  {/* {pollOptionCount &&
                   Object.entries(pollOptionCount).map(([optionIndex, optionData], i) => {
                     return (
                       <div key={i}>
@@ -472,19 +475,20 @@ export default function PollPage() {
                       </div>
                     );
                   })} */}
-                <div className="flex flex-row justify-between">
-                  {/* <div>Primary Relay: {decodedNevent.relays}</div> */}
-                  {structuredPollData.closedAt && (
-                    <div className="ml-auto text-sm leading-6">
-                      Closes on {new Date(structuredPollData.closedAt * 1000).toLocaleString()}
-                    </div>
-                  )}
+                  <div className="flex flex-row justify-between">
+                    {/* <div>Primary Relay: {decodedNevent.relays}</div> */}
+                    {structuredPollData.closedAt && (
+                      <div className="ml-auto text-sm leading-6">
+                        Closes on {new Date(structuredPollData.closedAt * 1000).toLocaleString()}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
-      )}
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

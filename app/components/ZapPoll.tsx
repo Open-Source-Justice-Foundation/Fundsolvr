@@ -138,13 +138,16 @@ export default function ZapPoll({ Icon, event }: Props) {
       tags.push(["e", eventId, relayUrl]);
     }
 
-    if (recipientAddresses.length) {
-      const pTags = recipientAddresses.map((recipient, index) => {
-        return ["p", recipient, relayUrl];
-      });
-      tags.push(...pTags);
-    }
-    // console.log("tags", tags);
+    // if (recipientAddresses.length) {
+    //   const pTags = recipientAddresses.map((recipient, index) => {
+    //     return ["p", recipient, relayUrl];
+    //   });
+    //   tags.push(...pTags);
+    // }
+
+    // Resolvr is the recipient of sats from zap polls
+    const RESOLVR_PUBKEY = "4ef937123ffc92417d04e137d9f8bf33b75ca45a08be8049d8abde1197fe79c0";
+    tags.push(["p", RESOLVR_PUBKEY, relayUrl]);
 
     // TODO:
     // * implement OTS field
@@ -361,7 +364,7 @@ export default function ZapPoll({ Icon, event }: Props) {
                       }}
                     />
                   </div>
-                  <div className="mt-4">
+                  {/* <div className="mt-4">
                     <p className="mb-2 text-sm text-gray-500">Which Event is this for?</p>
                     <input
                       type="text"
@@ -374,8 +377,8 @@ export default function ZapPoll({ Icon, event }: Props) {
                         setEventId(e.target.value);
                       }}
                     />
-                  </div>
-                  <div className="mt-4">
+                  </div> */}
+                  {/* <div className="mt-4">
                     <p className="mb-2 text-sm text-gray-500">Recipient(s) of the Zap</p>
                     {Array.from({ length: recipientOptionCount }).map((recipient, i) => (
                       <input
@@ -404,7 +407,7 @@ export default function ZapPoll({ Icon, event }: Props) {
                         </button>
                       )}
                     </div>
-                  </div>
+                  </div> */}
                   <div className="mt-4 flex-row space-x-4">
                     <button onClick={handlePublish}>Publish</button>
                     <button onClick={closeModal}>Cancel</button>

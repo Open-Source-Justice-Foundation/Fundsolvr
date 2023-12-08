@@ -67,6 +67,8 @@ export default function BountyPage() {
       setNaddrPointer(naddr_data);
       console.log("naddry", naddr_data);
 
+      console.log(nip19.decode("npub1fmunwy3lljfyzlgyuyman79lxwm4efz6pzlgqjwc400pr9l708qquvje8w"));
+
       if (naddrPointer) {
         if (cachedBountyEvent) {
           setBountyEvent(cachedBountyEvent);
