@@ -351,8 +351,8 @@ export default function BountyPage() {
               )}
             </div>
 
-            <div className="flex flex-col text-black dark:text-gray-400">
-              <div className="flex gap-4 border-b border-gray-700 px-2 sm:flex-col">
+            <div className="order-first flex flex-col text-black dark:text-gray-400 md:order-2">
+              <div className="flex items-center gap-4 border-b border-gray-700 px-2 sm:flex-col sm:items-start">
                 <span>Value</span>
                 <div className="flex flex-row items-center justify-start">
                   <div className="text-bitcoin">
@@ -363,7 +363,7 @@ export default function BountyPage() {
                   </span>
                 </div>
               </div>
-              <div className="flex gap-4 border-b border-gray-700 px-2 py-6 sm:flex-col">
+              <div className="flex items-center gap-4 border-b border-gray-700 px-2 py-6 sm:flex-col sm:items-start">
                 <span>Status</span>
                 <div>
                   {" "}
@@ -412,9 +412,9 @@ export default function BountyPage() {
                   </span>
                 </div>
               </div>
-              <div className="flex gap-4 px-2 py-6 sm:flex-col">
+              <div className="flex items-center gap-4 px-2 py-6 sm:flex-col sm:items-start">
                 <span>Tags</span>
-                <div className="mt-4 flex justify-end gap-x-4">
+                <div className="flex gap-x-4 md:justify-end">
                   {getBountyTags(bountyEvent.tags).map((tag) => (
                     <div
                       key={tag}

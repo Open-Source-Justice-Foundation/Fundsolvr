@@ -17,7 +17,7 @@ interface PropTypes {
   bountyEvent: Event;
 }
 
-export default function Applybutton({ bountyEvent }: PropTypes) {
+export default function ApplyButton({ bountyEvent }: PropTypes) {
   const { relayUrl, publish } = useRelayStore();
   const { setApplicantEvent } = useBountyEventStore();
   const { userPublicKey, userPrivateKey } = useUserProfileStore();

@@ -67,22 +67,8 @@ export default function Bounty({ event }: Props) {
           />
         </div>
         <div className="flex w-full flex-col gap-y-2">
-          <div className="flex justify-between pl-1.5">
-            <div className="flex items-center justify-end gap-x-2 sm:justify-start">
-              {/* {event.pubkey === getUserPublicKey() && <DeleteBounty eventId={event.id}></DeleteBounty>} */}
-              {tags[0] && (
-                <div
-                  key={tags[0]}
-                  className="flex cursor-pointer select-none items-center gap-x-2 rounded-lg bg-gray-200 px-3 py-2 text-sm font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-100"
-                >
-                  {tags[0]}
-                </div>
-              )}
-            </div>
-          </div>
-
           <div className="flex flex-col gap-x-3 gap-y-2">
-            <div className="flex flex-row text-secondaryText">
+            <div className="flex flex-row items-center text-secondaryText">
               <div className="truncate text-sm font-medium leading-6 ">
                 {parseProfileContent(getProfileEvent(relayUrl, event.pubkey)?.content).name || shortenHash(nip19.npubEncode(event.pubkey))}
               </div>
@@ -94,6 +80,19 @@ export default function Bounty({ event }: Props) {
               </div>
 
               <div className="text-sm leading-6">{getTagValues("title", event.tags)}</div>
+              <div className="ml-auto hidden justify-between sm:flex">
+                <div className="flex items-center justify-end gap-x-2 sm:justify-start">
+                  {/* {event.pubkey === getUserPublicKey() && <DeleteBounty eventId={event.id}></DeleteBounty>} */}
+                  {tags[0] && (
+                    <div
+                      key={tags[0]}
+                      className="flex cursor-pointer select-none items-center gap-x-2 rounded-lg bg-gray-200 px-3 py-2 text-sm font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-100"
+                    >
+                      {tags[0]}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
             <div className="prose leading-6 text-gray-800 dark:text-gray-100">{truncateText(removeMarkdownTitles(event.content), 120)}</div>
           </div>

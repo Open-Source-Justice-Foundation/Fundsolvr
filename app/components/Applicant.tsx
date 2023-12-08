@@ -7,6 +7,7 @@ import Link from "next/link";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 import { type Event, nip19 } from "nostr-tools";
 
+import { retrieveProfiles } from "../lib/nostr";
 import { getITagValue, getITagValues, getTagValues, parseProfileContent, shortenHash, verifyGithub, websiteLink } from "../lib/utils";
 import Avatar from "../messages/components/Avatar";
 import { useBountyEventStore } from "../stores/eventStore";
@@ -16,7 +17,6 @@ import { useUserProfileStore } from "../stores/userProfileStore";
 import AssignButton from "./AssignButton";
 import CompleteButton from "./CompleteButton";
 import UnassignButton from "./UnassignButton";
-import { retrieveProfiles } from "../lib/nostr";
 
 interface Props {
   applicantEvent: Event;
@@ -68,7 +68,7 @@ export default function Applicant({ applicantEvent }: Props) {
       setupProfile(event);
     };
 
-    const onEOSE = () => { };
+    const onEOSE = () => {};
 
     const userFilter = {
       kinds: [0],
@@ -183,7 +183,7 @@ export default function Applicant({ applicantEvent }: Props) {
       {cachedBountyEvent &&
         getTagValues("p", applicantEvent.tags) === userPublicKey &&
         getTagValues("p", cachedBountyEvent.tags) !== applicantEvent.pubkey &&
-        !getTagValues("p", cachedBountyEvent.tags) && <AssignButton pubkey={applicantEvent.pubkey} />}
+        !getTagValues("p", cachedBountyEvent.tags) && <AssignButton applicantEvent={applicantEvent} />}
     </div>
   );
 }
