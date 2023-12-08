@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import Script from "next/script";
 
 import Applicant from "@/app/components/Applicant";
-import ApplyButton from "@/app/components/ApplyButton";
+import ApplyButton from "@/app/components/Applybutton";
 import Discussion from "@/app/components/discussion/Discussion";
 import BitcoinIcon from "@/app/components/icons/BitcoinIcon";
 import { getApplicants, getZapRecieptFromRelay, retrieveProfiles } from "@/app/lib/nostr";
