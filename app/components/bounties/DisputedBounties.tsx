@@ -18,56 +18,76 @@ import NoBounties from "./NoBounties";
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
   const { setAssignedEvents, assignedEvents, bountyType, search } = useBountyEventStore();
+  const [disputedBounties, setDisputedBounties] = useState<Event[]>([]);
   const { userPublicKey } = useUserProfileStore();
-  const [loading, setLoading] = useState({ assigned: false });
+  const [loading, setLoading] = useState({ disputed: false });
 
   // TODO: check if user has been paid for bounty
   // if so don't show it
   const getAssignedBounties = async () => {
     if (userPublicKey && !assignedEvents[relayUrl]) {
-      setLoading({ ...loading, assigned: true });
+      setLoading({ ...loading, disputed: true });
     }
 
     const events: Event[] = [];
     const pubkeys = new Set<string>();
     const dValues = new Set<string>();
 
-    const assignedBountyFilter: Filter = {
-      kinds: [30050],
+    const pollEventFilter: Filter = {
+      kinds: [1985],
       limit: 10,
       until: undefined,
-      "#p": [userPublicKey],
+      "#L": ["io.resolvr"],
     };
 
     if (assignedEvents[relayUrl]) {
       const lastEvent = assignedEvents[relayUrl].slice(-1)[0];
       if (lastEvent) {
-        assignedBountyFilter.until = lastEvent.created_at - 10;
+        pollEventFilter.until = lastEvent.created_at - 10;
       }
     }
 
     const onEvent = (event: Event) => {
-      // TODO: check for zap recipt
-      const value = getTagValues("reward", event.tags);
-      if (value && value.length > 0) {
-        events.push(event);
-        pubkeys.add(event.pubkey);
-        dValues.add(getTagValues("d", event.tags));
-      }
+      events.push(event);
     };
 
     const onEOSE = () => {
-      if (assignedEvents[relayUrl]) {
-        setAssignedEvents(relayUrl, [...assignedEvents[relayUrl], ...events]);
-      } else {
-        setAssignedEvents(relayUrl, events);
-      }
+      const disputedBounties: Event[] = [];
+
+      events.forEach((event) => {
+        const bountyId = event.tags.find((t) => {
+          if (t[2] === "#t") {
+            return t;
+          }
+        });
+
+        if (bountyId) {
+          const disputedBountyFilter: Filter = {
+            kinds: [30050],
+            ids: [bountyId[1]],
+          };
+
+          subscribe(
+            [relayUrl],
+            disputedBountyFilter,
+            (e) => {
+              console.log("disputed bounty event!", e);
+              setDisputedBounties(disputedBounties.concat(e));
+            },
+            () => {
+              console.log("disputed bounties", disputedBounties);
+            }
+          );
+        }
+      });
+
+      setDisputedBounties(events);
       retrieveProfiles(Array.from(pubkeys));
-      getApplicants(dValues);
-      setLoading({ ...loading, assigned: false });
+      // getApplicants(dValues);
+      setLoading({ ...loading, disputed: false });
     };
 
-    subscribe([relayUrl], assignedBountyFilter, onEvent, onEOSE);
+    subscribe([relayUrl], pollEventFilter, onEvent, onEOSE);
   };
 
   useEffect(() => {
@@ -78,13 +98,13 @@ export default function Bounties() {
 
   return (
     <>
-      {loading.assigned
+      {loading.disputed
         ? Array.from(Array(5)).map((i) => <BountyPlaceholder key={i} />)
-        : bountyType === BountyTab.assigned &&
-          assignedEvents[relayUrl] &&
+        : bountyType === BountyTab.disputed &&
+          disputedBounties &&
           userPublicKey &&
-          (assignedEvents[relayUrl].length ? (
-            filterBounties(search, assignedEvents[relayUrl]).map((event) => <Bounty key={event.id} event={event} />)
+          (disputedBounties.length ? (
+            filterBounties(search, disputedBounties).map((event) => <Bounty key={event.id} event={event} />)
           ) : (
             <NoBounties />
           ))}

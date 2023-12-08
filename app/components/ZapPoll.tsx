@@ -18,7 +18,7 @@ import { useUserProfileStore } from "../stores/userProfileStore";
 
 interface Props {
   Icon?: React.FC<any>;
-  event?: Event;
+  event: Event;
 }
 
 type Base64 = string;
@@ -41,7 +41,7 @@ export default function ZapPoll({ Icon, event }: Props) {
   const [satoshiAmount, setSatoshiAmount] = useState("");
   const [consensusThreshold, setConsensusThreshold] = useState("");
   const [closedAt, setClosedAt] = useState("");
-  const [eventId, setEventId] = useState(event?.id || "");
+  const [eventId, setEventId] = useState(event.id || "");
   // const [recipientId, setRecipientId] = useState("");
   const [recipientOptionCount, setRecipientOptionCount] = useState(1);
   const [recipientAddresses, setRecipientAddresses] = useState<string[]>([getUserPublicKey()]);
@@ -151,7 +151,7 @@ export default function ZapPoll({ Icon, event }: Props) {
     // * Implement Zap Recipient fields + p tags
     // * implement: p tags
 
-    let event: PollEvent = {
+    let pollEvent: PollEvent = {
       id: "",
       sig: "",
       kind: 6969,
@@ -162,8 +162,31 @@ export default function ZapPoll({ Icon, event }: Props) {
       ots: "",
     };
 
-    event = await window.nostr.signEvent(event);
-    publish(getActivePostRelayURLs(), event, onSeen);
+    pollEvent = await window.nostr.signEvent(pollEvent);
+
+    // Also publish a Label event so we can find the poll later.
+    let labelEvent = {
+      id: "",
+      sig: "",
+      kind: 1985,
+      tags: [
+        ["e", pollEvent.id, relayUrl], // The Poll event
+        ["l", event.id, "#t"], // The 'topic' is the id of the bounty that the poll references
+
+        ["L", "io.resolvr"],
+        ["l", getUserPublicKey(), "#p"],
+      ],
+      content: "",
+      pubkey: getUserPublicKey(),
+      created_at: Math.floor(Date.now() / 1000),
+    };
+
+    labelEvent = await window.nostr.signEvent(labelEvent);
+
+    publish(getActivePostRelayURLs(), pollEvent, onSeen);
+    publish(getActivePostRelayURLs(), labelEvent, (e) => {
+      console.log(e);
+    });
     // closeModal(e);
   }
 

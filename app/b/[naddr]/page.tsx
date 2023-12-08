@@ -90,6 +90,8 @@ export default function BountyPage() {
           "#d": [naddrPointer.identifier],
         };
 
+        console.log("filter", filter);
+
         if (naddrPointer.relays && naddrPointer.relays.length > 0) {
           subscribe([naddrPointer.relays[0]], filter, onEvent, onEOSE);
         } else {
