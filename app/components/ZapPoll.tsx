@@ -36,11 +36,11 @@ export default function ZapPoll({ Icon, event }: Props) {
   const router = useRouter();
   const { getUserPublicKey } = useUserProfileStore();
   const [inputCount, setInputCount] = useState(2);
-  const [pollOptions, setPollOptions] = useState<string[]>([]);
+  const [pollOptions, setPollOptions] = useState<string[]>(["Bounty Solved", "Bounty Not Solved"]);
   const [pollContent, setPollContent] = useState("");
-  const [satoshiAmount, setSatoshiAmount] = useState("");
-  const [consensusThreshold, setConsensusThreshold] = useState("");
-  const [closedAt, setClosedAt] = useState("");
+  const [satoshiAmount, setSatoshiAmount] = useState("1000");
+  const [consensusThreshold, setConsensusThreshold] = useState("51");
+  const [closedAt, setClosedAt] = useState(new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString().slice(0, -8));
   const [eventId, setEventId] = useState(event.id || "");
   // const [recipientId, setRecipientId] = useState("");
   const [recipientOptionCount, setRecipientOptionCount] = useState(1);
@@ -59,16 +59,16 @@ export default function ZapPoll({ Icon, event }: Props) {
 
   function closeModal(e: any) {
     setIsOpen(false);
-    setPollOptions([]);
+    // setPollOptions([]);
     setPollContent("");
-    setInputCount(2);
-    setShowDeleteButton(false);
-    setSatoshiAmount("");
-    setConsensusThreshold("");
-    setClosedAt("");
-    setRecipientOptionCount(1);
-    setRecipientAddresses([]);
-    setShowRecipientDeleteButton(false);
+    // setInputCount(2);
+    // setShowDeleteButton(false);
+    // setSatoshiAmount("");
+    // setConsensusThreshold("");
+    // setClosedAt("");
+    // setRecipientOptionCount(1);
+    // setRecipientAddresses([]);
+    // setShowRecipientDeleteButton(false);
   }
 
   function openModal(e: any) {
@@ -124,7 +124,9 @@ export default function ZapPoll({ Icon, event }: Props) {
       return ["poll_option", index.toString(), option];
     });
 
-    const amount = satoshiAmount ? satoshiAmount.toString() : "0";
+    // const amount = satoshiAmount ? satoshiAmount.toString() : "0";
+
+    const amount = "1000";
 
     tags.push(
       ["value_maximum", amount],
@@ -133,10 +135,10 @@ export default function ZapPoll({ Icon, event }: Props) {
       ["closed_at", Math.floor(new Date(closedAt).getTime() / 1000).toString()]
     );
 
-    if (eventId.length === 64) {
-      // TODO: Better validation in the form
-      tags.push(["e", eventId, relayUrl]);
-    }
+    // if (eventId.length === 64) {
+    //   // TODO: Better validation in the form
+    //   tags.push(["e", eventId, relayUrl]);
+    // }
 
     // if (recipientAddresses.length) {
     //   const pTags = recipientAddresses.map((recipient, index) => {
@@ -148,6 +150,12 @@ export default function ZapPoll({ Icon, event }: Props) {
     // Resolvr is the recipient of sats from zap polls
     const RESOLVR_PUBKEY = "4ef937123ffc92417d04e137d9f8bf33b75ca45a08be8049d8abde1197fe79c0";
     tags.push(["p", RESOLVR_PUBKEY, relayUrl]);
+
+    // Bounty event ID
+    tags.push(["e", event.id, relayUrl]);
+
+    // Namespace for resolvr
+    tags.push(["L", "io.resolvr"]);
 
     // TODO:
     // * implement OTS field
@@ -168,28 +176,28 @@ export default function ZapPoll({ Icon, event }: Props) {
     pollEvent = await window.nostr.signEvent(pollEvent);
 
     // Also publish a Label event so we can find the poll later.
-    let labelEvent = {
-      id: "",
-      sig: "",
-      kind: 1985,
-      tags: [
-        ["e", pollEvent.id, relayUrl], // The Poll event
-        ["l", event.id, "#t"], // The 'topic' is the id of the bounty that the poll references
+    // let labelEvent = {
+    //   id: "",
+    //   sig: "",
+    //   kind: 1985,
+    //   tags: [
+    //     ["e", pollEvent.id, relayUrl], // The Poll event
+    //     ["l", event.id, "#t"], // The 'topic' is the id of the bounty that the poll references
 
-        ["L", "io.resolvr"],
-        ["l", getUserPublicKey(), "#p"],
-      ],
-      content: "",
-      pubkey: getUserPublicKey(),
-      created_at: Math.floor(Date.now() / 1000),
-    };
+    //     ["L", "io.resolvr"],
+    //     ["l", getUserPublicKey(), "#p"],
+    //   ],
+    //   content: "",
+    //   pubkey: getUserPublicKey(),
+    //   created_at: Math.floor(Date.now() / 1000),
+    // };
 
-    labelEvent = await window.nostr.signEvent(labelEvent);
+    // labelEvent = await window.nostr.signEvent(labelEvent);
 
     publish(getActivePostRelayURLs(), pollEvent, onSeen);
-    publish(getActivePostRelayURLs(), labelEvent, (e) => {
-      console.log(e);
-    });
+    // publish(getActivePostRelayURLs(), labelEvent, (e) => {
+    //   console.log(e);
+    // });
     // closeModal(e);
   }
 
@@ -255,12 +263,13 @@ export default function ZapPoll({ Icon, event }: Props) {
                         {Array.from({ length: inputCount }).map((e, i) => {
                           return (
                             <input
+                              disabled
                               key={i}
                               type="text"
                               name="message"
                               id={`pollField-${i}`}
                               autoComplete="off"
-                              className="mb-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
+                              className="mb-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
                               placeholder={`Option ${i + 1}`}
                               value={pollOptions[i] || ""}
                               // ref={inputRef}
@@ -276,7 +285,7 @@ export default function ZapPoll({ Icon, event }: Props) {
                     </div>
                   </div>
 
-                  <div className="mt-4">
+                  {/* <div className="mt-4">
                     <button onClick={handleAddField} className="h-6 w-6">
                       <PlusCircleIcon></PlusCircleIcon>
                     </button>
@@ -285,12 +294,13 @@ export default function ZapPoll({ Icon, event }: Props) {
                         <MinusCircleIcon></MinusCircleIcon>
                       </button>
                     )}
-                  </div>
+                  </div> */}
                   <div className="mt-4">
                     <p className="mb-2 text-sm text-gray-500">A value in satoshis to be paid to vote in the poll</p>
                     <input
+                      disabled
                       type="number"
-                      className="mb-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
+                      className="mb-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
                       autoComplete="off"
                       name="satoshis"
                       min="0"
@@ -317,8 +327,9 @@ export default function ZapPoll({ Icon, event }: Props) {
                   <div className="mt-4">
                     <p className="mb-2 text-sm text-gray-500">Required percentage to attain consensus</p>
                     <input
+                      disabled
                       type="number"
-                      className="mb-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
+                      className="mb-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
                       autoComplete="off"
                       name="threshold"
                       placeholder="0 - 100"
@@ -359,7 +370,7 @@ export default function ZapPoll({ Icon, event }: Props) {
                       value={closedAt}
                       onChange={(e) => {
                         const date = e.target.value;
-                        // console.log(date);
+                        console.log(date);
                         setClosedAt(date);
                       }}
                     />
