@@ -236,8 +236,8 @@ export default function ZapPoll({ Icon, event }: Props) {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all dark:bg-background">
+                  <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900 dark:text-white">
                     Poll
                   </Dialog.Title>
                   <div>
@@ -247,7 +247,7 @@ export default function ZapPoll({ Icon, event }: Props) {
                     <textarea
                       ref={pollContentRef}
                       value={pollContent}
-                      className="mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6  "
+                      className="mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-darkFormFieldBackground dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6  "
                       name="pollContent"
                       onChange={(e) => {
                         setPollContent(e.target.value);
@@ -269,7 +269,7 @@ export default function ZapPoll({ Icon, event }: Props) {
                               name="message"
                               id={`pollField-${i}`}
                               autoComplete="off"
-                              className="mb-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
+                              className="mb-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 disabled:cursor-not-allowed dark:bg-darkFormFieldBackground dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
                               placeholder={`Option ${i + 1}`}
                               value={pollOptions[i] || ""}
                               // ref={inputRef}
@@ -300,7 +300,7 @@ export default function ZapPoll({ Icon, event }: Props) {
                     <input
                       disabled
                       type="number"
-                      className="mb-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
+                      className="mb-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 disabled:cursor-not-allowed dark:bg-darkFormFieldBackground dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
                       autoComplete="off"
                       name="satoshis"
                       min="0"
@@ -329,7 +329,7 @@ export default function ZapPoll({ Icon, event }: Props) {
                     <input
                       disabled
                       type="number"
-                      className="mb-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
+                      className="mb-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 disabled:cursor-not-allowed dark:bg-darkFormFieldBackground dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
                       autoComplete="off"
                       name="threshold"
                       placeholder="0 - 100"
@@ -362,7 +362,7 @@ export default function ZapPoll({ Icon, event }: Props) {
                     <p className="mb-2 text-sm text-gray-500">A date in the future when the poll closes</p>
                     <input
                       type="datetime-local"
-                      className="mb-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
+                      className="mb-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-darkFormFieldBackground dark:text-gray-100 dark:ring-gray-600 dark:[color-scheme:dark] sm:text-sm sm:leading-6"
                       autoComplete="off"
                       name="closed_at"
                       // min={() => new Date(Date.now()).toLocaleString()}
@@ -379,7 +379,7 @@ export default function ZapPoll({ Icon, event }: Props) {
                     <p className="mb-2 text-sm text-gray-500">Which Event is this for?</p>
                     <input
                       type="text"
-                      className="mb-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
+                      className="mb-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-darkFormFieldBackground dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
                       autoComplete="off"
                       name="eventId"
                       value={eventId}
@@ -395,7 +395,7 @@ export default function ZapPoll({ Icon, event }: Props) {
                       <input
                         key={i}
                         type="text"
-                        className="mb-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
+                        className="mb-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-darkFormFieldBackground dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
                         autoComplete="off"
                         name="zapRecipient"
                         placeholder={`Address ${i + 1}`}
@@ -419,9 +419,13 @@ export default function ZapPoll({ Icon, event }: Props) {
                       )}
                     </div>
                   </div> */}
-                  <div className="mt-4 flex-row space-x-4">
-                    <button onClick={handlePublish}>Publish</button>
-                    <button onClick={closeModal}>Cancel</button>
+                  <div className="mt-6 flex-row space-x-4 dark:text-white">
+                    <button className="dark:hover:text-gray-300" onClick={handlePublish}>
+                      Publish
+                    </button>
+                    <button className="dark:hover:text-gray-300" onClick={closeModal}>
+                      Cancel
+                    </button>
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

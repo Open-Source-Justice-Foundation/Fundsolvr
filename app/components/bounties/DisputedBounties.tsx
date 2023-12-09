@@ -22,7 +22,7 @@ import NoBounties from "./NoBounties";
 
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
-  const { setAssignedEvents, assignedEvents, bountyType, search } = useBountyEventStore();
+  const { setAssignedEvents, bountyEvents, bountyType, search } = useBountyEventStore();
   const [disputedBounties, setDisputedBounties] = useState<{ bounty: Event; poll: Event }[]>([]);
   const { userPublicKey } = useUserProfileStore();
   const [loading, setLoading] = useState({ disputed: false });
@@ -41,8 +41,8 @@ export default function Bounties() {
       "#L": ["io.resolvr"],
     };
 
-    if (assignedEvents[relayUrl]) {
-      const lastEvent = assignedEvents[relayUrl].slice(-1)[0];
+    if (bountyEvents[relayUrl]) {
+      const lastEvent = bountyEvents[relayUrl].slice(-1)[0];
       if (lastEvent) {
         pollEventFilter.until = lastEvent.created_at - 10;
       }
@@ -50,11 +50,12 @@ export default function Bounties() {
 
     const onEvent = (event: Event) => {
       events.push(event);
+      console.log(event);
     };
 
     const onEOSE = () => {
       const pollToBountyMap: { bounty: Event; poll: Event }[] = [];
-
+      console.log(events);
       events.forEach((event) => {
         const bountyId = event.tags.find((t) => {
           if (t[0] === "e") {
@@ -86,9 +87,7 @@ export default function Bounties() {
         }
       });
 
-      // setDisputedBounties(events);
-      retrieveProfiles(Array.from(pubkeys));
-      // getApplicants(dValues);
+      // setDisputedBounties(pollToBountyMap);
       setLoading({ ...loading, disputed: false });
     };
 

@@ -75,7 +75,7 @@ export default function Bounty({ event }: Props) {
               <div className="flex items-center justify-center stroke-secondaryText">
                 {" "}
                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
-                  <path d="M4.58081 3L7.58081 6L4.58081 9" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M4.58081 3L7.58081 6L4.58081 9" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>{" "}
               </div>
 

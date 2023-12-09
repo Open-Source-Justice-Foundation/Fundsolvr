@@ -27,6 +27,8 @@ const config: Config = {
         primaryText: "#FFFFFF",
         rejected: "#FCD34D",
         success: "#6EE7B7",
+        darkFormFieldBackground: "#1C1B34",
+        darkBorders: "#2B3455",
       },
       keyframes: {
         shimmer: {
