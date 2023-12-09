@@ -21,8 +21,8 @@ export default function Discussion() {
     setMessage(e.target.value);
   };
 
-const handleEnterKeyPress = (e: any) => {
-    if (e.key === 'Enter') {
+  const handleEnterKeyPress = (e: any) => {
+    if (e.key === "Enter") {
       handleSend(e);
     }
   };
@@ -102,7 +102,7 @@ const handleEnterKeyPress = (e: any) => {
             // type="text"
             value={message}
             onChange={handleMessageChange}
-            className="w-full rounded-lg border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+            className="w-full rounded-lg border border-gray-300 bg-white p-2 text-gray-800 dark:border-darkBorder dark:bg-gray-800 dark:text-gray-100"
             placeholder="Start a new message"
             onKeyDown={handleEnterKeyPress}
           />

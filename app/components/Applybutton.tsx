@@ -122,7 +122,7 @@ export default function Applybutton({ bountyEvent }: PropTypes) {
                       // type="text"
                       value={message}
                       onChange={handleMessageChange}
-                      className="mt-4 w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
+                      className="mt-4 w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-darkBorder dark:bg-darkFormFieldBackground dark:text-gray-100"
                       placeholder="I would like to apply to this bounty because..."
                     />
                   </div>

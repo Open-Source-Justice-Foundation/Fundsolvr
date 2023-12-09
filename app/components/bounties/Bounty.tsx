@@ -75,7 +75,7 @@ export default function Bounty({ event }: Props) {
               <div className="flex items-center justify-center stroke-secondaryText">
                 {" "}
                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
-                  <path d="M4.58081 3L7.58081 6L4.58081 9" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M4.58081 3L7.58081 6L4.58081 9" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>{" "}
               </div>
 
@@ -86,7 +86,7 @@ export default function Bounty({ event }: Props) {
                   {tags[0] && (
                     <div
                       key={tags[0]}
-                      className="flex cursor-pointer select-none items-center gap-x-2 rounded-lg bg-gray-200 px-3 py-2 text-sm font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-100"
+                      className="flex cursor-pointer select-none items-center gap-x-2 rounded-lg bg-gray-200 px-3 py-2 text-sm font-medium text-gray-500 dark:bg-darkFormFieldBackground dark:text-gray-100"
                     >
                       {tags[0]}
                     </div>

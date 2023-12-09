@@ -2,10 +2,10 @@ import React, { useEffect } from "react";
 
 import { getTagValues, removeTag } from "@/app/lib/utils";
 import { useRelayStore } from "@/app/stores/relayStore";
+import { BitcoinCircleIcon } from "@bitcoin-design/bitcoin-icons-react/filled";
 import { IdentificationIcon, NewspaperIcon, PencilSquareIcon, UserIcon } from "@heroicons/react/24/outline";
 import { type Event, Filter, Relay, nip19 } from "nostr-tools";
 import { AddressPointer } from "nostr-tools/lib/nip19";
-import { BitcoinCircleIcon } from "@bitcoin-design/bitcoin-icons-react/filled";
 
 interface Props {
   event: Event;
@@ -79,7 +79,7 @@ export default function TimelineItem({ event, eventIdx, timelineLength }: Props)
     <li key={event.id}>
       <div className="relative pb-8">
         {eventIdx !== timelineLength - 1 ? (
-          <span className="absolute left-4 top-4 -ml-px h-full w-0.5 bg-gray-200 dark:bg-gray-700" aria-hidden="true" />
+          <span className="absolute left-4 top-4 -ml-px h-full w-0.5 bg-gray-200 dark:bg-darkFormFieldBackground" aria-hidden="true" />
         ) : null}
         <div className="relative flex space-x-3">
           <div>

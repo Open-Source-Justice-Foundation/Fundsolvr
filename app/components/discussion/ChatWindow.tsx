@@ -52,11 +52,11 @@ export default function ChatWindow() {
     if (userPrivateKey) {
       try {
         return await nip04.decrypt(userPrivateKey, decryptPublicKey, event.content);
-      } catch (e) { }
+      } catch (e) {}
     } else {
       try {
         return await nostr.nip04.decrypt(decryptPublicKey, event.content);
-      } catch (e) { }
+      } catch (e) {}
     }
   }
 
@@ -166,7 +166,7 @@ export default function ChatWindow() {
             setMessageEvents(relayUrl, cachedBountyEvent.id, sortByCreatedAt([...getMessageEvents(relayUrl, cachedBountyEvent.id), event]));
           }
         }
-      } 
+      }
     };
 
     const onEOSE = () => {
@@ -186,36 +186,36 @@ export default function ChatWindow() {
   }, [messageEvents]);
 
   return (
-    <div className="w-full rounded-lg border border-gray-400 dark:border-gray-700">
-        <div className="mb-8 flex w-full gap-x-4 border-b border-gray-400 rounded-t-lg dark:border-gray-700 bg-gray-200 dark:bg-gray-800 py-6 pl-4">
-          {cachedBountyEvent && participantPublicKey && (
-            <>
-              <Avatar
-                src={parseProfileContent(getProfileEvent(relayUrl, participantPublicKey)?.content).picture}
-                className="h-12 w-12 ring-1 ring-white dark:ring-gray-700"
-                seed={getTagValues("p", cachedBountyEvent.tags)}
-              />
-              <div className="flex flex-col">
-                <span className="text-gray-800 dark:text-gray-200">
-                  {parseProfileContent(getProfileEvent(relayUrl, participantPublicKey)?.content).name}
-                </span>
-                <span className="text-gray-800 dark:text-gray-200">
-                  {parseProfileContent(getProfileEvent(relayUrl, participantPublicKey)?.content).about}
-                </span>
-              </div>
-            </>
-          )}
-        </div>
+    <div className="w-full rounded-lg border border-gray-400 dark:border-darkBorder">
+      <div className="mb-8 flex w-full gap-x-4 rounded-t-lg border-b border-gray-400 bg-gray-200 py-6 pl-4 dark:border-darkBorder dark:bg-gray-800">
+        {cachedBountyEvent && participantPublicKey && (
+          <>
+            <Avatar
+              src={parseProfileContent(getProfileEvent(relayUrl, participantPublicKey)?.content).picture}
+              className="h-12 w-12 ring-1 ring-white dark:ring-gray-700"
+              seed={getTagValues("p", cachedBountyEvent.tags)}
+            />
+            <div className="flex flex-col">
+              <span className="text-gray-800 dark:text-gray-200">
+                {parseProfileContent(getProfileEvent(relayUrl, participantPublicKey)?.content).name}
+              </span>
+              <span className="text-gray-800 dark:text-gray-200">
+                {parseProfileContent(getProfileEvent(relayUrl, participantPublicKey)?.content).about}
+              </span>
+            </div>
+          </>
+        )}
+      </div>
       <div className="flex max-h-96 min-h-[16rem] flex-col overflow-y-auto  px-4 py-4">
         {cachedBountyEvent &&
-          messageEvents[relayUrl] &&
-          messageEvents[relayUrl][cachedBountyEvent.id] &&
-          messageEvents[relayUrl][cachedBountyEvent.id].length > 0 ? (
+        messageEvents[relayUrl] &&
+        messageEvents[relayUrl][cachedBountyEvent.id] &&
+        messageEvents[relayUrl][cachedBountyEvent.id].length > 0 ? (
           messageEvents[relayUrl][cachedBountyEvent.id].map((message: Event) => {
             if (userPublicKey === message.pubkey) {
               return (
                 <div key={message.id} className="mb-4 flex w-full flex-col items-end justify-center">
-                  <div className="flex items-center justify-center rounded-bl-3xl rounded-br-sm rounded-tl-3xl rounded-tr-3xl bg-indigo-500 dark:bg-indigo-600 px-3 py-2">
+                  <div className="flex items-center justify-center rounded-bl-3xl rounded-br-sm rounded-tl-3xl rounded-tr-3xl bg-indigo-500 px-3 py-2 dark:bg-indigo-600">
                     <div className="flex flex-col">
                       <span className="text-sm font-medium text-white">{message.content}</span>
                     </div>
@@ -235,7 +235,7 @@ export default function ChatWindow() {
             } else {
               return (
                 <div key={message.id} className="mb-4 flex w-full flex-col items-start justify-center">
-                  <div className="flex items-center justify-center rounded-bl-sm rounded-br-3xl rounded-tl-3xl rounded-tr-3xl bg-gray-200 dark:bg-gray-600 px-3 py-2">
+                  <div className="flex items-center justify-center rounded-bl-sm rounded-br-3xl rounded-tl-3xl rounded-tr-3xl bg-gray-200 px-3 py-2 dark:bg-gray-600">
                     <div className="flex flex-col">
                       <span className="text-sm font-medium text-gray-800 dark:text-white">{message.content}</span>
                     </div>

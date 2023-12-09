@@ -262,7 +262,7 @@ export default function Settings() {
     <div className="flex w-full flex-col items-center justify-center px-4 pb-24 pt-10">
       <form className="w-full max-w-screen-xl">
         <div className="space-y-12">
-          <div className="border-b border-gray-900/10 pb-12 dark:border-gray-700">
+          <div className="border-b border-gray-900/10 pb-12 dark:border-darkBorder">
             <div className="flex items-center gap-x-2">
               <h2 className="text-base font-semibold leading-7 text-gray-900 dark:text-gray-100">Profile</h2>
               {relayUrl && <span className="text-gray-400 dark:text-gray-600">({relayUrl.replace("wss://", "")})</span>}
@@ -288,7 +288,7 @@ export default function Settings() {
                       type="text"
                       name="picture"
                       id="picture"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-darkFormFieldBackground dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
                       placeholder="image URL"
                       value={imageURL}
                       onChange={(e) => {
@@ -309,7 +309,7 @@ export default function Settings() {
                       name="username"
                       id="username"
                       autoComplete="username"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-darkFormFieldBackground dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
                       placeholder="satoshi"
                       value={username}
                       onChange={(e) => {
@@ -327,7 +327,7 @@ export default function Settings() {
                       type="text"
                       name="lud16"
                       id="lud16"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-darkFormFieldBackground dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
                       value={lud16}
                       onChange={(e) => {
                         setLud16(e.target.value);
@@ -346,7 +346,7 @@ export default function Settings() {
                     id="about"
                     name="about"
                     rows={3}
-                    className="block w-full max-w-lg rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
+                    className="block w-full max-w-lg rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-darkFormFieldBackground dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
                     value={about}
                     onChange={(e) => {
                       setAbout(e.target.value);
@@ -358,7 +358,7 @@ export default function Settings() {
             </div>
           </div>
 
-          <div className="border-b border-gray-900/10 pb-12 dark:border-gray-700">
+          <div className="border-b border-gray-900/10 pb-12 dark:border-darkBorder">
             <h2 className="text-base font-semibold leading-7 text-gray-900 dark:text-gray-100">Integrations</h2>
             <p className="mt-1 text-sm leading-6 text-gray-600 dark:text-gray-300">Link your external accounts.</p>
 
@@ -373,7 +373,7 @@ export default function Settings() {
                       type="text"
                       name="lud16"
                       id="lud16"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-darkFormFieldBackground dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
                       value={lud16}
                       onChange={(e) => {
                         setLud16(e.target.value);
@@ -404,7 +404,7 @@ export default function Settings() {
                       type="text"
                       name="github"
                       id="github"
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-darkFormFieldBackground dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
                       placeholder="Gist ID"
                       value={gistId}
                       onChange={(e) => {

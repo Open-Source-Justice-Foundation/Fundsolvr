@@ -66,7 +66,7 @@ export default function MessagesPage() {
             className={({ selected }) =>
               classNames(
                 `flex items-center gap-2 rounded-t-md border-x border-t p-4`,
-                selected ? "border-gray-400 dark:border-gray-600 focus:outline-none" : "border-transparent"
+                selected ? "border-gray-400 focus:outline-none dark:border-darkBorder" : "border-transparent"
               )
             }
           >

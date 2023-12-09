@@ -252,7 +252,7 @@ export default function LoginPage() {
                     onChange={(e: any) => {
                       setUserProvidedPrivateKey(e.target.value);
                     }}
-                    className="transparent text-shadow w-full rounded border border-gray-300 p-2 dark:border-gray-600 dark:bg-gray-600 dark:text-gray-100 "
+                    className="transparent text-shadow w-full rounded border border-gray-300 p-2 dark:border-darkBorder dark:bg-gray-600 dark:text-gray-100 "
                   />
                   <div className="flex w-full flex-col gap-2">
                     <button
@@ -285,7 +285,7 @@ export default function LoginPage() {
                     placeholder="Enter name here"
                     value={name}
                     onChange={handleOnChange}
-                    className="w-full rounded border border-gray-300 p-2 dark:border-gray-600 dark:bg-gray-600 dark:text-gray-100"
+                    className="w-full rounded border border-gray-300 p-2 dark:border-darkBorder dark:bg-gray-600 dark:text-gray-100"
                   />
                   <button
                     className="rounded-3xl bg-indigo-500 px-2 py-4 text-sm font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"

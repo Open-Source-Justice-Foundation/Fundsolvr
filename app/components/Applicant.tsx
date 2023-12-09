@@ -119,7 +119,7 @@ export default function Applicant({ applicantEvent }: Props) {
               target="_blank"
               rel="nofollow noopener noreferrer"
               href={websiteLink(parseProfileContent(getProfileEvent(relayUrl, applicantEvent.pubkey)?.content).website)}
-              className="relative flex items-center gap-x-2 rounded-lg bg-gray-200 px-2 py-1 text-sm font-medium text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 hover:dark:bg-gray-600"
+              className="relative flex items-center gap-x-2 rounded-lg bg-gray-200 px-2 py-1 text-sm font-medium text-gray-700 hover:bg-gray-300 dark:bg-darkFormFieldBackground dark:text-gray-200 hover:dark:bg-gray-600"
             >
               <svg
                 className="h-5 w-5 fill-gray-700 hover:fill-gray-500 dark:fill-gray-200 dark:hover:fill-gray-200"
@@ -138,7 +138,7 @@ export default function Applicant({ applicantEvent }: Props) {
               target="_blank"
               rel="nofollow noopener noreferrer"
               href={`https://github.com/${getITagValue(getProfileEvent(relayUrl, applicantEvent.pubkey)?.tags, "github")}`}
-              className="relative flex items-center gap-x-2 rounded-lg bg-gray-200 px-2 py-1 text-sm font-medium text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 hover:dark:bg-gray-600"
+              className="relative flex items-center gap-x-2 rounded-lg bg-gray-200 px-2 py-1 text-sm font-medium text-gray-700 hover:bg-gray-300 dark:bg-darkFormFieldBackground dark:text-gray-200 hover:dark:bg-gray-600"
             >
               <svg
                 className="h-5 w-5 fill-gray-700 hover:fill-gray-500 dark:fill-gray-200 dark:hover:fill-gray-200"

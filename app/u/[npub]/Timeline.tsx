@@ -36,14 +36,13 @@ export default function Timeline() {
   }, []);
 
   return (
-    <div className="mt-4 flow-root border-t border-gray-300 px-4 dark:border-gray-600">
-      <h2 className="text-lg font-medium pb-8 pt-8 text-gray-500 dark:text-gray-400">Recent Activity</h2>
+    <div className="mt-4 flow-root border-t border-gray-300 px-4 dark:border-darkBorder">
+      <h2 className="pb-8 pt-8 text-lg font-medium text-gray-500 dark:text-gray-400">Recent Activity</h2>
       <ul role="list" className="-mb-8">
         {recentEvents.slice(0, 10).map((event, eventIdx) => (
-          <TimelineItem key={event.id} event={event} eventIdx={eventIdx} timelineLength={10}  />
+          <TimelineItem key={event.id} event={event} eventIdx={eventIdx} timelineLength={10} />
         ))}
       </ul>
     </div>
   );
 }
-

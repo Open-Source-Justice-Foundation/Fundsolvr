@@ -16,7 +16,8 @@ import NoBounties from "./NoBounties";
 
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
-  const { setBountyEvents, getBountyEvents, bountyEvents, bountyType, search, tag, taggedBountyEvents, getTaggedBountyEvents } = useBountyEventStore();
+  const { setBountyEvents, getBountyEvents, bountyEvents, bountyType, search, tag, taggedBountyEvents, getTaggedBountyEvents } =
+    useBountyEventStore();
   const [loading, setLoading] = useState({ all: false });
 
   const getBounties = async () => {
@@ -88,24 +89,24 @@ export default function Bounties() {
       {loading.all && tag === "All"
         ? Array.from(Array(5)).map((i) => <BountyPlaceholder key={i} />)
         : bountyType === BountyTab.all &&
-        tag === "All" &&
-        bountyEvents[relayUrl] &&
-        (bountyEvents[relayUrl].length ? (
-          filterBounties(search, bountyEvents[relayUrl]).map((event) => <Bounty key={event.id} event={event} />)
-        ) : (
-          <NoBounties />
-        ))}
+          tag === "All" &&
+          bountyEvents[relayUrl] &&
+          (bountyEvents[relayUrl].length ? (
+            filterBounties(search, bountyEvents[relayUrl]).map((event) => <Bounty key={event.id} event={event} />)
+          ) : (
+            <NoBounties />
+          ))}
       {loading.all && tag !== "All"
         ? Array.from(Array(5)).map((i) => <BountyPlaceholder key={i} />)
         : bountyType === BountyTab.all &&
-        tag !== "All" &&
-        taggedBountyEvents[relayUrl] &&
-        taggedBountyEvents[relayUrl][tag] &&
-        (taggedBountyEvents[relayUrl][tag].length ? (
-          filterBounties(search, taggedBountyEvents[relayUrl][tag]).map((event) => <Bounty key={event.id} event={event} />)
-        ) : (
-          <NoBounties />
-        ))}
+          tag !== "All" &&
+          taggedBountyEvents[relayUrl] &&
+          taggedBountyEvents[relayUrl][tag] &&
+          (taggedBountyEvents[relayUrl][tag].length ? (
+            filterBounties(search, taggedBountyEvents[relayUrl][tag]).map((event) => <Bounty key={event.id} event={event} />)
+          ) : (
+            <NoBounties />
+          ))}
       <LoadBountiesButton action={localGetTaggedBounties} />
     </>
   );

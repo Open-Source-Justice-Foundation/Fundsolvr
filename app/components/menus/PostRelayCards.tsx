@@ -5,12 +5,7 @@ import RelayIcon from "./RelayIcon";
 
 export default function ReadRelayCards() {
   const { getRelayInfo } = useRelayInfoStore();
-  const {
-    postRelays,
-    updatePostRelayStatus,
-    sortPostRelays,
-    countActivePostRelays,
-  } = usePostRelayStore();
+  const { postRelays, updatePostRelayStatus, sortPostRelays, countActivePostRelays } = usePostRelayStore();
 
   // TODO: show paid
 
@@ -41,13 +36,10 @@ export default function ReadRelayCards() {
 
   return (
     <>
-      <p className="px-4 py-2 bg-gray-50 text-gray-500 dark:bg-gray-700/50 dark:text-gray-300">
+      <p className="bg-gray-50 px-4 py-2 text-gray-500 dark:bg-darkFormFieldBackground/50 dark:text-gray-300">
         Choose up to 5 relays to post content to
       </p>
-      <ul
-        role="list"
-        className="flex-1 divide-y divide-gray-200 overflow-y-auto dark:divide-gray-700"
-      >
+      <ul role="list" className="flex-1 divide-y divide-gray-200 overflow-y-auto dark:divide-gray-700">
         {postRelays.map((postRelay) => (
           <li key={postRelay.url}>
             <div className="group relative flex items-center px-5 py-6">
@@ -56,11 +48,7 @@ export default function ReadRelayCards() {
                 <div className="relative flex min-w-0 flex-1 items-center">
                   <span className="relative inline-block flex-shrink-0">
                     <RelayIcon
-                      src={
-                        postRelay.url
-                          .replace("wss://", "https://")
-                          .replace("relay.", "") + "/favicon.ico"
-                      }
+                      src={postRelay.url.replace("wss://", "https://").replace("relay.", "") + "/favicon.ico"}
                       fallback="https://user-images.githubusercontent.com/29136904/244441447-d6f64435-6155-4ffa-8574-fb221a3ad412.png"
                       alt=""
                     />
@@ -75,18 +63,14 @@ export default function ReadRelayCards() {
                               Active
                             </span>
                           </p>
-                          <p className="truncate text-sm text-gray-500">
-                            {getRelayInfo(postRelay.url).contact}
-                          </p>
+                          <p className="truncate text-sm text-gray-500">{getRelayInfo(postRelay.url).contact}</p>
                         </>
                       ) : (
                         <>
                           <p className="truncate text-sm font-medium text-gray-900 dark:text-gray-100">
                             {getRelayInfo(postRelay.url).name}
                           </p>
-                          <p className="truncate text-sm text-gray-500">
-                            {getRelayInfo(postRelay.url).contact}
-                          </p>
+                          <p className="truncate text-sm text-gray-500">{getRelayInfo(postRelay.url).contact}</p>
                         </>
                       ))}
                   </div>
