@@ -80,9 +80,13 @@ export default function Bounties() {
       {loading.posted
         ? Array.from(Array(5)).map((i) => <BountyPlaceholder key={i} />)
         : bountyType === BountyTab.userPosted &&
-        userEvents[relayUrl] &&
-        userPublicKey &&
-        (userEvents[relayUrl].length ? filterBounties(search, userEvents[relayUrl]).map((event) => <Bounty key={event.id} event={event} />) : <NoBounties />)}
+          userEvents[relayUrl] &&
+          userPublicKey &&
+          (userEvents[relayUrl].length ? (
+            filterBounties(search, userEvents[relayUrl]).map((event) => <Bounty key={event.id} event={event} />)
+          ) : (
+            <NoBounties />
+          ))}
       <LoadBountiesButton action={getPostedBounties} />
     </>
   );

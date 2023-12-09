@@ -3,10 +3,11 @@ import { SimplePool } from "nostr-tools";
 export const POSSIBLE_TAGS = ["All", "Nostr", "Bitcoin", "Lightning", "AI", "Infrastructure", "Other"];
 
 export enum BountyTab {
-    all = "all",
-    userPosted = "userPosted",
-    assigned = "assigned",
-  }
+  all = "all",
+  userPosted = "userPosted",
+  assigned = "assigned",
+  disputed = "disputed",
+}
 
 export const RELAYS = [
   "wss://relay.damus.io",

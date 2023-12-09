@@ -18,7 +18,7 @@ import { useUserProfileStore } from "../stores/userProfileStore";
 
 interface Props {
   Icon?: React.FC<any>;
-  event?: Event;
+  event: Event;
 }
 
 type Base64 = string;
@@ -41,7 +41,7 @@ export default function ZapPoll({ Icon, event }: Props) {
   const [satoshiAmount, setSatoshiAmount] = useState("");
   const [consensusThreshold, setConsensusThreshold] = useState("");
   const [closedAt, setClosedAt] = useState("");
-  const [eventId, setEventId] = useState(event?.id || "");
+  const [eventId, setEventId] = useState(event.id || "");
   // const [recipientId, setRecipientId] = useState("");
   const [recipientOptionCount, setRecipientOptionCount] = useState(1);
   const [recipientAddresses, setRecipientAddresses] = useState<string[]>([getUserPublicKey()]);
@@ -138,20 +138,23 @@ export default function ZapPoll({ Icon, event }: Props) {
       tags.push(["e", eventId, relayUrl]);
     }
 
-    if (recipientAddresses.length) {
-      const pTags = recipientAddresses.map((recipient, index) => {
-        return ["p", recipient, relayUrl];
-      });
-      tags.push(...pTags);
-    }
-    // console.log("tags", tags);
+    // if (recipientAddresses.length) {
+    //   const pTags = recipientAddresses.map((recipient, index) => {
+    //     return ["p", recipient, relayUrl];
+    //   });
+    //   tags.push(...pTags);
+    // }
+
+    // Resolvr is the recipient of sats from zap polls
+    const RESOLVR_PUBKEY = "4ef937123ffc92417d04e137d9f8bf33b75ca45a08be8049d8abde1197fe79c0";
+    tags.push(["p", RESOLVR_PUBKEY, relayUrl]);
 
     // TODO:
     // * implement OTS field
     // * Implement Zap Recipient fields + p tags
     // * implement: p tags
 
-    let event: PollEvent = {
+    let pollEvent: PollEvent = {
       id: "",
       sig: "",
       kind: 6969,
@@ -162,8 +165,31 @@ export default function ZapPoll({ Icon, event }: Props) {
       ots: "",
     };
 
-    event = await window.nostr.signEvent(event);
-    publish(getActivePostRelayURLs(), event, onSeen);
+    pollEvent = await window.nostr.signEvent(pollEvent);
+
+    // Also publish a Label event so we can find the poll later.
+    let labelEvent = {
+      id: "",
+      sig: "",
+      kind: 1985,
+      tags: [
+        ["e", pollEvent.id, relayUrl], // The Poll event
+        ["l", event.id, "#t"], // The 'topic' is the id of the bounty that the poll references
+
+        ["L", "io.resolvr"],
+        ["l", getUserPublicKey(), "#p"],
+      ],
+      content: "",
+      pubkey: getUserPublicKey(),
+      created_at: Math.floor(Date.now() / 1000),
+    };
+
+    labelEvent = await window.nostr.signEvent(labelEvent);
+
+    publish(getActivePostRelayURLs(), pollEvent, onSeen);
+    publish(getActivePostRelayURLs(), labelEvent, (e) => {
+      console.log(e);
+    });
     // closeModal(e);
   }
 
@@ -171,7 +197,7 @@ export default function ZapPoll({ Icon, event }: Props) {
     <>
       <button
         onClick={openModal}
-        className="flex cursor-pointer items-center justify-center rounded-lg bg-indigo-500 px-3 py-2 text-sm text-white hover:bg-indigo-400"
+        className="flex cursor-pointer items-center justify-center rounded-lg bg-indigo-500 px-3 py-2 text-sm text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500"
       >
         {Icon ? <Icon className="h-5 w-5"></Icon> : <ListBulletIcon className="mr-2 h-5 w-5" />}
         Poll
@@ -338,7 +364,7 @@ export default function ZapPoll({ Icon, event }: Props) {
                       }}
                     />
                   </div>
-                  <div className="mt-4">
+                  {/* <div className="mt-4">
                     <p className="mb-2 text-sm text-gray-500">Which Event is this for?</p>
                     <input
                       type="text"
@@ -351,8 +377,8 @@ export default function ZapPoll({ Icon, event }: Props) {
                         setEventId(e.target.value);
                       }}
                     />
-                  </div>
-                  <div className="mt-4">
+                  </div> */}
+                  {/* <div className="mt-4">
                     <p className="mb-2 text-sm text-gray-500">Recipient(s) of the Zap</p>
                     {Array.from({ length: recipientOptionCount }).map((recipient, i) => (
                       <input
@@ -381,7 +407,7 @@ export default function ZapPoll({ Icon, event }: Props) {
                         </button>
                       )}
                     </div>
-                  </div>
+                  </div> */}
                   <div className="mt-4 flex-row space-x-4">
                     <button onClick={handlePublish}>Publish</button>
                     <button onClick={closeModal}>Cancel</button>

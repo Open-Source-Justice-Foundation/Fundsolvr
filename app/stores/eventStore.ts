@@ -54,8 +54,8 @@ interface BountyEventState {
   getZapReceiptEvent: (relayUrl: string, bountyId: string) => Event | null;
   getZapReceiptEvents: (relayUrl: string) => Record<string, Event>;
 
-  bountyType: "all" | "userPosted" | "assigned";
-  setBountyType: (bountyType: "all" | "userPosted" | "assigned") => void;
+  bountyType: "all" | "userPosted" | "assigned" | "disputed";
+  setBountyType: (bountyType: "all" | "userPosted" | "assigned" | "disputed") => void;
 }
 
 export const useBountyEventStore = create<BountyEventState>()(
