@@ -364,7 +364,25 @@ export default function Settings() {
 
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="sm:col-span-3">
-                <label htmlFor="github" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">
+                <label htmlFor="lud16" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">
+                  Lightning Address
+                </label>
+                <div className="mt-2">
+                  <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 dark:ring-gray-600 sm:max-w-md">
+                    <input
+                      type="text"
+                      name="lud16"
+                      id="lud16"
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
+                      value={lud16}
+                      onChange={(e) => {
+                        setLud16(e.target.value);
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <label htmlFor="github" className="mt-8 block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">
                   Github
                 </label>
                 {githubVerified ? (
