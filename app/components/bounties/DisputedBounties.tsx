@@ -26,11 +26,12 @@ export default function Bounties() {
   const [disputedBounties, setDisputedBounties] = useState<{ bounty: Event; poll: Event }[]>([]);
   const { userPublicKey } = useUserProfileStore();
   const [loading, setLoading] = useState({ disputed: false });
+  const [events, setEvents] = useState<Event[]>([]);
 
   const getDisputedBounties = async () => {
     setLoading({ ...loading, disputed: true });
 
-    const events: Event[] = [];
+    const pollEvents: Event[] = [];
     const pubkeys = new Set<string>();
     const dValues = new Set<string>();
 
@@ -41,22 +42,22 @@ export default function Bounties() {
       "#L": ["io.resolvr"],
     };
 
-    if (bountyEvents[relayUrl]) {
-      const lastEvent = bountyEvents[relayUrl].slice(-1)[0];
+    if (events) {
+      const lastEvent = events.slice(-1)[0];
       if (lastEvent) {
         pollEventFilter.until = lastEvent.created_at - 10;
       }
     }
 
     const onEvent = (event: Event) => {
-      events.push(event);
-      console.log(event);
+      pollEvents.push(event);
+
+      setEvents(events.concat(pollEvents));
     };
 
     const onEOSE = () => {
       const pollToBountyMap: { bounty: Event; poll: Event }[] = [];
-      console.log(events);
-      events.forEach((event) => {
+      pollEvents.forEach((event) => {
         const bountyId = event.tags.find((t) => {
           if (t[0] === "e") {
             return t;
@@ -81,7 +82,7 @@ export default function Bounties() {
             },
             () => {
               console.log("disputed bounties", pollToBountyMap);
-              setDisputedBounties(pollToBountyMap);
+              setDisputedBounties(disputedBounties.concat(pollToBountyMap));
             }
           );
         }
