@@ -42,7 +42,8 @@ import { Theme } from "../../types";
 export default function BountyPage() {
   const { subscribe, relayUrl } = useRelayStore();
   const { getProfileEvent } = useProfileStore();
-  const { cachedBountyEvent, setCachedBountyEvent, getBountyApplicants, getApplicantEvent, getZapReceiptEvent } = useBountyEventStore();
+  const { cachedBountyEvent, setCachedBountyEvent, getBountyApplicants, getApplicantEvent, getZapReceiptEvent, assignedEvents } =
+    useBountyEventStore();
   const { getUserPublicKey, userPublicKey, userPrivateKey } = useUserProfileStore();
   const { readRelays, updateReadRelayStatus, sortReadRelays, setAllReadRelaysInactive } = useReadRelayStore();
   const NoCommentContainer = useRef<HTMLDivElement>(null);
@@ -65,9 +66,6 @@ export default function BountyPage() {
       const naddr_data: any = nip19.decode(naddrStr).data;
       setNaddr(naddrStr);
       setNaddrPointer(naddr_data);
-      console.log("naddry", naddr_data);
-
-      console.log(nip19.decode("npub1fmunwy3lljfyzlgyuyman79lxwm4efz6pzlgqjwc400pr9l708qquvje8w"));
 
       if (naddrPointer) {
         if (cachedBountyEvent) {
@@ -91,8 +89,6 @@ export default function BountyPage() {
           authors: [naddrPointer.pubkey],
           "#d": [naddrPointer.identifier],
         };
-
-        console.log("filter", filter);
 
         if (naddrPointer.relays && naddrPointer.relays.length > 0) {
           subscribe([naddrPointer.relays[0]], filter, onEvent, onEOSE);
@@ -177,7 +173,12 @@ export default function BountyPage() {
                   }
                 </>
               )}
-              {userPublicKey && bountyEvent.pubkey === userPublicKey && <ZapPoll event={bountyEvent} />}
+              {userPublicKey &&
+                (bountyEvent.pubkey === userPublicKey ||
+                  Object.values(getBountyApplicants(relayUrl, getTagValues("d", bountyEvent.tags))).some((applicant) => {
+                    const assignedTo = getTagValues("p", bountyEvent.tags);
+                    applicant.pubkey === assignedTo;
+                  })) && <ZapPoll event={bountyEvent} />}
             </div>
             <div className="flex flex-col gap-6 pb-3">
               <div className="mt-6 flex items-center justify-between">
