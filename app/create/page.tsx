@@ -229,7 +229,7 @@ export default function CreateBounty() {
               type="text"
               value={title}
               onChange={handleTitleChange}
-              className="mt-4 w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
+              className="mt-4 w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-darkBorder dark:bg-darkFormFieldBackground dark:text-gray-100"
               placeholder="Bounty title"
             />
             <h2 className="pb-4 pt-8 font-semibold text-gray-800 dark:text-gray-100">Content</h2>
@@ -281,7 +281,7 @@ export default function CreateBounty() {
               type="number"
               value={reward}
               onChange={handleRewardChange}
-              className="mt-4 w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
+              className="mt-4 w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-darkBorder dark:bg-darkFormFieldBackground dark:text-gray-100"
               placeholder="Value in sats"
               min="1"
               step="1"

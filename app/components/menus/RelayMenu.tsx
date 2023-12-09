@@ -94,7 +94,7 @@ export default function RelayMenu() {
                         </div>
                       </div>
                     </div>
-                    <div className="border-b border-gray-200 dark:border-gray-700">
+                    <div className="border-b border-gray-200 dark:border-darkBorder">
                       <div className="px-6">
                         <nav className="-mb-px flex space-x-6" x-descriptions="Tab component">
                           {RelayMenuTabs.map((tab) => (

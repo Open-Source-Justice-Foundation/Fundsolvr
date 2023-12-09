@@ -13,13 +13,7 @@ export default function RelaySettings() {
   const { getRelayInfo } = useRelayInfoStore();
   const { relayUrl } = useRelayStore();
   const { readRelays, addReadRelay, removeReadRelay } = useReadRelayStore();
-  const {
-    postRelays,
-    countActivePostRelays,
-    addPostRelay,
-    removePostRelay,
-    checkPostRelayStatus,
-  } = usePostRelayStore();
+  const { postRelays, countActivePostRelays, addPostRelay, removePostRelay, checkPostRelayStatus } = usePostRelayStore();
   const [activeRelays, setActiveRelays] = useState<any[]>([]);
 
   function classNames(...classes: any[]) {
@@ -45,9 +39,7 @@ export default function RelaySettings() {
     }
 
     if (!postRelays.map((relay) => relay.url).includes(readRelay)) {
-      alert(
-        "Must be either a read or post relay, consider removing this relay.",
-      );
+      alert("Must be either a read or post relay, consider removing this relay.");
       return;
     }
 
@@ -68,9 +60,7 @@ export default function RelaySettings() {
     }
 
     if (!readRelays.map((relay) => relay.url).includes(postRelay)) {
-      alert(
-        "Must be either a read or post relay, consider removing this relay.",
-      );
+      alert("Must be either a read or post relay, consider removing this relay.");
       return;
     }
 
@@ -104,20 +94,15 @@ export default function RelaySettings() {
 
     removePostRelay(settingsRelayUrl);
     removeReadRelay(settingsRelayUrl);
-    setActiveRelays(
-      activeRelays.filter((relay) => relay.url !== settingsRelayUrl),
-    );
+    setActiveRelays(activeRelays.filter((relay) => relay.url !== settingsRelayUrl));
   };
 
   return (
     <>
-      <p className="px-4 py-2 bg-gray-50 text-gray-500 dark:bg-gray-700/50 dark:text-gray-300">
+      <p className="bg-gray-50 px-4 py-2 text-gray-500 dark:bg-darkFormFieldBackground/50 dark:text-gray-300">
         Determine what each relay will be used for
       </p>
-      <ul
-        role="list"
-        className="flex-1 divide-y divide-slate-200 overflow-y-auto dark:divide-gray-700"
-      >
+      <ul role="list" className="flex-1 divide-y divide-slate-200 overflow-y-auto dark:divide-gray-700">
         {activeRelays.map((relay) => (
           <li key={relay.url}>
             <div className="group relative flex items-center px-5 py-6">
@@ -126,11 +111,7 @@ export default function RelaySettings() {
                 <div className="relative flex min-w-0 flex-1 items-center">
                   <span className="relative inline-block flex-shrink-0">
                     <RelayIcon
-                      src={
-                        relay.url
-                          .replace("wss://", "https://")
-                          .replace("relay.", "") + "/favicon.ico"
-                      }
+                      src={relay.url.replace("wss://", "https://").replace("relay.", "") + "/favicon.ico"}
                       fallback="https://user-images.githubusercontent.com/29136904/244441447-d6f64435-6155-4ffa-8574-fb221a3ad412.png"
                       alt=""
                     />
@@ -138,12 +119,8 @@ export default function RelaySettings() {
                   <div className="ml-4 truncate">
                     {getRelayInfo(relay.url) && (
                       <>
-                        <p className="truncate text-sm font-medium text-slate-900 dark:text-gray-100">
-                          {getRelayInfo(relay.url).name}
-                        </p>
-                        <p className="truncate text-sm text-slate-500">
-                          {getRelayInfo(relay.url).contact}
-                        </p>
+                        <p className="truncate text-sm font-medium text-slate-900 dark:text-gray-100">{getRelayInfo(relay.url).name}</p>
+                        <p className="truncate text-sm text-slate-500">{getRelayInfo(relay.url).contact}</p>
                       </>
                     )}
                   </div>
@@ -182,10 +159,7 @@ export default function RelaySettings() {
                 )}
               </div>
 
-              <Menu
-                as="div"
-                className="relative z-40 ml-2 inline-block flex-shrink-0 text-left"
-              >
+              <Menu as="div" className="relative z-40 ml-2 inline-block flex-shrink-0 text-left">
                 <Menu.Button className="group relative inline-flex h-8 w-8 items-center justify-center focus:outline-none">
                   <span className="sr-only">Open options menu</span>
                   <span className="flex h-full w-full items-center justify-center rounded-full">
@@ -212,9 +186,9 @@ export default function RelaySettings() {
                             href="#"
                             className={classNames(
                               active
-                                ? "bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-gray-100"
+                                ? "bg-gray-100 text-gray-900 dark:bg-darkFormFieldBackground dark:text-gray-100"
                                 : "text-gray-700 dark:text-gray-200",
-                              "block px-4 py-2 text-sm",
+                              "block px-4 py-2 text-sm"
                             )}
                           >
                             Relay Info
@@ -227,9 +201,9 @@ export default function RelaySettings() {
                             onClick={() => handleRemoveRelay(relay.url)}
                             className={classNames(
                               active
-                                ? "bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-red-500"
+                                ? "bg-gray-100 text-gray-900 dark:bg-darkFormFieldBackground dark:text-red-500"
                                 : "text-gray-700 dark:text-gray-200",
-                              "block w-full px-4 py-2 text-start text-sm",
+                              "block w-full px-4 py-2 text-start text-sm"
                             )}
                           >
                             Remove Relay

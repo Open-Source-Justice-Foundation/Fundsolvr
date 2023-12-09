@@ -101,7 +101,7 @@ export default function UserProfilePage() {
           />
           {/* <div className="flex gap-x-4">
             <Link
-              className="flex items-center justify-center rounded-lg bg-gray-400 px-3 text-white hover:bg-gray-500 dark:bg-gray-700/80 dark:hover:bg-gray-700"
+              className="flex items-center justify-center rounded-lg bg-gray-400 px-3 text-white hover:bg-gray-500 dark:bg-darkFormFieldBackground/80 dark:hover:bg-gray-700"
               href={`/messages/${nip19.npubEncode(publicKey)}`}
             >
               <PaperAirplaneIcon className="h-5 w-5" />

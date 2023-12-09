@@ -19,7 +19,9 @@ export default function ReadRelayCards() {
 
   return (
     <>
-      <p className="bg-gray-50 px-4 py-2 text-gray-500 dark:bg-gray-700/50 dark:text-gray-300">Choose a relay to read content from</p>
+      <p className="bg-gray-50 px-4 py-2 text-gray-500 dark:bg-darkFormFieldBackground/50 dark:text-gray-300">
+        Choose a relay to read content from
+      </p>
       <ul role="list" className="flex-1 divide-y divide-gray-200 overflow-y-auto dark:divide-gray-700">
         {readRelays.map((readRelay) => (
           <li key={readRelay.url}>

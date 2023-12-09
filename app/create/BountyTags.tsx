@@ -24,8 +24,8 @@ export default function BountyTags({ tags, setTags }: PropTypes) {
     query === ""
       ? possibleTagsSansAll
       : possibleTagsSansAll.filter((tag) => {
-        return tag.toLowerCase().includes(query.toLowerCase());
-      });
+          return tag.toLowerCase().includes(query.toLowerCase());
+        });
 
   const handleTagChange = (newTag: string) => {
     if (tags.includes(newTag)) {
@@ -48,7 +48,7 @@ export default function BountyTags({ tags, setTags }: PropTypes) {
           <Combobox.Input
             displayValue={() => ""}
             placeholder="Tags"
-            className="w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
+            className="w-full rounded border border-gray-300 bg-white p-2 text-gray-800 dark:border-darkBorder dark:bg-darkFormFieldBackground dark:text-gray-100"
             onChange={(event) => setQuery(event.target.value)}
             onBlur={() => setQuery("")}
           />

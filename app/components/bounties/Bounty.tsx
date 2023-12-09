@@ -86,7 +86,7 @@ export default function Bounty({ event }: Props) {
                   {tags[0] && (
                     <div
                       key={tags[0]}
-                      className="flex cursor-pointer select-none items-center gap-x-2 rounded-lg bg-gray-200 px-3 py-2 text-sm font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-100"
+                      className="flex cursor-pointer select-none items-center gap-x-2 rounded-lg bg-gray-200 px-3 py-2 text-sm font-medium text-gray-500 dark:bg-darkFormFieldBackground dark:text-gray-100"
                     >
                       {tags[0]}
                     </div>
