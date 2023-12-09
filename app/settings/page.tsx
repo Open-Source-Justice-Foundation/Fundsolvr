@@ -25,6 +25,7 @@ export default function Settings() {
 
   const [imageURL, setImageUrl] = useState("");
   const [username, setUsername] = useState("");
+  const [lud16, setLud16] = useState("");
   const [about, setAbout] = useState("");
   const [currentUserEvent, setCurrentUserEvent] = useState<Event>({
     kind: 0,
@@ -77,6 +78,7 @@ export default function Settings() {
     name: string;
     picture: string;
     about: string;
+    lud16: string;
   }
 
   const onSeen = () => {};
@@ -124,16 +126,17 @@ export default function Settings() {
   }
 
   const setMetadata = (metadata: Metadata) => {
-    const { name, picture, about } = metadata;
+    const { name, picture, about, lud16 } = metadata;
     setImageUrl(picture || "");
     setAbout(about || "");
     setUsername(name || "");
+    setLud16(lud16 || "");
   };
 
   const saveMetadata = async (e: React.MouseEvent) => {
     e.preventDefault();
     const currentContent = currentUserEvent?.content ? JSON.parse(currentUserEvent?.content) : {};
-    const updatedUserProfile = currentContent ? JSON.stringify({ ...currentContent, name: username, picture: imageURL, about }) : "";
+    const updatedUserProfile = currentContent ? JSON.stringify({ ...currentContent, name: username, picture: imageURL, about, lud16 }) : "";
     let identityTags: string[][] | null | undefined = [];
 
     // check if gistId is set
@@ -240,6 +243,7 @@ export default function Settings() {
         name: userProfile.name,
         picture: userProfile.picture,
         about: userProfile.about,
+        lud16: userProfile.lud16 || "",
       });
     } else {
       setCurrentUserEvent({} as Event);
@@ -247,6 +251,7 @@ export default function Settings() {
         name: "",
         picture: "",
         about: "",
+        lud16: "",
       });
     }
     // getUserMetadata();
@@ -309,6 +314,23 @@ export default function Settings() {
                       value={username}
                       onChange={(e) => {
                         setUsername(e.target.value);
+                      }}
+                    />
+                  </div>
+                </div>
+                <label htmlFor="lud16" className="mt-8 block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">
+                  Lightning Address
+                </label>
+                <div className="mt-2">
+                  <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 dark:ring-gray-600 sm:max-w-md">
+                    <input
+                      type="text"
+                      name="lud16"
+                      id="lud16"
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 sm:text-sm sm:leading-6"
+                      value={lud16}
+                      onChange={(e) => {
+                        setLud16(e.target.value);
                       }}
                     />
                   </div>
