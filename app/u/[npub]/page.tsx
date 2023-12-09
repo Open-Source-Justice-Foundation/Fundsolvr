@@ -9,7 +9,7 @@ import { getITagValue, getITagValues, parseProfileContent, shortenHash, verifyGi
 import Avatar from "@/app/messages/components/Avatar";
 import { useProfileStore } from "@/app/stores/profileStore";
 import { useRelayStore } from "@/app/stores/relayStore";
-import { CheckCircleIcon, PaperAirplaneIcon, UserPlusIcon } from "@heroicons/react/20/solid";
+import { CheckCircleIcon, ClipboardDocumentListIcon, PaperAirplaneIcon, UserPlusIcon } from "@heroicons/react/20/solid";
 import { nip19 } from "nostr-tools";
 import type { Event } from "nostr-tools";
 
@@ -29,6 +29,14 @@ export default function UserProfilePage() {
   }
 
   // check if github profile exists
+
+  async function handleCopyAddress() {
+    if ("clipboard" in navigator) {
+      await navigator.clipboard.writeText(npub);
+    } else {
+      document.execCommand("copy", true, npub);
+    }
+  }
 
   async function verifyGithubForUser(tag: any) {
     const githubUserVerified = await verifyGithub(npub, tag[2]);
@@ -71,7 +79,7 @@ export default function UserProfilePage() {
         setupProfile(event);
       };
 
-      const onEOSE = () => { };
+      const onEOSE = () => {};
 
       const userFilter = {
         kinds: [0],
@@ -91,7 +99,7 @@ export default function UserProfilePage() {
             src={parseProfileContent(getProfileEvent(relayUrl, publicKey)?.content).picture}
             seed={publicKey}
           />
-          <div className="flex gap-x-4">
+          {/* <div className="flex gap-x-4">
             <Link
               className="flex items-center justify-center rounded-lg bg-gray-400 px-3 text-white hover:bg-gray-500 dark:bg-gray-700/80 dark:hover:bg-gray-700"
               href={`/messages/${nip19.npubEncode(publicKey)}`}
@@ -103,14 +111,22 @@ export default function UserProfilePage() {
               <UserPlusIcon className="h-5 w-5" />
               Follow
             </button>
-          </div>
+          </div> */}
         </div>
 
         <div className="flex w-full items-center gap-x-4">
           <div className="flex flex-col gap-y-2">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-              {parseProfileContent(getProfileEvent(relayUrl, publicKey)?.content).name || shortenHash(nip19.npubEncode(publicKey))}
-            </h2>
+            <div className="flex flex-row gap-x-2">
+              <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+                {parseProfileContent(getProfileEvent(relayUrl, publicKey)?.content).name || shortenHash(nip19.npubEncode(publicKey))}
+              </h2>
+              <button
+                onClick={handleCopyAddress}
+                className="flex items-center active:translate-y-px dark:text-white hover:dark:text-gray-300"
+              >
+                <ClipboardDocumentListIcon className="h-4 w-4" />
+              </button>
+            </div>
             <div className="flex items-center gap-x-2">
               {parseProfileContent(getProfileEvent(relayUrl, publicKey)?.content).nip05 && (
                 <>
