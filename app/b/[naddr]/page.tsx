@@ -42,7 +42,8 @@ import { Theme } from "../../types";
 export default function BountyPage() {
   const { subscribe, relayUrl } = useRelayStore();
   const { getProfileEvent } = useProfileStore();
-  const { cachedBountyEvent, setCachedBountyEvent, getBountyApplicants, getApplicantEvent, getZapReceiptEvent } = useBountyEventStore();
+  const { cachedBountyEvent, setCachedBountyEvent, getBountyApplicants, getApplicantEvent, getZapReceiptEvent, assignedEvents } =
+    useBountyEventStore();
   const { getUserPublicKey, userPublicKey, userPrivateKey } = useUserProfileStore();
   const { readRelays, updateReadRelayStatus, sortReadRelays, setAllReadRelaysInactive } = useReadRelayStore();
   const NoCommentContainer = useRef<HTMLDivElement>(null);
@@ -91,8 +92,6 @@ export default function BountyPage() {
           authors: [naddrPointer.pubkey],
           "#d": [naddrPointer.identifier],
         };
-
-        console.log("filter", filter);
 
         if (naddrPointer.relays && naddrPointer.relays.length > 0) {
           subscribe([naddrPointer.relays[0]], filter, onEvent, onEOSE);
@@ -182,7 +181,12 @@ export default function BountyPage() {
                   }
                 </>
               )}
-              {userPublicKey && bountyEvent.pubkey === userPublicKey && <ZapPoll event={bountyEvent} />}
+              {userPublicKey &&
+                (bountyEvent.pubkey === userPublicKey ||
+                  Object.values(getBountyApplicants(relayUrl, getTagValues("d", bountyEvent.tags))).some((applicant) => {
+                    const assignedTo = getTagValues("p", bountyEvent.tags);
+                    applicant.pubkey === assignedTo;
+                  })) && <ZapPoll event={bountyEvent} />}
             </div>
             <div className="flex flex-col gap-6 pb-3">
               <div className="mt-6 flex items-center justify-between">
@@ -223,7 +227,7 @@ export default function BountyPage() {
                     tab === "details"
                       ? "text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
                       : "hover:text-gray-700 dark:hover:text-gray-200",
-                    "flex cursor-pointer select-none items-center gap-x-2 pr-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
+                    "flex cursor-pointer select-none items-center gap-x-2 pr-2 hover:text-indigo-600 dark:border-darkBorder dark:hover:text-gray-100"
                   )}
                 >
                   <BookOpenIcon className="h-5 w-5" />
@@ -235,7 +239,7 @@ export default function BountyPage() {
                     tab === "applications"
                       ? "text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
                       : "hover:text-gray-700 dark:hover:text-gray-200",
-                    "flex cursor-pointer select-none items-center gap-x-2 px-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
+                    "flex cursor-pointer select-none items-center gap-x-2 px-2 hover:text-indigo-600 dark:border-darkBorder dark:hover:text-gray-100"
                   )}
                 >
                   <UsersIcon className="h-5 w-5" />
@@ -250,14 +254,14 @@ export default function BountyPage() {
                       tab === "discussion"
                         ? "text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
                         : "hover:text-gray-700 dark:hover:text-gray-200",
-                      "flex cursor-pointer select-none items-center gap-x-2 pl-2 hover:text-indigo-600 dark:border-gray-700 dark:hover:text-gray-100"
+                      "flex cursor-pointer select-none items-center gap-x-2 pl-2 hover:text-indigo-600 dark:border-darkBorder dark:hover:text-gray-100"
                     )}
                   >
                     <ChatBubbleLeftRightIcon className="h-5 w-5" />
                     <h3 className="">Discussion</h3>
                   </div>
                 ) : (
-                  <div className={"flex cursor-not-allowed select-none items-center gap-x-2 pl-2 dark:border-gray-700"}>
+                  <div className={"flex cursor-not-allowed select-none items-center gap-x-2 pl-2 dark:border-darkBorder"}>
                     <LockClosedIcon className="h-5 w-5" />
                     <h3 className="">Discussion</h3>
                   </div>
@@ -425,7 +429,7 @@ export default function BountyPage() {
                   {getBountyTags(bountyEvent.tags).map((tag) => (
                     <div
                       key={tag}
-                      className="flex cursor-pointer select-none items-center gap-x-2 rounded-lg bg-gray-200 px-3 py-2 text-sm font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-100"
+                      className="flex cursor-pointer select-none items-center gap-x-2 rounded-lg bg-gray-200 px-3 py-2 text-sm font-medium text-gray-500 dark:bg-darkFormFieldBackground dark:text-gray-100"
                     >
                       {tag}
                     </div>

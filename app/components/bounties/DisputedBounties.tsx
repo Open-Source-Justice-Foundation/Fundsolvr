@@ -22,46 +22,44 @@ import NoBounties from "./NoBounties";
 
 export default function Bounties() {
   const { subscribe, relayUrl } = useRelayStore();
-  const { setAssignedEvents, assignedEvents, bountyType, search } = useBountyEventStore();
+  const { setAssignedEvents, bountyEvents, bountyType, search } = useBountyEventStore();
   const [disputedBounties, setDisputedBounties] = useState<{ bounty: Event; poll: Event }[]>([]);
   const { userPublicKey } = useUserProfileStore();
   const [loading, setLoading] = useState({ disputed: false });
+  const [events, setEvents] = useState<Event[]>([]);
 
-  // TODO: check if user has been paid for bounty
-  // if so don't show it
-  const getAssignedBounties = async () => {
-    if (userPublicKey && !assignedEvents[relayUrl]) {
-      setLoading({ ...loading, disputed: true });
-    }
+  const getDisputedBounties = async () => {
+    setLoading({ ...loading, disputed: true });
 
-    const events: Event[] = [];
+    const pollEvents: Event[] = [];
     const pubkeys = new Set<string>();
     const dValues = new Set<string>();
 
     const pollEventFilter: Filter = {
-      kinds: [1985],
+      kinds: [6969],
       limit: 10,
       until: undefined,
       "#L": ["io.resolvr"],
     };
 
-    if (assignedEvents[relayUrl]) {
-      const lastEvent = assignedEvents[relayUrl].slice(-1)[0];
+    if (events) {
+      const lastEvent = events.slice(-1)[0];
       if (lastEvent) {
         pollEventFilter.until = lastEvent.created_at - 10;
       }
     }
 
     const onEvent = (event: Event) => {
-      events.push(event);
+      pollEvents.push(event);
+
+      setEvents(events.concat(pollEvents));
     };
 
     const onEOSE = () => {
       const pollToBountyMap: { bounty: Event; poll: Event }[] = [];
-
-      events.forEach((event) => {
+      pollEvents.forEach((event) => {
         const bountyId = event.tags.find((t) => {
-          if (t[2] === "#t") {
+          if (t[0] === "e") {
             return t;
           }
         });
@@ -75,24 +73,22 @@ export default function Bounties() {
           subscribe(
             [relayUrl],
             disputedBountyFilter,
-            (e) => {
+            (bounty) => {
               pollToBountyMap.push({
-                bounty: e,
+                bounty,
                 poll: event,
               });
-              console.log("disputed bounty event!", e);
+              console.log("disputed bounty event!", bounty);
             },
             () => {
-              console.log("disputed bounties", disputedBounties);
-              setDisputedBounties(pollToBountyMap);
+              console.log("disputed bounties", pollToBountyMap);
+              setDisputedBounties(disputedBounties.concat(pollToBountyMap));
             }
           );
         }
       });
 
-      // setDisputedBounties(events);
-      retrieveProfiles(Array.from(pubkeys));
-      // getApplicants(dValues);
+      // setDisputedBounties(pollToBountyMap);
       setLoading({ ...loading, disputed: false });
     };
 
@@ -101,7 +97,7 @@ export default function Bounties() {
 
   useEffect(() => {
     if (userPublicKey) {
-      getAssignedBounties();
+      getDisputedBounties();
     }
   }, [userPublicKey, relayUrl]);
 
@@ -114,16 +110,11 @@ export default function Bounties() {
           userPublicKey &&
           (disputedBounties.length ? (
             disputedBounties.map((e) => {
-              const pollEvent = e.poll.tags.find((t) => {
-                if (t[0] === "e") {
-                  return t[2];
-                }
-              });
               const poll: EventPointer = {
-                id: pollEvent![1],
+                id: e.poll.id,
                 author: e.poll.pubkey,
                 kind: 6969,
-                relays: [pollEvent![2]],
+                relays: [relayUrl],
               };
               return (
                 <>
@@ -143,7 +134,7 @@ export default function Bounties() {
           ) : (
             <NoBounties />
           ))}
-      <LoadBountiesButton action={getAssignedBounties} />
+      <LoadBountiesButton action={getDisputedBounties} />
     </>
   );
 }

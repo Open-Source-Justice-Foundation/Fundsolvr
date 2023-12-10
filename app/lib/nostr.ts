@@ -16,7 +16,7 @@ export function retrieveProfiles(pubkey: string[]) {
     setProfileEvent(relayUrl, event.pubkey, event);
   };
 
-  const onEOSE = () => { };
+  const onEOSE = () => {};
 
   const userFilter: Filter = {
     kinds: [0],
@@ -42,7 +42,7 @@ export function getApplicants(dValues: Set<string>) {
     }
   };
 
-  const onApplicantEOSE = () => { };
+  const onApplicantEOSE = () => {};
 
   subscribe([relayUrl], applicantFilter, onApplicantEvent, onApplicantEOSE);
 }
@@ -97,10 +97,10 @@ export function makeZapRequest({
       Array.isArray(tags) && tags.length > 0
         ? tags
         : [
-          ["p", profile],
-          ["amount", amount.toString()],
-          ["relays", ...relays],
-        ],
+            ["p", profile],
+            ["amount", amount.toString()],
+            ["relays", ...relays],
+          ],
   };
 
   if (event && (!Array.isArray(tags) || !tags.length)) {
@@ -145,7 +145,7 @@ export const getZapRecieptFromRelay = async (cachedBountyEvent: Event) => {
       }
     };
 
-    const onEOSE = () => { };
+    const onEOSE = () => {};
 
     subscribe([relayUrl], postedBountyFilter, onEvent, onEOSE);
   }
@@ -225,7 +225,9 @@ export const getTaggedBounties = async (tag: string, loading: any, setLoading: a
     }
   };
 
-  const onEOSE = () => { };
+  const onEOSE = () => {
+    setLoading({ ...loading, all: false });
+  };
 
   subscribe([relayUrl], taggedBountyFilter, onEvent, onEOSE);
 };

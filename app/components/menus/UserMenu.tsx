@@ -80,10 +80,10 @@ export default function Example({ children }: any) {
           leaveTo="opacity-0 translate-y-1"
         >
           <Popover.Panel className="absolute right-0 z-10 mt-2 flex w-screen max-w-min translate-x-4 px-4">
-            <div className="w-48 shrink rounded-md border border-gray-200 bg-gray-50 py-2 text-sm font-semibold leading-6 text-gray-800 shadow-lg ring-1 ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:ring-gray-900/5">
+            <div className="w-48 shrink rounded-md border border-gray-200 bg-gray-50 py-2 text-sm font-semibold leading-6 text-gray-800 shadow-lg ring-1 ring-gray-200 dark:border-darkBorder dark:bg-gray-800 dark:text-gray-100 dark:ring-gray-900/5">
               <span
                 onClick={handleRelayMenuReadFromClick}
-                className="mb-2 block cursor-pointer border-b border-gray-200  px-4 pb-2 pt-1 dark:border-gray-700/40"
+                className="mb-2 block cursor-pointer border-b border-gray-200  px-4 pb-2 pt-1 dark:border-darkBorder/40"
               >
                 {currentProfile && currentProfile.name ? (
                   <p>{currentProfile.name}</p>
@@ -143,7 +143,7 @@ export default function Example({ children }: any) {
                   Backup Keys
                 </Popover.Button>
               )}
-              <div className="mt-2 border-t border-gray-200 dark:border-gray-700/40" />
+              <div className="mt-2 border-t border-gray-200 dark:border-darkBorder/40" />
               <Popover.Button
                 as="button"
                 onClick={signOut}

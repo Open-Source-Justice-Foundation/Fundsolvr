@@ -114,7 +114,7 @@ export default function RelayDiscover() {
             onChange={(event) => setQuery(event.target.value)}
             id="search"
             placeholder="Search relays..."
-            className="block w-full rounded-md border-0 py-4 pl-4 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-700/50 dark:text-gray-100 dark:ring-gray-700 dark:placeholder:text-gray-400 dark:focus:ring-2 dark:focus:ring-inset dark:focus:ring-indigo-400 sm:leading-6"
+            className="block w-full rounded-md border-0 py-4 pl-4 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-darkFormFieldBackground/50 dark:text-gray-100 dark:ring-gray-700 dark:placeholder:text-gray-400 dark:focus:ring-2 dark:focus:ring-inset dark:focus:ring-indigo-400 sm:leading-6"
           />
           <div className="absolute inset-y-0 right-0 flex py-4 pr-4">
             <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -123,7 +123,7 @@ export default function RelayDiscover() {
       </div>
       <ul
         role="list"
-        className="mt-6 flex-1 divide-y divide-gray-200 overflow-y-auto border-t border-gray-200 dark:divide-gray-700 dark:border-gray-700"
+        className="mt-6 flex-1 divide-y divide-gray-200 overflow-y-auto border-t border-gray-200 dark:divide-gray-700 dark:border-darkBorder"
       >
         {relaySearch.length > 0
           ? relaySearch.map((relay: any) => SearchItem(relay.item))

@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { getTagValues, shortenHash } from "@/app/lib/utils";
 import { useRelayStore } from "@/app/stores/relayStore";
+import { ArrowLeftIcon } from "@bitcoin-design/bitcoin-icons-react/filled";
 import { bech32 } from "bech32";
 import { Event, EventTemplate, Filter, UnsignedEvent, getEventHash, nip19, nip57 } from "nostr-tools";
 
@@ -385,6 +387,13 @@ export default function PollPage() {
   return (
     <div className="p-4">
       <div className="m-auto max-w-screen-xl dark:text-white">
+        <Link
+          href={`/`}
+          className="mb-8 flex w-48 items-center gap-x-2 rounded-lg bg-gray-50 px-3 py-2 text-sm font-medium text-gray-800 shadow-lg shadow-gray-900/5 ring-1 ring-gray-300 hover:bg-white dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-800 dark:hover:bg-gray-700/50"
+        >
+          <ArrowLeftIcon className="h-4 w-4" />
+          Back to all Bounties
+        </Link>
         {pollEvent && (
           <div className="dark:hover:border-gray-500/60z relative flex flex-col gap-y-4 rounded-lg border border-gray-200 bg-white p-6 py-4 pr-4 shadow-lg shadow-black/10 transition duration-150 ease-in-out hover:border-gray-400/70 dark:border-gray-500/30 dark:bg-gray-800/80">
             {pollAuthorProfile && (

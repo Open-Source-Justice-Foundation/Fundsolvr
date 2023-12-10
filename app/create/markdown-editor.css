@@ -89,7 +89,7 @@
 .rc-md-editor {
   padding-bottom: 1px;
   position: relative;
-  @apply overflow-hidden rounded-md border border-gray-300 bg-white dark:border-gray-600 dark:bg-gray-700;
+  @apply overflow-hidden rounded-md border border-gray-300 bg-white dark:border-darkBorder dark:bg-darkFormFieldBackground;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   display: -webkit-box;
@@ -135,7 +135,7 @@
   -ms-flex-preferred-size: 1px;
   flex-basis: 1px;
   /* border-right: 1px solid #e0e0e0; */
-  @apply border-r border-gray-300 dark:border-gray-700;
+  @apply border-r border-gray-300 dark:border-darkBorder;
 }
 .rc-md-editor .editor-container > .section.in-visible {
   display: none;
@@ -161,7 +161,7 @@
   resize: none;
   outline: none;
   min-height: 0;
-  @apply rounded-b-md bg-white text-gray-900 dark:bg-gray-700 dark:text-white;
+  @apply rounded-b-md bg-white text-gray-900 dark:bg-darkFormFieldBackground dark:text-white;
   font-size: 14px;
   line-height: 1.7;
 }
@@ -323,7 +323,7 @@
   box-sizing: border-box;
   /* border-bottom: 1px solid #e0e0e0; */
   font-size: 16px;
-  @apply rounded-t-md border-b border-gray-300 bg-gray-100 dark:border-gray-600 dark:bg-gray-800;
+  @apply rounded-t-md border-b border-gray-300 bg-gray-100 dark:border-darkBorder dark:bg-gray-800;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;

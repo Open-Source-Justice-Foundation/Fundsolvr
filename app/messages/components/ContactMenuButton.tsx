@@ -44,13 +44,14 @@ const ContactMenuButton = ({ className = "" }: IContactMenuButtonProps) => {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-200 rounded-md border border-gray-200 bg-white dark:bg-gray-800 text-gray-800 dark:text-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:divide-gray-600 dark:border-gray-600">
+        <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-200 rounded-md border border-gray-200 bg-white text-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:divide-gray-600 dark:border-darkBorder dark:bg-gray-800 dark:text-white">
           <div className="px-1 py-1 ">
             <Menu.Item>
               {({ active }) => (
                 <button
-                  className={`${active ? "bg-gray-100 dark:bg-gray-700" : ""
-                    } group flex w-full items-center gap-3 rounded-md px-2 py-2 text-sm`}
+                  className={`${
+                    active ? "bg-gray-100 dark:bg-darkFormFieldBackground" : ""
+                  } group flex w-full items-center gap-3 rounded-md px-2 py-2 text-sm`}
                 >
                   <ClipboardIcon className="h-6 w-6" />
                   <span>Copy npub</span>
@@ -59,7 +60,11 @@ const ContactMenuButton = ({ className = "" }: IContactMenuButtonProps) => {
             </Menu.Item>
             <Menu.Item>
               {({ active }) => (
-                <button className={`${active ? "bg-gray-100 dark:bg-gray-700" : ""} group flex w-full items-center gap-3 rounded-md px-2 py-2 text-sm`}>
+                <button
+                  className={`${
+                    active ? "bg-gray-100 dark:bg-darkFormFieldBackground" : ""
+                  } group flex w-full items-center gap-3 rounded-md px-2 py-2 text-sm`}
+                >
                   <SpeakerXMarkIcon className="h-6 w-6" />
                   <span>Mute</span>
                 </button>
@@ -70,8 +75,9 @@ const ContactMenuButton = ({ className = "" }: IContactMenuButtonProps) => {
             <Menu.Item>
               {({ active }) => (
                 <button
-                  className={`${active ? "bg-red-500/20" : ""
-                    } group flex w-full items-center gap-3 rounded-md px-2 py-2 text-sm text-red-500`}
+                  className={`${
+                    active ? "bg-red-500/20" : ""
+                  } group flex w-full items-center gap-3 rounded-md px-2 py-2 text-sm text-red-500`}
                 >
                   <TrashIcon className="h-6 w-6" />
                   <span>Delete</span>

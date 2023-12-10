@@ -48,7 +48,7 @@ export default function BackupKeys({ publicKey, privateKey }: Props) {
             setPublicKeyCopyText("Copied");
             setPrivateKeyCopyText("Copy");
           }}
-          className="w-full cursor-pointer rounded border border-gray-300 p-2 caret-transparent dark:border-gray-600 dark:bg-gray-600 dark:text-gray-100"
+          className="w-full cursor-pointer rounded border border-gray-300 p-2 caret-transparent dark:border-darkBorder dark:bg-gray-600 dark:text-gray-100"
         />
 
         <div className="right-0 top-0 flex h-full w-full items-center justify-center lg:absolute lg:items-end lg:justify-end">
@@ -80,7 +80,7 @@ export default function BackupKeys({ publicKey, privateKey }: Props) {
             setPublicKeyCopyText("Copy");
           }}
           onChange={(e) => e.preventDefault()}
-          className="w-full cursor-pointer rounded border border-gray-300 p-2 caret-transparent dark:border-gray-600 dark:bg-gray-600 dark:text-gray-100"
+          className="w-full cursor-pointer rounded border border-gray-300 p-2 caret-transparent dark:border-darkBorder dark:bg-gray-600 dark:text-gray-100"
         />
         <div className="right-0 top-0 flex h-full w-full items-center justify-center lg:absolute lg:items-end lg:justify-end">
           <button
