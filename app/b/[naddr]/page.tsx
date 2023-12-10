@@ -169,24 +169,26 @@ export default function BountyPage() {
                 <ArrowLeftIcon className="h-4 w-4" />
                 Back to all Bounties
               </Link>
-              {userPublicKey && bountyEvent.pubkey !== userPublicKey && (
-                <>
-                  {
-                    // TODO: check if user has already applied
-                    getApplicantEvent(relayUrl, getTagValues("d", bountyEvent.tags), userPublicKey) ? (
-                      <span className="select-none text-green-500 dark:text-green-400">Applied</span>
-                    ) : (
-                      <Applybutton bountyEvent={bountyEvent} />
-                    )
-                  }
-                </>
-              )}
-              {userPublicKey &&
-                (bountyEvent.pubkey === userPublicKey ||
-                  Object.values(getBountyApplicants(relayUrl, getTagValues("d", bountyEvent.tags))).some((applicant) => {
-                    const assignedTo = getTagValues("p", bountyEvent.tags);
-                    applicant.pubkey === assignedTo;
-                  })) && <ZapPoll event={bountyEvent} />}
+              <div className="flex flex-row items-center gap-x-4">
+                {userPublicKey && bountyEvent.pubkey !== userPublicKey && (
+                  <>
+                    {
+                      // TODO: check if user has already applied
+                      getApplicantEvent(relayUrl, getTagValues("d", bountyEvent.tags), userPublicKey) ? (
+                        <span className="select-none text-green-500 dark:text-green-400">Applied</span>
+                      ) : (
+                        <Applybutton bountyEvent={bountyEvent} />
+                      )
+                    }
+                  </>
+                )}
+                {userPublicKey &&
+                  (bountyEvent.pubkey === userPublicKey ||
+                    Object.values(getBountyApplicants(relayUrl, getTagValues("d", bountyEvent.tags))).some((applicant) => {
+                      const assignedTo = getTagValues("p", bountyEvent.tags);
+                      return applicant.pubkey === assignedTo;
+                    })) && <ZapPoll event={bountyEvent} />}
+              </div>
             </div>
             <div className="flex flex-col gap-6 pb-3">
               <div className="mt-6 flex items-center justify-between">
