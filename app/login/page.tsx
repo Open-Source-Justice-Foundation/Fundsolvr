@@ -175,7 +175,7 @@ export default function LoginPage() {
   return (
     mounted && (
       <>
-        <div className="h-screen flex-col items-center p-4 font-['Avenir']">
+        <div className="h-screen flex-col items-center p-4">
           <div className="flex flex-col gap-10">
             <div className="m-auto w-full max-w-sm">
               <svg width="121" height="120" viewBox="0 0 121 120" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -202,7 +202,23 @@ export default function LoginPage() {
                 <div className="flex flex-col items-start justify-center gap-4">
                   <h3 className="font-bold dark:text-white">I have a nostr account</h3>
                   <p className="opacity-90 dark:text-white">
-                    For premium security, we recommend you login with your Alby or Nos02x extension
+                    For premium security, we recommend you login with your{" "}
+                    <a
+                      href="https://chromewebstore.google.com/detail/alby-bitcoin-wallet-for-l/iokeahhehimjnekafflcihljlcjccdbe"
+                      target="_blank"
+                      className="text-indigo-600"
+                    >
+                      Alby
+                    </a>{" "}
+                    or{" "}
+                    <a
+                      href="https://chromewebstore.google.com/detail/nos2x/kpgefcfmnafjgpblomihpgmejjdanjjp"
+                      target="_blank"
+                      className="text-indigo-600"
+                    >
+                      Nos02x
+                    </a>{" "}
+                    extension
                   </p>
                   <div className="flex w-full flex-col gap-2">
                     <button

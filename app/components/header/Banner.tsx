@@ -15,7 +15,7 @@ export default function Banner() {
     <div className="relative flex h-80 max-h-80 items-center justify-center overflow-hidden px-4">
       <div className="flex w-full max-w-screen-xl flex-col items-start justify-center space-y-5 text-white">
         <div className="mr-auto flex max-w-2xl flex-col items-start space-y-5 ">
-          <h2 className="text-2xl text-white md:text-4xl md:leading-11">Bitcoin native escrow and dispute resolution for FOSS bounties</h2>
+          <h2 className="text-2xl text-white md:text-4xl md:leading-11">a bitcoin native peer-to-peer bounty marketplace</h2>
           <button
             onClick={navigateToCreate}
             className="flex items-center gap-x-2 rounded-3xl bg-indigo-500 px-4 py-2 font-medium text-white hover:bg-indigo-600 dark:bg-indigo-600 dark:hover:bg-indigo-500 "
