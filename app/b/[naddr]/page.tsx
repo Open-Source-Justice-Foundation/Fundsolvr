@@ -18,11 +18,12 @@ import { useBountyEventStore } from "@/app/stores/eventStore";
 import { useProfileStore } from "@/app/stores/profileStore";
 import { useReadRelayStore } from "@/app/stores/readRelayStore";
 import { useRelayStore } from "@/app/stores/relayStore";
-import { SatoshiV2Icon } from "@bitcoin-design/bitcoin-icons-react/filled";
+import { ArrowRightIcon, SatoshiV2Icon } from "@bitcoin-design/bitcoin-icons-react/filled";
 import {
   ArrowLeftIcon,
   BookOpenIcon,
   ChatBubbleLeftRightIcon,
+  ListBulletIcon,
   LockClosedIcon,
   PaperAirplaneIcon,
   PencilSquareIcon,
@@ -53,6 +54,7 @@ export default function BountyPage() {
   const [naddr, setNaddr] = useState<string>("");
   const [naddrPointer, setNaddrPointer] = useState<AddressPointer>();
   const [bountyEvent, setBountyEvent] = useState<Event>();
+  const [pollEvent, setPollEvent] = useState<Event>();
   const [tab, setTab] = useState<string>("details");
 
   const pathname = usePathname();
@@ -145,7 +147,7 @@ export default function BountyPage() {
   }, [bountyEvent, tab]);
 
   useEffect(() => {
-    if (bountyEvent && naddrPointer) {
+    if (bountyEvent) {
       const pollEventFilter: Filter = {
         kinds: [6969],
         limit: 1,
@@ -153,14 +155,15 @@ export default function BountyPage() {
         "#e": [bountyEvent.id],
       };
       const onEvent = (event: Event) => {
-        // console.log("poll!,", event);
+        console.log("poll!,", event);
+        setPollEvent(event);
       };
 
       const onEOSE = () => {};
 
-      subscribe([naddrPointer.relays![0]], pollEventFilter, onEvent, onEOSE);
+      subscribe([relayUrl], pollEventFilter, onEvent, onEOSE);
     }
-  }, [naddrPointer, bountyEvent]);
+  }, [bountyEvent]);
 
   function setupMarkdown(content: string) {
     var md = require("markdown-it")();
@@ -274,16 +277,30 @@ export default function BountyPage() {
                       tab === "discussion"
                         ? "text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
                         : "hover:text-gray-700 dark:hover:text-gray-200",
-                      "flex cursor-pointer select-none items-center gap-x-2 pl-2 hover:text-indigo-600 dark:border-darkBorder dark:hover:text-gray-100"
+                      "flex cursor-pointer select-none items-center gap-x-2 px-2 hover:text-indigo-600 dark:border-darkBorder dark:hover:text-gray-100"
                     )}
                   >
                     <ChatBubbleLeftRightIcon className="h-5 w-5" />
                     <h3 className="">Discussion</h3>
                   </div>
                 ) : (
-                  <div className={"flex cursor-not-allowed select-none items-center gap-x-2 pl-2 dark:border-darkBorder"}>
+                  <div className={"flex cursor-not-allowed select-none items-center gap-x-2 px-2 dark:border-darkBorder"}>
                     <LockClosedIcon className="h-5 w-5" />
                     <h3 className="">Discussion</h3>
+                  </div>
+                )}
+                {pollEvent && (
+                  <div
+                    onClick={() => setTab("poll")}
+                    className={classNames(
+                      tab === "poll"
+                        ? "text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-400"
+                        : "hover:text-gray-700 dark:hover:text-gray-200",
+                      "flex cursor-pointer select-none items-center gap-x-2 px-2 hover:text-indigo-600 dark:border-darkBorder dark:hover:text-gray-100"
+                    )}
+                  >
+                    <ListBulletIcon className="h-5 w-5" />
+                    <h3 className="">Poll Results</h3>
                   </div>
                 )}
               </div>
@@ -377,6 +394,28 @@ export default function BountyPage() {
                       getTagValues("s", cachedBountyEvent.tags) === "assigned" &&
                       ((userPublicKey && bountyEvent.pubkey === userPublicKey) ||
                         getTagValues("p", cachedBountyEvent.tags) === userPublicKey) && <Discussion />}
+                  </div>
+                </div>
+              )}
+              {tab === "poll" && pollEvent && (
+                <div className="mt-4 flex flex-col gap-y-4 dark:text-white">
+                  <h3 className="text-xl font-bold text-gray-800 dark:text-white">
+                    Poll is {window.parseInt(getTagValues("closed_at", pollEvent.tags)) * 1000 < Date.now() ? "closed" : "open"}
+                  </h3>
+                  <div>
+                    <Link
+                      className="align-start ml-auto flex items-center gap-x-2 self-start hover:text-gray-700 dark:text-white hover:dark:text-gray-400"
+                      href={`/poll/${nip19.neventEncode({
+                        id: pollEvent.id,
+                        author: pollEvent.pubkey,
+                        kind: 6969,
+                        relays: [relayUrl],
+                      })}`}
+                    >
+                      <span>Go to Poll</span>
+                      <ArrowRightIcon className="h-4 w-4" />
+                    </Link>
+                    {/* {getTagValues()} */}
                   </div>
                 </div>
               )}
