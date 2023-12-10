@@ -144,6 +144,24 @@ export default function BountyPage() {
     };
   }, [bountyEvent, tab]);
 
+  useEffect(() => {
+    if (bountyEvent && naddrPointer) {
+      const pollEventFilter: Filter = {
+        kinds: [6969],
+        limit: 1,
+        until: undefined,
+        "#e": [bountyEvent.id],
+      };
+      const onEvent = (event: Event) => {
+        // console.log("poll!,", event);
+      };
+
+      const onEOSE = () => {};
+
+      subscribe([naddrPointer.relays![0]], pollEventFilter, onEvent, onEOSE);
+    }
+  }, [naddrPointer, bountyEvent]);
+
   function setupMarkdown(content: string) {
     var md = require("markdown-it")();
     var result = md.render(content || "");

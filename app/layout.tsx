@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const theme = cookies().get("theme");
   return (
-    <html className={`${GeistSans.variable} ${GeistMono.variable} ${theme?.value || Theme.light}`}>
+    <html className={`${GeistSans.variable} ${GeistMono.variable} ${theme?.value || Theme.dark}`}>
       <head />
       <ClientCookiesProvider value={cookies().getAll()}>
         <body className={`${avenir.className} h-full bg-gray-100 dark:bg-background`}>

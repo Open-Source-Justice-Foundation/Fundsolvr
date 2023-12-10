@@ -74,10 +74,13 @@ export default function Bounties() {
             [relayUrl],
             disputedBountyFilter,
             (bounty) => {
-              pollToBountyMap.push({
-                bounty,
-                poll: event,
-              });
+              const closedAt = window.parseInt(getTagValues("closed_at", event.tags));
+              if (closedAt * 1000 > Date.now()) {
+                pollToBountyMap.push({
+                  bounty,
+                  poll: event,
+                });
+              }
               console.log("disputed bounty event!", bounty);
             },
             () => {

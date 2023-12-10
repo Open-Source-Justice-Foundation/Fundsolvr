@@ -20,7 +20,8 @@ export default function PollPage() {
   const nevent = pathname.split("/poll/")[1];
   const decodedNevent: any = nip19.decode(nevent).data;
   const [pollEvent, setPollEvent] = useState<Event>();
-  const { getUserPublicKey } = useUserProfileStore();
+  const [bountyEvents, setBountyEvents] = useState<Event[]>([]);
+  const { getUserPublicKey, userPublicKey } = useUserProfileStore();
   const [authorProfile, setAuthorProfile] = useState<Event>();
   const [pollAuthorProfile, setPollAuthorProfile] = useState<PollAuthorProfile>();
   const [recipientProfile, setRecipientProfile] = useState<Event<0>>();
@@ -78,6 +79,29 @@ export default function PollPage() {
     eventIdReference?: string[];
     zapRecipients?: string[];
   };
+
+  // Gets the bounty referenced by the poll
+  function getBountyEvent() {
+    console.log(structuredPollData);
+    if (!structuredPollData) return;
+    const bountyFilter: Filter = {
+      kinds: [30050],
+      ids: structuredPollData?.eventIdReference,
+    };
+
+    const events: Event[] = [];
+
+    const onEvent = (event: Event) => {
+      events.push(event);
+    };
+
+    const onEOSE = () => {
+      console.log("the events!", events);
+      setBountyEvents(events);
+    };
+
+    subscribe(decodedNevent.relays, bountyFilter, onEvent, onEOSE);
+  }
 
   function getPollEvent() {
     const pollFilter: PollFilter = {
@@ -171,7 +195,6 @@ export default function PollPage() {
 
     const onEvent = (event: Event<0>) => {
       // const recipient = JSON.parse(event);
-      console.log("r", event);
       setRecipientProfile(event);
     };
 
@@ -271,6 +294,10 @@ export default function PollPage() {
 
   async function handleVoteClick(e: any, voteChoice: string) {
     e.preventDefault();
+    if (!userPublicKey) {
+      alert("Log in to vote!");
+      return;
+    }
     if (pollIsClosed) {
       alert("cant vote - the poll is closed!");
       return;
@@ -279,6 +306,17 @@ export default function PollPage() {
       alert("already voted!");
       return;
     }
+
+    if (userPublicKey === structuredPollData?.author) {
+      alert("You cant vote in your own poll!");
+      return;
+    }
+
+    if (bountyEvents.some((event) => getTagValues("p", event.tags) === userPublicKey)) {
+      alert("You cant vote in a poll about yourself!");
+      return;
+    }
+
     setVoteChoice(voteChoice);
 
     const tags = buildRequiredTags(voteChoice);
@@ -378,6 +416,7 @@ export default function PollPage() {
     if (Date.now() > structuredPollData?.closedAt! * 1000) {
       setPollIsClosed(true);
     }
+    getBountyEvent();
   }, [structuredPollData]);
 
   useEffect(() => {

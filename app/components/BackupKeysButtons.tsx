@@ -31,7 +31,7 @@ export default function BackupKeys({ publicKey, privateKey }: Props) {
   };
 
   return (
-    <div className="flex flex-col gap-4 font-['Avenir']">
+    <div className="flex flex-col gap-4">
       <label htmlFor="publickey" className="flex font-medium text-gray-900 dark:text-gray-100">
         Public Key
       </label>
