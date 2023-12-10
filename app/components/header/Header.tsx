@@ -16,7 +16,7 @@ import ThemeToggle from "./ThemeToggle";
 
 export default function Header() {
   const cookies = useCookies();
-  const [theme, setTheme] = useState<Theme>(cookies.get("theme") === "dark" ? Theme.dark : Theme.light);
+  const [theme, setTheme] = useState<Theme>(cookies.get("theme") === "light" ? Theme.light : Theme.dark);
   const pathname = usePathname();
 
   return pathname === "/login" ? (
