@@ -47,10 +47,10 @@ export default function Header() {
               </Link>
               <div className="flex items-center gap-x-6">
                 <ThemeToggle theme={theme} setTheme={setTheme} />
-                <a href="#">
+                <a href="https://discord.com/invite/VRmwgV3pjP" target="_blank">
                   <DiscordIcon className="stroke-gray-600 hover:stroke-slate-900 dark:stroke-slate-200 dark:hover:stroke-white" />
                 </a>
-                <a href="#">
+                <a href="https://github.com/Resolvr-io" target="_blank">
                   <GithubIcon className="stroke-gray-600 hover:stroke-slate-900 dark:stroke-slate-200 dark:hover:stroke-white" />
                 </a>
                 <Login>
