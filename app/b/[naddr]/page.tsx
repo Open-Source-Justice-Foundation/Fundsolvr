@@ -65,12 +65,12 @@ export default function BountyPage() {
       const naddr_data: any = nip19.decode(naddrStr).data;
       setNaddr(naddrStr);
       setNaddrPointer(naddr_data);
-      console.log("naddry", naddr_data);
-
-      console.log(nip19.decode("npub1fmunwy3lljfyzlgyuyman79lxwm4efz6pzlgqjwc400pr9l708qquvje8w"));
 
       if (naddrPointer) {
         if (cachedBountyEvent) {
+          const dValues = new Set<string>();
+          dValues.add(getTagValues("d", cachedBountyEvent.tags));
+          getApplicants(dValues);
           setBountyEvent(cachedBountyEvent);
           return;
         }
@@ -111,6 +111,11 @@ export default function BountyPage() {
     if (!getZapReceiptEvent(relayUrl, cachedBountyEvent.id)) {
       getZapRecieptFromRelay(cachedBountyEvent);
     }
+
+    const dValues = new Set<string>();
+    dValues.add(getTagValues("d", cachedBountyEvent.tags));
+
+    getApplicants(dValues);
   }, [cachedBountyEvent]);
 
   useEffect(() => {

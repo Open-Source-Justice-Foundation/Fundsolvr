@@ -10,6 +10,7 @@ import { getTagValues } from "../lib/utils";
 import { useBountyEventStore } from "../stores/eventStore";
 import { useRelayStore } from "../stores/relayStore";
 import { useUserProfileStore } from "../stores/userProfileStore";
+import { usePostRelayStore } from "../stores/postRelayStore";
 
 interface Props {
   applicantProfile: Event<0>;
@@ -29,6 +30,7 @@ export default function CompleteButton({ applicantProfile }: Props) {
   const { cachedBountyEvent } = useBountyEventStore();
   const { relayUrl } = useRelayStore();
   const { userPublicKey, userPrivateKey } = useUserProfileStore();
+  const {getActivePostRelayURLs} = usePostRelayStore();
 
   useEffect(() => {
     setZapMessage("");
@@ -75,7 +77,7 @@ export default function CompleteButton({ applicantProfile }: Props) {
         profile: applicantProfile.pubkey,
         event: cachedBountyEvent.id,
         amount: Number(getTagValues("reward", cachedBountyEvent.tags)) * 1000, // it's in millisats
-        relays: [relayUrl],
+        relays: getActivePostRelayURLs(),
         comment: "bounty complete",
       };
 

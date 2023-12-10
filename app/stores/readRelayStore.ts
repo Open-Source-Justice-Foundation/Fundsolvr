@@ -22,8 +22,8 @@ export const useReadRelayStore = create<RelayState>()(
         // TODO: populate this on login
         // TODO: make sure the active relay matches
         readRelays: [
-          { url: "wss://relay.damus.io", isActive: true },
-          { url: "wss://nos.lol", isActive: false },
+          { url: "wss://relay.damus.io", isActive: false},
+          { url: "wss://nos.lol", isActive: true},
           { url: "wss://relay.snort.social", isActive: false },
           { url: "wss://nostr-pub.wellorder.net", isActive: false },
           { url: "wss://nostr.wine/", isActive: false },
