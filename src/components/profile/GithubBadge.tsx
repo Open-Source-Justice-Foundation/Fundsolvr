@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 
+import { validateGithub } from "~/server";
+import { useRelayStore } from "~/store/relay-store";
 import { CheckCircle, Github } from "lucide-react";
 import Link from "next/link";
 import { nip19 } from "nostr-tools";
+import { identityTag, profileContent, useBatchedProfiles } from "react-nostr";
 
 import { Badge } from "../ui/badge";
-import { identityTag, profileContent, useBatchedProfiles } from "react-nostr";
-import { validateGithub } from "~/server";
-import { useRelayStore } from "~/store/relay-store";
 
 type Props = {
   pubkey: string;
@@ -19,11 +19,10 @@ export default function GithubBadge({ pubkey }: Props) {
   const { subRelays } = useRelayStore();
   const profileEvent = useBatchedProfiles(pubkey, subRelays);
 
-
   useEffect(() => {
     if (githubVerified) return;
 
-    const gist = identityTag("github",profileEvent?.tags ?? [])?.[2];
+    const gist = identityTag("github", profileEvent?.tags ?? [])?.[2];
     const github = profileContent(profileEvent).github;
     const npub = nip19.npubEncode(pubkey);
 
@@ -49,6 +48,7 @@ export default function GithubBadge({ pubkey }: Props) {
   if (githubVerified) {
     return (
       <Link
+        prefetch={false}
         href={`https://${profileContent(profileEvent).github}` ?? "#"}
         target="_blank"
         rel="noopener noreferrer"

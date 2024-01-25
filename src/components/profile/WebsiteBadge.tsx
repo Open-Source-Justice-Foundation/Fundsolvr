@@ -17,6 +17,7 @@ export default function WebsiteBadge({ pubkey }: Props) {
 
   return (
     <Link
+      prefetch={false}
       href={`https://${profileContent(profileEvent).website}` ?? "#"}
       target="_blank"
       rel="noopener noreferrer"
