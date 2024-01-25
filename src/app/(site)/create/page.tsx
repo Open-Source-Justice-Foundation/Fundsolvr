@@ -131,10 +131,6 @@ export default function CreateBounty() {
     const event = await finishEvent(eventTemplate, seckey);
 
     const onSuccess = (_: Event) => {
-      // TODO: add this to react-nostr lib
-      revalidateCachedTag("open-bounties");
-      revalidateCachedTag(`posted-bounties-${pubkey}`);
-      // TODO: maybe make this callback async
       void invalidateKeys(["open", "posted"]);
       if (shouldNotify) {
         postSocialNote();
