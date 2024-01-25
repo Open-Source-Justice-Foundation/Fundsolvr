@@ -11,6 +11,8 @@ import { type Event } from "nostr-tools";
 import { usePublish } from "react-nostr";
 import { toast } from "sonner";
 
+import { Button } from "../ui/button";
+
 type Props = {
   profileEvent: Event | undefined;
 };
@@ -39,9 +41,9 @@ export default function ApplicantMenu({ profileEvent }: Props) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <div className="flex h-9 w-9 items-center justify-center whitespace-nowrap rounded-md border border-input bg-background text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:bg-secondary/70 dark:hover:bg-secondary/60">
-          <MoreVertical className="h-4 w-4" />
-        </div>
+        <Button variant="ghost" size="smIcon">
+          <MoreVertical height={16} width={16} />
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="mt-2">
         <DropdownMenuItem
