@@ -144,7 +144,7 @@ export default function BountyTabs({ bounty, selectedTab }: BountyTabsProps) {
         <>
           <div className="flex items-center justify-between">
             <h4 className="scroll-m-20 py-4 text-xl font-semibold tracking-tight">
-              Applications
+              Participants
             </h4>
             <span className="text-sm text-muted-foreground">
               {fromNow(bounty?.created_at) ?? "unknown"}

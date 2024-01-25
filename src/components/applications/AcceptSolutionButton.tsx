@@ -6,7 +6,7 @@ import { allTags, finishEvent, tag, usePublish, useZap } from "react-nostr";
 import { toast } from "sonner";
 
 import { Button } from "../ui/button";
-import { revalidateCachedTag } from "~/server";
+// import { revalidateCachedTag } from "~/server";
 
 type Props = {
   applicationEvent: Event;
@@ -134,12 +134,12 @@ export default function AcceptSolutionButton({
 
     const onSuccess = (event: Event) => {
       // TODO: REMOVE THE OLD APPLICATION EVENTS for the old bounty id
-      revalidateCachedTag("open-bounties");
-      revalidateCachedTag(`posted-bounties-${pubkey}`);
-      revalidateCachedTag(`assigned-bounties-${applicationEvent.pubkey}`);
-      const dTagValue = tag("d", bountyEvent);
-      const bountyPubkey = bountyEvent.pubkey;
-      revalidateCachedTag(`${dTagValue}-${bountyPubkey}`);
+      // revalidateCachedTag("open-bounties");
+      // revalidateCachedTag(`posted-bounties-${pubkey}`);
+      // revalidateCachedTag(`assigned-bounties-${applicationEvent.pubkey}`);
+      // const dTagValue = tag("d", bountyEvent);
+      // const bountyPubkey = bountyEvent.pubkey;
+      // revalidateCachedTag(`${dTagValue}-${bountyPubkey}`);
       const eventKey = "currentBounty";
       void removeEvent([eventKey], bountyEvent.id);
       void addEvent(eventKey, event);

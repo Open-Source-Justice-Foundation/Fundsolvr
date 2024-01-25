@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import useAuth from "~/hooks/useAuth";
-import { revalidateCachedTag } from "~/server";
+// import { revalidateCachedTag } from "~/server";
 import { useRelayStore } from "~/store/relay-store";
 import { MoreVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -43,8 +43,8 @@ export default function BountyMenu({ bounty }: Props) {
     const event = await finishEvent(eventTemplate, seckey);
 
     const onSeen = (_: Event) => {
-      revalidateCachedTag("open-bounties");
-      revalidateCachedTag(`posted-bounties-${pubkey}`);
+      // revalidateCachedTag("open-bounties");
+      // revalidateCachedTag(`posted-bounties-${pubkey}`);
       void removeEvent(["open", "posted"], bounty.id);
       router.push("/");
       toast("Bounty deleted", {

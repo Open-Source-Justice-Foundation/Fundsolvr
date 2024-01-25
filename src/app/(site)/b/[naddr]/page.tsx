@@ -45,7 +45,7 @@ export default async function BountyPage({
 
   const identifier = addressPointer.identifier;
   const pubkey = addressPointer.pubkey;
-  const relays = addressPointer.relays as RelayUrl[];
+  // const relays = addressPointer.relays as RelayUrl[];
 
   if (!identifier || !pubkey) {
     return <InvalidNaddr />;
@@ -57,36 +57,36 @@ export default async function BountyPage({
     "#d": [identifier],
   };
 
-  const getCachedEvents = unstable_cache(
-    async (relays: RelayUrl[], filter: Filter) => {
-      const bountyEvent = await get(
-        relays ?? ["wss://nos.lol", "wss://relay.damus.io"],
-        filter,
-      );
-      if (!bountyEvent) {
-        throw new Error("Bounty not found");
-      }
-      return bountyEvent;
-    },
-    undefined,
-    { tags: [`${identifier}-${pubkey}`], revalidate: 60 },
-  );
+  // const getCachedEvents = unstable_cache(
+  //   async (relays: RelayUrl[], filter: Filter) => {
+  //     const bountyEvent = await get(
+  //       relays ?? ["wss://nos.lol", "wss://relay.damus.io"],
+  //       filter,
+  //     );
+  //     if (!bountyEvent) {
+  //       throw new Error("Bounty not found");
+  //     }
+  //     return bountyEvent;
+  //   },
+  //   undefined,
+  //   { tags: [`${identifier}-${pubkey}`], revalidate: 60 },
+  // );
+  //
+  // let bountyEvent;
 
-  let bountyEvent;
-
-  try {
-    bountyEvent = await getCachedEvents(relays, filter);
-    bountyEvent = JSON.parse(JSON.stringify(bountyEvent)) as Event;
-  } catch (e) {
-    console.log("e: ", e);
-  }
+  // try {
+  //   bountyEvent = await getCachedEvents(relays, filter);
+  //   bountyEvent = JSON.parse(JSON.stringify(bountyEvent)) as Event;
+  // } catch (e) {
+  //   console.log("e: ", e);
+  // }
 
   return (
     <div className="mt-4 flex flex-col items-center justify-center">
       <div className="flex min-h-screen w-full max-w-4xl flex-col">
         <BackButton />
         <Bounty
-          initialBounty={bountyEvent}
+          initialBounty={undefined}
           selectedTab={selectedTab}
           filter={filter}
         />
