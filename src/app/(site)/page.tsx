@@ -1,13 +1,10 @@
 import BountyFeed from "~/components/bounty-feed/BountyFeed";
 import BountyTags from "~/components/bounty-feed/BountyTags";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
-// import { querySync } from "~/server/nostr";
 import { type UserWithKeys } from "~/types";
 import { getServerSession } from "next-auth";
-// import { unstable_cache } from "next/cache";
 import Link from "next/link";
-import { type Event, type Filter } from "nostr-tools";
-// import { type RelayUrl } from "react-nostr";
+import { type Filter } from "nostr-tools";
 
 import { authOptions } from "../api/auth/[...nextauth]/auth";
 
@@ -46,34 +43,6 @@ export default async function HomePage({
   if (selectedTab === "assigned") {
     filter["#p"] = [publicKey];
   }
-
-  // let cacheTags: string[] = [];
-
-  // if (selectedTab === "open") {
-  //   cacheTags = ["open-bounties", `open-bounties-${publicKey}`];
-  // }
-  // if (selectedTab === "posted") {
-  //   cacheTags = [`posted-bounties-${publicKey}`];
-  // }
-
-  // const getCachedEvents = unstable_cache(
-  //   async (relayUrls: RelayUrl[], filter: Filter) => {
-  //     console.log("CACHING BOUNTY EVENTS");
-  //     const initialBountyEvents: Event[] = await querySync(relayUrls, filter);
-  //     return initialBountyEvents;
-  //   },
-  //   undefined,
-  //   { tags: cacheTags, revalidate: 60 },
-  // );
-
-  // const relayUrls: RelayUrl[] = ["wss://nos.lol", "wss://relay.damus.io"];
-
-  // let initialBountyEvents = await getCachedEvents(relayUrls, filter);
-
-  // HACK: this is a workaround for dealing with passing symbols
-  // initialBountyEvents = JSON.parse(
-  //   JSON.stringify(initialBountyEvents),
-  // ) as Event[];
 
   return (
     <div className="w-full flex-col items-center">

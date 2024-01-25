@@ -1,10 +1,7 @@
 import BackButton from "~/components/bounty/BackButton";
 import Bounty from "~/components/bounty/Bounty";
 import InvalidNaddr from "~/components/bounty/InvalidNaddr";
-import { get } from "~/server/nostr";
-import { unstable_cache } from "next/cache";
-import { nip19, type Event, type Filter } from "nostr-tools";
-import { type RelayUrl } from "react-nostr";
+import { nip19, type Filter } from "nostr-tools";
 
 export default async function BountyPage({
   params,
@@ -13,8 +10,6 @@ export default async function BountyPage({
   searchParams: Record<string, string>;
   params: Record<string, string>;
 }) {
-  // console.log("params: ", params);
-  // console.log("searchParams: ", searchParams);
 
   const selectedTab = searchParams.tab ?? "details";
 
@@ -45,7 +40,6 @@ export default async function BountyPage({
 
   const identifier = addressPointer.identifier;
   const pubkey = addressPointer.pubkey;
-  // const relays = addressPointer.relays as RelayUrl[];
 
   if (!identifier || !pubkey) {
     return <InvalidNaddr />;
@@ -56,30 +50,6 @@ export default async function BountyPage({
     limit: 1,
     "#d": [identifier],
   };
-
-  // const getCachedEvents = unstable_cache(
-  //   async (relays: RelayUrl[], filter: Filter) => {
-  //     const bountyEvent = await get(
-  //       relays ?? ["wss://nos.lol", "wss://relay.damus.io"],
-  //       filter,
-  //     );
-  //     if (!bountyEvent) {
-  //       throw new Error("Bounty not found");
-  //     }
-  //     return bountyEvent;
-  //   },
-  //   undefined,
-  //   { tags: [`${identifier}-${pubkey}`], revalidate: 60 },
-  // );
-  //
-  // let bountyEvent;
-
-  // try {
-  //   bountyEvent = await getCachedEvents(relays, filter);
-  //   bountyEvent = JSON.parse(JSON.stringify(bountyEvent)) as Event;
-  // } catch (e) {
-  //   console.log("e: ", e);
-  // }
 
   return (
     <div className="mt-4 flex flex-col items-center justify-center">

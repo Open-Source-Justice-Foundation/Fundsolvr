@@ -8,18 +8,6 @@ type Props = {
 };
 
 export default async function UserProfile({ params }: Props) {
-  // const session = await getServerSession(authOptions);
-  // let loggedIn = false;
-  // let publicKey = "";
-
-  // if (session?.user) {
-    // const user = session?.user as UserWithKeys;
-    // publicKey = user.publicKey;
-    // if (publicKey) {
-      // loggedIn = true;
-    // }
-  // }
-
   const npub = params.npub;
   if (!npub) {
     notFound();
