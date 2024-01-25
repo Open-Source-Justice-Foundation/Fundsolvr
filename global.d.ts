@@ -1,5 +1,3 @@
-// import type { Event } from "nostr-tools";
-
 interface Window {
   nostr: Nostr;
   webln: WebLN;
@@ -13,8 +11,8 @@ interface Nip04 {
 // https://github.com/nostr-protocol/nips/blob/master/07.md
 interface Nostr {
   getPublicKey(): Promise<string>;
-  signEvent(event: any): Promise<any>;
-  getRelays(): Promise<{ [url: string]: { read: boolean; write: boolean } }>;
+  signEvent(event: unknown): Promise<unknown>;
+  getRelays(): Promise<Record<string, { read: boolean; write: boolean }>>;
   nip04: Nip04;
 }
 
@@ -36,6 +34,7 @@ interface KeysendArgs {
 
 interface SendPaymentResponse {
   preimage: string;
+  paymentHash: string;
 }
 
 interface RequestInvoiceArgs {
@@ -65,3 +64,4 @@ interface WebLN {
 
 declare const webln: WebLN;
 declare const nostr: Nostr;
+

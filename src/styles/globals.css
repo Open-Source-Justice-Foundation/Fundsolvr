@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100% /* white */;
+    --foreground: 224 72% 5% /* gray-950 */;
+    --card: 0 0% 100% /* white */;
+    --card-foreground: 224 72% 5% /* gray-950 */;
+    --popover: 0 0% 100% /* white */;
+    --popover-foreground: 224 72% 5% /* gray-950 */;
+    --primary: 244 76% 59% /* indigo-600 */;
+    --primary-foreground: 226 100% 97% /* indigo-50 */;
+    --secondary: 220 15% 96% /* gray-100 */;
+    --secondary-foreground: 221 40% 11% /* gray-900 */;
+    --muted: 220 15% 96% /* gray-100 */;
+    --muted-foreground: 220 9% 47% /* gray-500 */;
+    --accent: 220 15% 96% /* gray-100 */;
+    --accent-foreground: 221 40% 11% /* gray-900 */;
+    --destructive: 0 85% 61% /* red-500 */;
+    --destructive-foreground: 210 20% 99% /* gray-50 */;
+    --border: 220 14% 91% /* gray-200 */;
+    --input: 220 14% 91% /* gray-200 */;
+    --outline: 220 14% 91% /* gray-200 */;
+    --ring: 244 76% 59% /* indigo-600 */;
+    --radius: 0.5rem;
+
+    --nc-background: #ffffff;
+    --nc-container-font-family: arial;
+    --nc-container-font-size: 1.2em;
+    --nc-comment-author-font-size: 1.2em;
+    --nc-comment-author-font-family: monospace;
+    --nc-comment-author-font-color: inherit;
+    --nc-comment-date-color: inherit;
+    --nc-comment-date-font-family: sans-serif;
+    --nc-comment-date-font-size: 0.7em;
+    --nc-link-text-decor: none;
+    --nc-link-text-decor-hover: underline;
+    --nc-textarea-font-family: inherit;
+    --nc-textarea-font-size: inherit;
+    --nc-text-background: #f3f4f6;
+    --nc-text-color: #030712;
+    --nc-text-color-dark: #374151;
+    --nc-primary-color: #374151;
+    --nc-primary-contrast: #f9fafb;
+  }
+
+  .dark {
+    --background: 224 72% 5% /* gray-950 */;
+    --foreground: 210 20% 99% /* gray-50 */;
+    --card: 224 72% 5% /* gray-950 */;
+    --card-foreground: 210 20% 99% /* gray-50 */;
+    --popover: 224 72% 5% /* gray-950 */;
+    --popover-foreground: 210 20% 99% /* gray-50 */;
+    --primary: 244 76% 59% /* indigo-600 */;
+    --primary-foreground: 226 100% 97% /* indigo-50 */;
+    --secondary: 215 28% 17% /* gray-800 */;
+    --secondary-foreground: 210 20% 99% /* gray-50 */;
+    --muted: 215 28% 17% /* gray-800 */;
+    --muted-foreground: 218 11% 65% /* gray-400 */;
+    --accent: 215 28% 17% /* gray-800 */;
+    --accent-foreground: 210 20% 99% /* gray-50 */;
+    --destructive: 0 63% 31% /* red-900 */;
+    --destructive-foreground: 210 20% 99% /* gray-50 */;
+    --border: 215 28% 17% /* gray-800 */;
+    --outline: 216.9 19.1% 26.7% /* gray-700 */;
+    --input: 215 28% 17% /* gray-800 */;
+    --ring: 244 76% 59% /* indigo-600 */;
+
+    --nc-background: #040816;
+    --nc-container-font-family: arial;
+    --nc-container-font-size: 1.2em;
+    --nc-comment-author-font-size: 1.2em;
+    --nc-comment-author-font-family: monospace;
+    --nc-comment-author-font-color: inherit;
+    --nc-comment-date-color: inherit;
+    --nc-comment-date-font-family: sans-serif;
+    --nc-comment-date-font-size: 0.7em;
+    --nc-comment-content-color: #fff;
+    --nc-link-text-decor: none;
+    --nc-link-text-decor-hover: underline;
+    --nc-textarea-font-family: inherit;
+    --nc-textarea-font-size: inherit;
+    --nc-text-background: #111827;
+    --nc-hover-background: #333c4c; 
+    --nc-text-color: #d1d5db;
+    --nc-text-color-dark: #9ca3af;
+    --nc-primary-color: #374151;
+    --nc-primary-contrast: #f9fafb;
+  }
+}
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .popover-content-width-same-as-its-trigger {
+    width: var(--radix-popover-trigger-width);
+    max-height: var(--radix-popover-content-available-height);
+  }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
+}
