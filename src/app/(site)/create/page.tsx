@@ -32,15 +32,16 @@ import { Textarea } from "~/components/ui/textarea";
 import useAuth from "~/hooks/useAuth";
 import { TAGS } from "~/lib/constants";
 import { cn, createIdentifier } from "~/lib/utils";
+import { revalidateCachedTag } from "~/server";
 import { useRelayStore } from "~/store/relay-store";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { type Event, type EventTemplate } from "nostr-tools";
+import { nip19, type Event, type EventTemplate } from "nostr-tools";
 import { useForm } from "react-hook-form";
 import Markdown from "react-markdown";
-import { finishEvent, usePublish } from "react-nostr";
+import { createNaddr, finishEvent, usePublish } from "react-nostr";
+import { toast } from "sonner";
 import * as z from "zod";
-import { revalidateCachedTag } from "~/server";
 
 const formSchema = z.object({
   title: z
@@ -80,16 +81,20 @@ export default function CreateBounty() {
 
   const router = useRouter();
 
-  function postSocialNote() {
+  async function postSocialNote(bountyEvent: Event) {
     if (!pubkey) {
-      // TODO: show error toast
+      toast("No pubkey", {
+        description:
+          "You don't have a pubkey. Please log in or create an account.",
+      });
       return;
     }
 
-    // TODO: link to bounty
-    const content = `I just posted a new bounty on Nostr!`;
+    const content = `I just posted a new bounty on Nostr! 
+      https://resolvr.io/b/${createNaddr(bountyEvent, pubRelays)}
+    `;
 
-    const event: Event = {
+    const eventTemplate: Event = {
       kind: 1,
       tags: [],
       content: content,
@@ -99,12 +104,33 @@ export default function CreateBounty() {
       sig: "",
     };
 
-    console.log(event);
+    const onErr = (err: Error) => {
+      toast("Post note failure", {
+        description: "Failed to post your social note!",
+      });
+      console.log("Post note failure", err);
+    };
+
+    const onSuccess = (_: Event) => {
+      toast("Post note success", {
+        description: "Successfully posted your social note!",
+      });
+    };
+
+    try {
+      const event = await finishEvent(eventTemplate, seckey, onErr);
+      await publish(event, onSuccess);
+    } catch (e) {
+      return e;
+    }
   }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!pubkey) {
-      // TODO: show error toast
+      toast("No pubkey", {
+        description:
+          "You don't have a pubkey. Please log in or create an account.",
+      });
       return;
     }
 
@@ -133,16 +159,24 @@ export default function CreateBounty() {
     const onSuccess = (_: Event) => {
       void invalidateKeys(["open", "posted"]);
       if (shouldNotify) {
-        postSocialNote();
+        postSocialNote(_)
+          .then((success) => {
+            console.log(success);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
 
       router.push("/");
     };
 
-    // TODO: error toast
-    if (!event) return;
-
-    console.log(event);
+    if (!event) {
+      toast("Event not signed", {
+        description: "You did not sign the event. Please try again",
+      });
+      return;
+    }
 
     await publish(event, onSuccess);
   }
