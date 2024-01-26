@@ -103,7 +103,7 @@ export default function ApplicantMenu({ applicantEvent, bountyEvent }: Props) {
               disabled={status !== "idle"}
               className="dark:text-red-400 dark:focus:bg-red-400/10 dark:focus:text-red-400 "
             >
-              Delete Application
+              Delete
             </DropdownMenuItem>
           </>
         )}
