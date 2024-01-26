@@ -1,14 +1,8 @@
-/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
-/* eslint-disable @next/next/no-img-element */
-
 import useAuth from "~/hooks/useAuth";
-import { BOT_AVATAR_ENDPOINT } from "~/lib/constants";
 import { fromNow } from "~/lib/utils";
 import { useRelayStore } from "~/store/relay-store";
 import { type Event } from "nostr-tools";
 import {
-  profileContent,
-  shortNpub,
   tag,
   useBatchedEvents,
   useBatchedProfiles,
@@ -32,7 +26,6 @@ export default function ApplicationCard({
   const applicantPubkey = applicationEvent.pubkey;
   const { pubkey } = useAuth();
   const { subRelays } = useRelayStore();
-  // console.log("BountyEvent", bountyEvent);
 
   const profileEvent = useBatchedProfiles(applicationEvent.pubkey, subRelays);
 
