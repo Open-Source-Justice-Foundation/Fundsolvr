@@ -29,11 +29,12 @@ import { Textarea } from "../ui/textarea";
 
 type Props = {
   bounty: Event;
+  pubkey: string;
 };
 
-export default function ApplyButton({ bounty }: Props) {
+export default function ApplyButton({ bounty, pubkey }: Props) {
   const { subRelays, pubRelays } = useRelayStore();
-  const { pubkey, seckey } = useAuth();
+  const { seckey } = useAuth();
   const [message, setMessage] = useState("");
   const [open, setOpen] = useState(false);
 
@@ -50,6 +51,7 @@ export default function ApplyButton({ bounty }: Props) {
 
   const filter: Filter = {
     kinds: [30051],
+    authors: [pubkey],
     limit: 1,
     "#a": [aTag],
   };
