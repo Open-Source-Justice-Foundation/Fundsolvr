@@ -14,6 +14,7 @@ import {
   useBatchedProfiles,
 } from "react-nostr";
 
+import Profile from "../bounty/Profile";
 import GithubBadge from "../profile/GithubBadge";
 import WebsiteBadge from "../profile/WebsiteBadge";
 import AcceptSolutionButton from "./AcceptSolutionButton";
@@ -49,19 +50,9 @@ export default function ApplicationCard({
       <div className="flex w-full flex-col gap-y-1">
         <span className="flex w-full justify-between pb-1">
           <span className="flex items-center gap-x-2 text-sm font-light text-muted-foreground">
-            <img
-              src={
-                profileContent(profileEvent).picture ||
-                BOT_AVATAR_ENDPOINT + applicantPubkey
-              }
-              alt=""
-              className="aspect-square w-8 rounded-full border border-border dark:border-border"
-            />
-
-            {profileContent(profileEvent).name || shortNpub(applicantPubkey)}
+            {applicantPubkey && <Profile pubkey={applicantPubkey} />}
           </span>
           <div className="flex items-center gap-x-1.5">
-
             {profileEvent &&
               pubkey === bountyEvent.pubkey &&
               tag("s", bountyEvent) === "open" && (
