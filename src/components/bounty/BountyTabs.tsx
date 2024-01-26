@@ -72,7 +72,7 @@ function ApplicationTab({ selectedTab, count }: ApplicationTabProps) {
           "-ml-0.5 mr-2 h-5 w-5",
         )}
       />
-      <span className="flex gap-x-1">{count ?? 0} Applications</span>
+      <span className="flex gap-x-1">{count ?? 0} Hunters</span>
     </Link>
   );
 }
