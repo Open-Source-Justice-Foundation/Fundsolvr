@@ -15,6 +15,8 @@ export default function WebsiteBadge({ pubkey }: Props) {
   const { subRelays } = useRelayStore();
   const profileEvent = useBatchedProfiles(pubkey, subRelays);
 
+  if (!profileContent(profileEvent).website) return null;
+
   return (
     <Link
       prefetch={false}
