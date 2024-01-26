@@ -42,7 +42,7 @@ export default function ProfileCard({ pubkey }: Props) {
                 <span className="text-muted-foreground">
                   {profileContent(profileEvent).nip05 ?? shortNpub(pubkey)}
                 </span>
-                <ProfileMenu profileEvent={profileEvent} />
+                {profileEvent && <ProfileMenu profileEvent={profileEvent} />}
               </span>
             </div>
           </div>

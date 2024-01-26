@@ -1,5 +1,6 @@
 import BountyFeed from "~/components/bounty-feed/BountyFeed";
 import ProfileCard from "~/components/profile/ProfileCard";
+import { VANITY_PROFILES } from "~/lib/constants";
 import { notFound } from "next/navigation";
 import { nip19, type Filter } from "nostr-tools";
 
@@ -8,11 +9,26 @@ type Props = {
 };
 
 export default async function UserProfile({ params }: Props) {
-  const npub = params.npub;
+  let npub = params.npub;
   if (!npub) {
     notFound();
   }
-  const decodedNpub = nip19.decode(npub);
+
+  let decodedNpub;
+
+  if (npub in VANITY_PROFILES) {
+    npub = VANITY_PROFILES[npub];
+  }
+
+  if (!npub) {
+    notFound();
+  }
+
+  try {
+    decodedNpub = nip19.decode(npub);
+  } catch (e) {
+    notFound();
+  }
 
   if (!decodedNpub) {
     notFound();
@@ -24,6 +40,8 @@ export default async function UserProfile({ params }: Props) {
 
   const profilePublicKey = decodedNpub.data;
 
+  console.log("profilePublicKey", profilePublicKey);
+
   const filter: Filter = {
     kinds: [30050],
     authors: [profilePublicKey],
@@ -33,7 +51,7 @@ export default async function UserProfile({ params }: Props) {
   return (
     <div className="flex flex-col py-4">
       <ProfileCard pubkey={profilePublicKey} />
-      <div className="flex flex-col w-full">
+      <div className="flex w-full flex-col">
         <BountyFeed
           filter={filter}
           eventKey={`profile-feed-${profilePublicKey}`}
