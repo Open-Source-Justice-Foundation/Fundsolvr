@@ -98,8 +98,8 @@ export default function ApplicationCard({
         </span>
         <span className="py-4">{applicationEvent.content}</span>
         <span className="flex w-full justify-start gap-x-1.5 pt-2 text-sm font-light text-muted-foreground">
-          <GithubBadge pubkey={applicantPubkey} />
           <WebsiteBadge pubkey={applicantPubkey} />
+          <GithubBadge pubkey={applicantPubkey} />
         </span>
       </div>
     </li>
