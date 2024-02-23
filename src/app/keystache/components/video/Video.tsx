@@ -8,7 +8,7 @@ export default function Video() {
         style={{ paddingTop: "56.25%" }}
       >
         <iframe
-          src="https://www.youtube.com/embed/dyUejQOFD2k?si=jzdxmefXJ70HldKa"
+          src="https://www.youtube.com/embed/hP3s2XX069s?si=_lb-3AvDgpE_EwTf"
           frameBorder="0"
           allowFullScreen
           style={{
