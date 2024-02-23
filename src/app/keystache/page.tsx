@@ -38,7 +38,7 @@ const features = [
 export default function Page() {
   return (
     <div
-      className={`min-w-screen relative z-10 flex h-full min-h-screen w-full flex-col justify-between bg-white text-black ${inter.className}`}
+      className={`min-w-screen relative z-10 flex h-full min-h-screen w-full flex-col justify-between bg-white text-[#29333D] ${inter.className}`}
     >
       <Header />
       <div className="m-auto my-8 items-center justify-center p-4 text-center">
@@ -54,7 +54,7 @@ export default function Page() {
           <div className="mt-4 flex flex-col items-center justify-center gap-y-2">
             <div className="flex flex-col gap-x-2 gap-y-2 md:flex-row">
               <a href="/Keystache_0.0.0_aarch64.dmg" download>
-                <Button className="m-auto self-start p-6">
+                <Button className="m-auto self-start bg-[#5247E6] p-6">
                   <AppleLogo />
                   <span className="ml-2">Download for Mac</span>
                 </Button>
@@ -66,16 +66,18 @@ export default function Page() {
                 </Button>
               </Link>
             </div>
-            <div className="text-xs text-muted">Coming soon to Windows</div>
+            <div className="text-xs text-[#364C63] text-muted">
+              Coming soon to Windows
+            </div>
           </div>
         </div>
         <div className="m-auto mt-10 flex max-w-md flex-col gap-y-6">
           {features.map((feature, i) => (
             <div className="flex flex-row text-left" key={i}>
-              <Check className="mr-2 shrink-0 text-primary" />
+              <Check className="mr-2 shrink-0 text-[#5247E6]" />
               <div className="flex-auto">
                 <span className="font-bold">{feature.title}</span>{" "}
-                {feature.description}
+                <span className="text-[#364C63]">{feature.description}</span>
               </div>
             </div>
           ))}

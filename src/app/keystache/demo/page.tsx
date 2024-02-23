@@ -12,13 +12,13 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Page() {
   return (
     <div
-      className={`min-w-screen relative z-10 flex h-full min-h-screen w-full flex-col justify-between bg-white text-black ${inter.className}`}
+      className={`min-w-screen relative z-10 flex h-full min-h-screen w-full flex-col justify-between bg-white text-[#29333D] ${inter.className}`}
     >
-      <div className="m-auto flex h-full min-h-screen w-full max-w-screen-lg flex-col justify-between">
+      <div className="m-auto flex h-full min-h-screen w-full max-w-screen-lg flex-col">
         <header className=" w-full p-4">
           <Link className="flex w-full items-center gap-x-2 " href="/keystache">
             <Logo />
-            <h1>Keystache</h1>
+            <h1 className="text-[#364C63]">Keystache</h1>
           </Link>
         </header>
         <div className="my-6 justify-center p-4">
@@ -40,9 +40,11 @@ export default function Page() {
                   </div>
                   <div className="flex flex-col gap-y-4">
                     <div>
-                      <span className="font-bold">Setup Keystache</span> click
-                      on Keystache for Mac to download, setup your password and
-                      import your account with your private key
+                      <span className="font-bold">Setup Keystache</span>{" "}
+                      <span className="text-[#364C63]">
+                        click on Keystache for Mac to download, setup your
+                        password and import your account with your private key
+                      </span>
                     </div>
                     <a href="/Keystache_0.0.0_aarch64.dmg" download>
                       <Button className="self-start p-6">
@@ -58,8 +60,10 @@ export default function Page() {
                   </div>
                   <div className="flex flex-col items-stretch justify-between gap-y-4">
                     <div>
-                      <span className="font-bold">Setup Resolvr</span> click on
-                      Resolvr for Mac to download
+                      <span className="font-bold">Setup Resolvr</span>{" "}
+                      <span className="text-[#364C63]">
+                        click on Resolvr for Mac to download
+                      </span>
                     </div>
                     <a href="/Resolvr_Desktop_0.0.0_aarch64.dmg" download>
                       <Button className="self-start bg-[#FD865F] p-6 hover:bg-[#fd6c3d]">
@@ -74,18 +78,22 @@ export default function Page() {
                     <Three />
                   </div>
                   <div>
-                    <span className="font-bold">Sign in to Resolvr</span> click
-                    on sign in with Keystache, a dialog modal of Keystache will
-                    be prompted, click on confirm to sign in, you can continue
-                    to test out the app by approving zaps and events with
-                    Keystache.
+                    <span className="font-bold">Sign in to Resolvr</span>{" "}
+                    <span className="text-[#364C63]">
+                      click on sign in with Keystache, a dialog modal of
+                      Keystache will be prompted, click on confirm to sign in,
+                      you can continue to test out the app by approving zaps and
+                      events with Keystache.
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <Footer />
+        <div className="mt-auto">
+          <Footer />
+        </div>
       </div>
     </div>
   );

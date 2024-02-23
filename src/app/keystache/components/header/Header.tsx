@@ -1,14 +1,20 @@
 import Link from "next/link";
 
-import { Logo } from "../icons";
+import { Arrow, Logo } from "../icons";
 
 export default function Header() {
   return (
-    <header className="flex w-full items-center justify-between gap-x-2 border-b border-gray-300 p-4 md:justify-center">
+    <header className="flex w-full items-center justify-between gap-x-1 border-b border-gray-300 p-4 md:justify-center">
       <Logo className="block md:hidden" />
       <span className="hidden md:block">
-        Three easy steps to implement Keystache for your applications   →{" "}
+        <span className="font-semibold">Three easy steps</span>{" "}
+        <span className="text-[#364C63]">
+          to implement Keystache for your applications
+        </span>
       </span>
+      <div className="hidden md:block">
+        <Arrow />
+      </div>{" "}
       <Link className="text-primary" href="/keystache/demo">
         Documentation
       </Link>

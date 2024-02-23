@@ -1,4 +1,5 @@
 import AppleLogo from "./AppleLogo";
+import Arrow from "./Arrow";
 import Bitcoin from "./Bitcoin";
 import Computer from "./Computer";
 import Discord from "./Discord";
@@ -16,6 +17,7 @@ import Two from "./Two";
 
 export {
   AppleLogo,
+  Arrow,
   Bitcoin,
   Computer,
   Discord,
