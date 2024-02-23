@@ -1,6 +1,7 @@
 import { Button } from "~/components/ui/button";
 import { Check } from "lucide-react";
 import { Inter } from "next/font/google";
+import Link from "next/link";
 
 import Footer from "./components/footer/Footer";
 import Header from "./components/header/Header";
@@ -12,6 +13,7 @@ import {
   Keys,
   Logo,
   Penguin,
+  Play,
   Shield,
 } from "./components/icons";
 
@@ -45,23 +47,33 @@ export default function Page() {
             <Logo /> <h1 className="text-2xl">Keystache</h1>
           </div>
 
-          <h2 className="text-5xl font-semibold">
+          <h2 className="text-4xl font-semibold md:text-5xl">
             Your sovereign desktop companion for nostr applications
           </h2>
 
           <div className="mt-4 flex flex-col items-center justify-center gap-y-2">
-            <Button className="m-auto self-start p-6">
-              <AppleLogo />
-              <span className="ml-2">Download for Mac</span>
-            </Button>
-            <div className="text-sm text-muted">Coming soon to Windows</div>
+            <div className="flex flex-col gap-x-2 gap-y-2 md:flex-row">
+              <a href="/Keystache_0.0.0_aarch64.dmg" download>
+                <Button className="m-auto self-start p-6">
+                  <AppleLogo />
+                  <span className="ml-2">Download for Mac</span>
+                </Button>
+              </a>
+              <Link href="/keystache/demo">
+                <Button className="m-auto self-start bg-[#FD865F] p-6 hover:bg-[#fd6c3d]">
+                  <Play />
+                  <span className="ml-2">Watch Demo</span>
+                </Button>
+              </Link>
+            </div>
+            <div className="text-xs text-muted">Coming soon to Windows</div>
           </div>
         </div>
         <div className="m-auto mt-10 flex max-w-md flex-col gap-y-6">
           {features.map((feature, i) => (
             <div className="flex flex-row text-left" key={i}>
-              <Check className="mr-2" />
-              <div>
+              <Check className="mr-2 shrink-0 text-primary" />
+              <div className="flex-auto">
                 <span className="font-bold">{feature.title}</span>{" "}
                 {feature.description}
               </div>

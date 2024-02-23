@@ -7,8 +7,12 @@ import Github from "./Github";
 import Globe from "./Globe";
 import Keys from "./Keys";
 import Logo from "./Logo";
+import One from "./One";
 import Penguin from "./Penguin";
+import Play from "./Play";
 import Shield from "./Shield";
+import Three from "./Three";
+import Two from "./Two";
 
 export {
   AppleLogo,
@@ -20,6 +24,10 @@ export {
   Globe,
   Keys,
   Logo,
+  One,
   Penguin,
+  Play,
   Shield,
+  Three,
+  Two,
 };
