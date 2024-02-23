@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import Footer from "../components/footer/Footer";
 import { AppleLogo, Logo, One, Three, Two } from "../components/icons";
+import Thumbnail from "../components/video/Thumbnail";
 import Video from "../components/video/Video";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -29,7 +30,7 @@ export default function Page() {
             </h2>
 
             <div className="mt-4 flex flex-col items-center justify-center gap-y-6">
-              <div className="w-full">
+              <div className="w-full max-w-screen-lg">
                 <Video />
               </div>
               <div className="flex flex-col items-stretch gap-x-2 gap-y-4 md:flex-row">
