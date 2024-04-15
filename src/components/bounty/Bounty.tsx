@@ -10,7 +10,6 @@ import BountyMetadata from "./BountyMetadata";
 import BountyTabs from "./BountyTabs";
 
 type Props = {
-  identifier: string;
   initialBounty: Event | undefined | null;
   selectedTab: string;
   filter: Filter;

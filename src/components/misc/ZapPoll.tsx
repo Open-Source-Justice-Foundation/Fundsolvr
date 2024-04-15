@@ -24,11 +24,10 @@ export default function ZapPoll({ bountyEvent }: Props) {
     eventKey: `zap-${bountyEvent.id}`,
     relays: subRelays,
   });
-  //
+
   const { status } = usePublish({
     relays: pubRelays,
   });
-  // const [pollResults, setPollResults] = useState({ yes: 0, no: 0 });
 
   const { events: zapReceiptEvents, loadNewerEvents } = useSubscribe({
     // initialEvents: initialBounties,

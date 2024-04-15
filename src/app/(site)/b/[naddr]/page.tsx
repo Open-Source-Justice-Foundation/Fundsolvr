@@ -57,7 +57,6 @@ export default async function BountyPage({
       <div className="flex min-h-screen w-full max-w-4xl flex-col">
         <BackButton />
         <Bounty
-          identifier={identifier}
           initialBounty={undefined}
           selectedTab={selectedTab}
           filter={filter}
