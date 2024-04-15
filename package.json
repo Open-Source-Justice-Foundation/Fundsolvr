@@ -44,7 +44,7 @@
     "react-hook-form": "^7.49.3",
     "react-markdown": "^9.0.1",
     "react-nocomment-fork": "^0.5.0",
-    "react-nostr": "^0.0.6",
+    "react-nostr": "^0.0.13",
     "sonner": "^1.3.1",
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",

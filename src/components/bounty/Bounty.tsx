@@ -10,15 +10,20 @@ import BountyMetadata from "./BountyMetadata";
 import BountyTabs from "./BountyTabs";
 
 type Props = {
+  identifier: string;
   initialBounty: Event | undefined | null;
   selectedTab: string;
   filter: Filter;
 };
 
-export default function Bounty({ initialBounty, selectedTab, filter }: Props) {
+export default function Bounty({
+  initialBounty,
+  selectedTab,
+  filter,
+}: Props) {
   const { subRelays } = useRelayStore();
 
-  const eventKey = "currentBounty";
+  const eventKey = "currentBounty"
 
   const { events, invalidate } = useSubscribe({
     // initialEvents: initialBounties,
