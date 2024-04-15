@@ -57,10 +57,9 @@ export default function ZapPoll({ bountyEvent }: Props) {
   const sendZap = async (choice: string) => {
     if (!pubkey) return;
 
-    const onPaymentSuccess = (sendPaymentResponse: SendPaymentResponse | string) => {
+    const onPaymentSuccess = (sendPaymentResponse: SendPaymentResponse) => {
       toast("Zap sent", {
-        // description: `Payment hash: ${sendPaymentResponse.paymentHash}`,
-        description: "Your zap has been sent.",
+        description: `Payment hash: ${sendPaymentResponse.paymentHash}`,
       });
     };
 
