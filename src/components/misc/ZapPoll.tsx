@@ -55,15 +55,9 @@ export default function ZapPoll({ bountyEvent }: Props) {
   };
 
   const sendZap = async (choice: string) => {
-    // console.log("sending zap");
-    // console.log(choice);
-    // console.log(bountyEvent);
-    // console.log(pubkey);
     if (!pubkey) return;
 
-    const onPaymentSuccess = (
-      sendPaymentResponse: SendPaymentResponse | string,
-    ) => {
+    const onPaymentSuccess = (sendPaymentResponse: SendPaymentResponse | string) => {
       toast("Zap sent", {
         // description: `Payment hash: ${sendPaymentResponse.paymentHash}`,
         description: "Your zap has been sent.",
@@ -108,7 +102,6 @@ export default function ZapPoll({ bountyEvent }: Props) {
       recipientMetadata: recipientMetadata,
       eventId: bountyEvent.id,
       content: choice,
-      useQRCode: false,
       onPaymentSuccess,
       onPaymentFailure,
       onZapReceipts,
@@ -146,8 +139,10 @@ export default function ZapPoll({ bountyEvent }: Props) {
   }
 
   return (
-    <div className="flex gap-y-4 flex-col">
-      <span className="font-medium">Was this bounty completed successfully?</span>
+    <div className="flex flex-col gap-y-4">
+      <span className="font-medium">
+        Was this bounty completed successfully?
+      </span>
       <span className="flex gap-x-1">Yes: {handleCountPollResults().yes}</span>
       <span className="flex gap-x-1">No: {handleCountPollResults().no}</span>
 
