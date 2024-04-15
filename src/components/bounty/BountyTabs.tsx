@@ -2,13 +2,14 @@ import { useMemo } from "react";
 
 import { cn, fromNow } from "~/lib/utils";
 import { useRelayStore } from "~/store/relay-store";
-import { BookOpen, Users } from "lucide-react";
+import { BoltIcon, BookOpen, Users, ZapIcon } from "lucide-react";
 import Link from "next/link";
 import { type Event, type Filter } from "nostr-tools";
 import { createATag, tag, useSubscribe, type ATagParams } from "react-nostr";
 import { toast } from "sonner";
 
 import ApplicantFeed from "../applications/ApplicantFeed";
+import ZapPoll from "../misc/ZapPoll";
 import BountyDetails from "./BountyDetails";
 
 type BountyTabsProps = {
@@ -77,6 +78,31 @@ function ApplicationTab({ selectedTab, count }: ApplicationTabProps) {
   );
 }
 
+function ZapPollTab({ selectedTab }: ApplicationTabProps) {
+  return (
+    <Link
+      replace={true}
+      href={"?tab=poll"}
+      className={cn(
+        selectedTab === "poll"
+          ? "border-indigo-600 text-indigo-600 dark:border-indigo-500 dark:text-indigo-500"
+          : "border-transparent text-muted-foreground hover:border-foreground hover:text-foreground",
+        "group inline-flex items-center border-b px-1 py-4 text-sm font-medium",
+      )}
+    >
+      <ZapIcon
+        className={cn(
+          selectedTab === "applications"
+            ? "text-indigo-600 dark:text-indigo-500"
+            : "text-muted-foreground group-hover:text-foreground",
+          "-ml-0.5 mr-2 h-5 w-5",
+        )}
+      />
+      <span className="flex gap-x-1">Zap Poll</span>
+    </Link>
+  );
+}
+
 export default function BountyTabs({ bounty, selectedTab }: BountyTabsProps) {
   const aTagParams: ATagParams = useMemo(
     () => ({
@@ -124,6 +150,7 @@ export default function BountyTabs({ bounty, selectedTab }: BountyTabsProps) {
           >
             <DetailTab selectedTab={selectedTab} bounty={bounty} />
             <ApplicationTab selectedTab={selectedTab} count={events?.length} />
+            <ZapPollTab selectedTab={selectedTab} count={events?.length} />
           </nav>
         </div>
       </div>
@@ -163,6 +190,12 @@ export default function BountyTabs({ bounty, selectedTab }: BountyTabsProps) {
           )}
         </>
       )}
+      <>
+        <h4 className="scroll-m-20 py-4 text-xl font-semibold tracking-tight">
+          Zap Poll
+        </h4>
+        {selectedTab === "poll" && <ZapPoll bountyEvent={bounty} />}
+      </>
     </div>
   );
 }

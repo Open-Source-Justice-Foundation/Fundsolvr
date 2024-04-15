@@ -60,6 +60,8 @@ export default function ProfileCard({ pubkey }: Props) {
   const { subRelays } = useRelayStore();
   const profileEvent = useBatchedProfiles(pubkey, subRelays);
 
+  console.log(profileEvent);
+
   // TODO: showld probably break this into global state as a map
   const [nipVerified, setNipVerified] = useState(false);
 

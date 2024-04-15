@@ -47,6 +47,7 @@ export default async function BountyPage({
 
   const filter: Filter = {
     kinds: [kind],
+    authors: [pubkey],
     limit: 1,
     "#d": [identifier],
   };
