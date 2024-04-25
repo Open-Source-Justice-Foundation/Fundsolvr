@@ -2,7 +2,7 @@ import { Separator } from "~/components/ui/separator";
 import { type Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Resolvr | Settings",
+  title: "Fundsolvr | Settings",
   description: "Update your profile settings on the network.",
 };
 

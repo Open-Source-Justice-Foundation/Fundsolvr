@@ -9,7 +9,7 @@ import AuthProvider from "~/context/AuthProvider";
 import { Toaster } from "~/components/ui/sonner";
 
 export const metadata: Metadata = {
-  title: "Resolvr",
+  title: "Fundsolvr",
   description: "Decentralized bounties",
 };
 

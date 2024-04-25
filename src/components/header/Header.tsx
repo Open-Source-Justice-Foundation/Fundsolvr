@@ -28,10 +28,10 @@ export default async function Header() {
     <header className="mb-2 flex items-center justify-between py-4">
       <nav className="flex items-center">
         <Link className="hidden dark:block" href="/">
-          <img className="w-[7.5rem]" src="/resolvr-logo-dark.png" alt="" />
+          <img className="w-[7.5rem]" src="/fundsolvr-logo-dark.svg" alt="" />
         </Link>
         <Link className="dark:hidden" href="/">
-          <img className="w-[7.5rem]" src="/resolvr-logo-light.png" alt="" />
+          <img className="w-[7.5rem]" src="/fundsolvr-logo-light.svg" alt="" />
         </Link>
       </nav>
       <div className="flex items-center justify-center gap-x-4">

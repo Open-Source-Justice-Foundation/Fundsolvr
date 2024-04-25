@@ -62,13 +62,13 @@ export default function Page() {
                     <div>
                       <span className="font-bold">Setup Resolvr</span>{" "}
                       <span className="text-[#364C63]">
-                        click on Resolvr for Mac to download
+                        click on Fundsolvr for Mac to download
                       </span>
                     </div>
                     <a href="/Resolvr_Desktop_0.0.0_aarch64.dmg" download>
                       <Button className="self-start bg-[#FD865F] p-6 hover:bg-[#fd6c3d]">
                         <AppleLogo />
-                        <span className="ml-2">Resolvr for Mac</span>
+                        <span className="ml-2">Fundsolvr for Mac</span>
                       </Button>
                     </a>
                   </div>
