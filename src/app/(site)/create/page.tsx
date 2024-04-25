@@ -91,7 +91,7 @@ export default function CreateBounty() {
     }
 
     const content = `I just posted a new bounty on Nostr! 
-      https://resolvr.io/b/${createNaddr(bountyEvent, pubRelays)}
+      https://fundsolvr.com/b/${createNaddr(bountyEvent, pubRelays)}
     `;
 
     const eventTemplate: Event = {

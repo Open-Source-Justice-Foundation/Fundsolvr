@@ -11,7 +11,7 @@ export default function Footer() {
         <a target="_blank" href="https://github.com/Resolvr-io">
           <Github />
         </a>
-        <a target="_blank" href="https://resolvr.io/">
+        <a target="_blank" href="https://fundsolvr.com/">
           <Globe />
         </a>
       </div>
