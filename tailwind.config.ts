@@ -25,10 +25,14 @@ module.exports = {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          hover: "hsl(var(--primary-hover))",
+          "foreground-hover": "hsl(var(--primary-foreground-hover))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+          hover: "hsl(var(--secondary-hover))",
+          "foreground-hover": "hsl(var(--secondary-foreground-hover))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
