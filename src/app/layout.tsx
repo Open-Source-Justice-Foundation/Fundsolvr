@@ -5,8 +5,8 @@ import type { Metadata } from "next";
 
 import "~/styles/globals.css";
 
-import AuthProvider from "~/context/AuthProvider";
 import { Toaster } from "~/components/ui/sonner";
+import AuthProvider from "~/context/AuthProvider";
 
 export const metadata: Metadata = {
   title: "Fundsolvr",

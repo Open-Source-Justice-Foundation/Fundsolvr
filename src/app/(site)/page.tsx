@@ -44,6 +44,10 @@ export default async function HomePage({
     filter["#p"] = [publicKey];
   }
 
+  const bitcoinPrice = parseFloat(
+    await (await fetch("https://blockchain.info/q/24hrprice")).text(),
+  );
+
   return (
     <div className="w-full flex-col items-center">
       {loggedIn && (
@@ -82,6 +86,7 @@ export default async function HomePage({
         initialBounties={[]}
         filter={filter}
         eventKey={selectedTab}
+        bitcoinPrice={bitcoinPrice}
       />
     </div>
   );
