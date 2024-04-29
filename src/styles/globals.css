@@ -24,7 +24,7 @@
     --accent-foreground: 221 40% 11% /* gray-900 */;
     --destructive: 0 85% 61% /* red-500 */;
     --destructive-foreground: 210 20% 99% /* gray-50 */;
-    --border: 215 28% 17% /* #1F2937 */;
+    --border: 220 14% 91% /* gray-200 */;
     --input: 220 14% 91% /* gray-200 */;
     --outline: 220 14% 91% /* gray-200 */;
     --ring: 244 76% 59% /* indigo-600 */;
@@ -72,7 +72,7 @@
     --accent-foreground: 210 20% 99% /* gray-50 */;
     --destructive: 0 63% 31% /* red-900 */;
     --destructive-foreground: 210 20% 99% /* gray-50 */;
-    --border: 215 28% 17% /* gray-800 */;
+    --border: 215 28% 17% /* #1F2937 */;
     --outline: 216.9 19.1% 26.7% /* gray-700 */;
     --input: 215 28% 17% /* gray-800 */;
     --ring: 244 76% 59% /* indigo-600 */;

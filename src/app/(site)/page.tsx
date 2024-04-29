@@ -59,7 +59,7 @@ export default async function HomePage({
                 Bounties
               </h1>
               <div className="mr-1 flex items-center">
-                <TabsList className="bg-secondary/90">
+                <TabsList className="bg-muted">
                   <TabsTrigger asChild value="open">
                     <Link href={"?tab=open"} replace={true}>
                       Open

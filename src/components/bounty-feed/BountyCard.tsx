@@ -35,7 +35,7 @@ export default function BountyCard({
   const profileEvent = useBatchedProfiles(bountyEvent.pubkey, subRelays);
   return (
     <Link href={`/b/${createNaddr(bountyEvent, subRelays)}`}>
-      <li className="flex cursor-pointer items-center gap-x-4 p-6 hover:bg-muted/40">
+      <li className="flex cursor-pointer items-center gap-x-4 rounded-md p-2.5 hover:bg-muted md:p-6">
         <div className="flex w-full flex-col">
           {showProfileInfo ? (
             <span className="text-base text-card-foreground">
