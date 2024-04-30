@@ -30,7 +30,18 @@ const getBitcoinPrice = async () => {
         },
       },
     );
-    const json = await response.json();
+
+    const json = (await response.json()) as {
+      data: {
+        "1": {
+          quote: {
+            USD: {
+              price: number;
+            };
+          };
+        };
+      };
+    };
 
     return json.data["1"].quote.USD.price;
   } catch (_) {
