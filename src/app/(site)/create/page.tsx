@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 
-// @ts-expect-error ts doesnt like the /zod path even though its valid
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
