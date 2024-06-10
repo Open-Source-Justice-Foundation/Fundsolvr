@@ -1,9 +1,9 @@
+import * as crypto from "crypto";
+
 import { clsx, type ClassValue } from "clsx";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { twMerge } from "tailwind-merge";
-
-import * as crypto from "crypto";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -42,4 +42,10 @@ export function createIdentifier(title: string, pubkey: string): string {
   return `${titleSlug}-${uniqueHash}`;
 }
 
-
+export function pluralize(
+  count: number | null | undefined,
+  noun: string,
+  suffix = "s",
+) {
+  return `${count ?? 0} ${noun}${count !== 1 ? suffix : ""}`;
+}

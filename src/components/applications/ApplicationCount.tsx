@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 
+import { pluralize } from "~/lib/utils";
 import { useRelayStore } from "~/store/relay-store";
 import { type Event } from "nostr-tools";
 import {
@@ -31,5 +32,7 @@ export default function ApplicationCount({ bounty }: Props) {
 
   const events = useBatchedEvents(30051, aTag, eventKey, subRelays);
 
-  return <span>{!events ? "0" : events?.length ?? 0}</span>;
+  const count = !events ? 0 : events?.length ?? 0;
+
+  return <span>{pluralize(count, "Hunter")}</span>;
 }

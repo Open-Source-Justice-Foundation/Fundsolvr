@@ -79,7 +79,6 @@ export default function BountyCard({
             <span className="flex items-center gap-x-1">
               <User className="h-4 w-4" />
               <ApplicationCount bounty={bountyEvent} />
-              Hunters
             </span>
           </span>
         </div>

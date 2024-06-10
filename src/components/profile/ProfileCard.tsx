@@ -5,9 +5,10 @@ import { useEffect, useState } from "react";
 
 import { BOT_AVATAR_ENDPOINT } from "~/lib/constants";
 import { useRelayStore } from "~/store/relay-store";
-import { Github, Globe, Zap } from "lucide-react";
-import { nip05 } from "nostr-tools";
+import { Copy, Github, Globe, Zap } from "lucide-react";
+import { nip05, nip19 } from "nostr-tools";
 import { profileContent, shortNpub, useBatchedProfiles } from "react-nostr";
+import { toast } from "sonner";
 
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import ProfileMenu from "./ProfileMenu";
@@ -56,6 +57,16 @@ function trimNip05(nip05Id: string | undefined) {
   return nip05Id;
 }
 
+async function copyText(text: string) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (err) {
+    toast("Clipboard error", {
+      description: `Failed to copy to clipboard: ${err as string}`,
+    });
+  }
+}
+
 export default function ProfileCard({ pubkey }: Props) {
   const { subRelays } = useRelayStore();
   const profileEvent = useBatchedProfiles(pubkey, subRelays);
@@ -96,6 +107,14 @@ export default function ProfileCard({ pubkey }: Props) {
     void verify();
   }, [profileEvent]);
 
+  const handleCopyClick = async () => {
+    if (!pubkey) {
+      return;
+    }
+
+    await copyText(nip19.npubEncode(pubkey));
+  };
+
   return (
     <div
       // className="sticky top-2 min-w-[20rem]"
@@ -117,42 +136,66 @@ export default function ProfileCard({ pubkey }: Props) {
               <span className="text-3xl">
                 {profileContent(profileEvent).name}
               </span>
-              <span className="flex items-center gap-x-1">
+              <span className="flex items-center gap-x-2">
                 <span className="text-muted-foreground">
-                  {nipVerified &&
-                    (trimNip05(profileContent(profileEvent).nip05) ??
-                      shortNpub(pubkey))}
+                  {nipVerified
+                    ? trimNip05(profileContent(profileEvent).nip05) ??
+                      shortNpub(pubkey)
+                    : shortNpub(pubkey)}
                 </span>
+                <Copy
+                  width={12}
+                  className="cursor-pointer text-muted-foreground hover:text-black active:scale-90 dark:hover:text-white"
+                  onClick={handleCopyClick}
+                />
                 {profileEvent && <ProfileMenu profileEvent={profileEvent} />}
               </span>
             </div>
           </div>
         </CardHeader>
-        <CardContent>{profileContent(profileEvent).about}</CardContent>
-        <CardFooter>
-          <div className="flex flex-col gap-y-2">
-            {profileContent(profileEvent).website && (
-              <span className="flex items-center text-sm font-light text-muted-foreground">
-                <Globe className="mr-1 h-4 w-4" />
-                {profileContent(profileEvent).website}
-              </span>
-            )}
+        {profileContent(profileEvent).about && (
+          <CardContent>{profileContent(profileEvent).about}</CardContent>
+        )}
+        {(profileContent(profileEvent).website ??
+          profileContent(profileEvent).lud16 ??
+          profileContent(profileEvent).github) && (
+          <CardFooter>
+            <div className="flex flex-col gap-y-2">
+              {profileContent(profileEvent).website && (
+                <a
+                  className="text-sm font-light text-muted-foreground hover:text-black dark:hover:text-white"
+                  href={profileContent(profileEvent).website}
+                  target="_blank"
+                >
+                  <span className="flex items-center">
+                    <Globe className="mr-1 h-4 w-4" />
+                    {profileContent(profileEvent).website}
+                  </span>
+                </a>
+              )}
 
-            {profileContent(profileEvent).lud16 && (
-              <span className="flex items-center text-sm font-light text-muted-foreground">
-                <Zap className="mr-1 h-4 w-4" />
-                {profileContent(profileEvent).lud16}
-              </span>
-            )}
+              {profileContent(profileEvent).lud16 && (
+                <span className="flex items-center text-sm font-light text-muted-foreground">
+                  <Zap className="mr-1 h-4 w-4" />
+                  {profileContent(profileEvent).lud16}
+                </span>
+              )}
 
-            {profileContent(profileEvent).github && (
-              <span className="flex items-center text-sm font-light text-muted-foreground">
-                <Github className="mr-1 h-4 w-4" />
-                {profileContent(profileEvent).github}
-              </span>
-            )}
-          </div>
-        </CardFooter>
+              {profileContent(profileEvent).github && (
+                <a
+                  className="text-sm font-light text-muted-foreground hover:text-black dark:hover:text-white"
+                  href={`https://github.com/${profileContent(profileEvent).github}`}
+                  target="_blank"
+                >
+                  <span className="flex items-center">
+                    <Github className="mr-1 h-4 w-4" />
+                    {profileContent(profileEvent).github}
+                  </span>
+                </a>
+              )}
+            </div>
+          </CardFooter>
+        )}
       </Card>
     </div>
   );
