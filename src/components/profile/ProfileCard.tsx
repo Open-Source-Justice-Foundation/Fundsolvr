@@ -1,12 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { BOT_AVATAR_ENDPOINT } from "~/lib/constants";
 import { useRelayStore } from "~/store/relay-store";
-import { Github, Globe, Zap } from "lucide-react";
-import { nip05 } from "nostr-tools";
+import { Copy, Github, Globe, Zap } from "lucide-react";
+import { nip05, nip19 } from "nostr-tools";
 import { profileContent, shortNpub, useBatchedProfiles } from "react-nostr";
 
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
@@ -56,9 +56,19 @@ function trimNip05(nip05Id: string | undefined) {
   return nip05Id;
 }
 
+async function copyText(text: string) {
+  try {
+    await navigator.clipboard.writeText(text);
+    console.log("Text copied to clipboard", text);
+  } catch (err) {
+    console.error("Failed to copy: ", err);
+  }
+}
+
 export default function ProfileCard({ pubkey }: Props) {
   const { subRelays } = useRelayStore();
   const profileEvent = useBatchedProfiles(pubkey, subRelays);
+  const textToCopyRef = useRef<HTMLSpanElement>(null);
 
   console.log(profileEvent);
 
@@ -96,6 +106,14 @@ export default function ProfileCard({ pubkey }: Props) {
     void verify();
   }, [profileEvent]);
 
+  const handleCopyClick = async () => {
+    if (!pubkey) {
+      return;
+    }
+
+    await copyText(nip19.npubEncode(pubkey));
+  };
+
   return (
     <div
       // className="sticky top-2 min-w-[20rem]"
@@ -117,12 +135,18 @@ export default function ProfileCard({ pubkey }: Props) {
               <span className="text-3xl">
                 {profileContent(profileEvent).name}
               </span>
-              <span className="flex items-center gap-x-1">
-                <span className="text-muted-foreground">
-                  {nipVerified &&
-                    (trimNip05(profileContent(profileEvent).nip05) ??
-                      shortNpub(pubkey))}
+              <span className="flex items-center gap-x-2">
+                <span className="text-muted-foreground" ref={textToCopyRef}>
+                  {nipVerified
+                    ? trimNip05(profileContent(profileEvent).nip05) ??
+                      shortNpub(pubkey)
+                    : shortNpub(pubkey)}
                 </span>
+                <Copy
+                  width={12}
+                  className="cursor-pointer text-muted-foreground hover:text-white active:scale-90"
+                  onClick={handleCopyClick}
+                />
                 {profileEvent && <ProfileMenu profileEvent={profileEvent} />}
               </span>
             </div>
