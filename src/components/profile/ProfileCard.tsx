@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { BOT_AVATAR_ENDPOINT } from "~/lib/constants";
 import { useRelayStore } from "~/store/relay-store";
@@ -59,7 +59,6 @@ function trimNip05(nip05Id: string | undefined) {
 async function copyText(text: string) {
   try {
     await navigator.clipboard.writeText(text);
-    console.log("Text copied to clipboard", text);
   } catch (err) {
     console.error("Failed to copy: ", err);
   }
@@ -68,7 +67,6 @@ async function copyText(text: string) {
 export default function ProfileCard({ pubkey }: Props) {
   const { subRelays } = useRelayStore();
   const profileEvent = useBatchedProfiles(pubkey, subRelays);
-  const textToCopyRef = useRef<HTMLSpanElement>(null);
 
   console.log(profileEvent);
 
@@ -136,7 +134,7 @@ export default function ProfileCard({ pubkey }: Props) {
                 {profileContent(profileEvent).name}
               </span>
               <span className="flex items-center gap-x-2">
-                <span className="text-muted-foreground" ref={textToCopyRef}>
+                <span className="text-muted-foreground">
                   {nipVerified
                     ? trimNip05(profileContent(profileEvent).nip05) ??
                       shortNpub(pubkey)
@@ -144,7 +142,7 @@ export default function ProfileCard({ pubkey }: Props) {
                 </span>
                 <Copy
                   width={12}
-                  className="cursor-pointer text-muted-foreground hover:text-white active:scale-90"
+                  className="cursor-pointer text-muted-foreground hover:text-black active:scale-90 dark:hover:text-white"
                   onClick={handleCopyClick}
                 />
                 {profileEvent && <ProfileMenu profileEvent={profileEvent} />}
@@ -152,31 +150,49 @@ export default function ProfileCard({ pubkey }: Props) {
             </div>
           </div>
         </CardHeader>
-        <CardContent>{profileContent(profileEvent).about}</CardContent>
-        <CardFooter>
-          <div className="flex flex-col gap-y-2">
-            {profileContent(profileEvent).website && (
-              <span className="flex items-center text-sm font-light text-muted-foreground">
-                <Globe className="mr-1 h-4 w-4" />
-                {profileContent(profileEvent).website}
-              </span>
-            )}
+        {profileContent(profileEvent).about && (
+          <CardContent>{profileContent(profileEvent).about}</CardContent>
+        )}
+        {(profileContent(profileEvent).website ??
+          profileContent(profileEvent).lud16 ??
+          profileContent(profileEvent).github) && (
+          <CardFooter>
+            <div className="flex flex-col gap-y-2">
+              {profileContent(profileEvent).website && (
+                <a
+                  className="text-sm font-light text-muted-foreground hover:text-black dark:hover:text-white"
+                  href={profileContent(profileEvent).website}
+                  target="_blank"
+                >
+                  <span className="flex items-center">
+                    <Globe className="mr-1 h-4 w-4" />
+                    {profileContent(profileEvent).website}
+                  </span>
+                </a>
+              )}
 
-            {profileContent(profileEvent).lud16 && (
-              <span className="flex items-center text-sm font-light text-muted-foreground">
-                <Zap className="mr-1 h-4 w-4" />
-                {profileContent(profileEvent).lud16}
-              </span>
-            )}
+              {profileContent(profileEvent).lud16 && (
+                <span className="flex items-center text-sm font-light text-muted-foreground">
+                  <Zap className="mr-1 h-4 w-4" />
+                  {profileContent(profileEvent).lud16}
+                </span>
+              )}
 
-            {profileContent(profileEvent).github && (
-              <span className="flex items-center text-sm font-light text-muted-foreground">
-                <Github className="mr-1 h-4 w-4" />
-                {profileContent(profileEvent).github}
-              </span>
-            )}
-          </div>
-        </CardFooter>
+              {profileContent(profileEvent).github && (
+                <a
+                  className="text-sm font-light text-muted-foreground hover:text-black dark:hover:text-white"
+                  href={`https://github.com/${profileContent(profileEvent).github}`}
+                  target="_blank"
+                >
+                  <span className="flex items-center">
+                    <Github className="mr-1 h-4 w-4" />
+                    {profileContent(profileEvent).github}
+                  </span>
+                </a>
+              )}
+            </div>
+          </CardFooter>
+        )}
       </Card>
     </div>
   );
