@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { cn, fromNow } from "~/lib/utils";
+import { cn, fromNow, pluralize } from "~/lib/utils";
 import { useRelayStore } from "~/store/relay-store";
 import { BoltIcon, BookOpen, Users, ZapIcon } from "lucide-react";
 import Link from "next/link";
@@ -73,7 +73,7 @@ function ApplicationTab({ selectedTab, count }: ApplicationTabProps) {
           "-ml-0.5 mr-2 h-5 w-5",
         )}
       />
-      <span className="flex gap-x-1">{count ?? 0} Hunters</span>
+      <span className="flex gap-x-1">{pluralize(count, "Hunter")}</span>
     </Link>
   );
 }
