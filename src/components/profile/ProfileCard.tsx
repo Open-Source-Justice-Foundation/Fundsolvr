@@ -8,6 +8,7 @@ import { useRelayStore } from "~/store/relay-store";
 import { Copy, Github, Globe, Zap } from "lucide-react";
 import { nip05, nip19 } from "nostr-tools";
 import { profileContent, shortNpub, useBatchedProfiles } from "react-nostr";
+import { toast } from "sonner";
 
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import ProfileMenu from "./ProfileMenu";
@@ -60,7 +61,9 @@ async function copyText(text: string) {
   try {
     await navigator.clipboard.writeText(text);
   } catch (err) {
-    console.error("Failed to copy: ", err);
+    toast("Clipboard error", {
+      description: `Failed to copy to clipboard: ${err as string}`,
+    });
   }
 }
 
