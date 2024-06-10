@@ -76,7 +76,7 @@ export default function BountyCard({
           </span>
           <span className="flex w-full justify-between pt-2 text-sm font-light text-muted-foreground">
             <span>{fromNow(bountyEvent.created_at) ?? "unknown"}</span>
-            <span className="flex  items-center gap-x-1">
+            <span className="flex items-center gap-x-1">
               <User className="h-4 w-4" />
               <ApplicationCount bounty={bountyEvent} />
             </span>
